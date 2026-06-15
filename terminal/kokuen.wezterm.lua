@@ -1,4 +1,4 @@
--- kokuen for wezterm. square, flat, SF Mono, grey ramp + green signal.
+-- kokuen for wezterm. square, flat, JetBrains Mono (ligatures), grey ramp + green signal.
 -- drop this at  C:\Users\<you>\.wezterm.lua  (or ~/.config/wezterm/wezterm.lua)
 -- the prompt + syntax colours come from the powershell profile (see kokuen-prompt.ps1).
 
@@ -9,7 +9,7 @@ local config = wezterm.config_builder()
 config.default_prog = { 'powershell.exe', '-NoLogo' }
 
 -- font
-config.font = wezterm.font 'SF Mono'
+config.font = wezterm.font 'JetBrains Mono'   -- ligatures on by default in wezterm
 config.font_size = 12.0
 config.warn_about_missing_glyphs = false
 
@@ -29,7 +29,7 @@ config.use_fancy_tab_bar = true
 config.hide_tab_bar_if_only_one_tab = false
 config.tab_max_width = 26
 config.window_frame = {
-  font = wezterm.font { family = 'SF Mono', weight = 'Medium' },
+  font = wezterm.font { family = 'JetBrains Mono', weight = 'Medium' },
   font_size = 10.0,
   active_titlebar_bg = '#0a0a0a',
   inactive_titlebar_bg = '#0a0a0a',

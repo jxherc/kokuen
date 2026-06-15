@@ -48,7 +48,7 @@ if ($cfg.profiles -is [array]) { $cfg.profiles = [pscustomobject]@{ list = $cfg.
 if (-not $cfg.profiles.PSObject.Properties['defaults']) { setp $cfg.profiles 'defaults' ([pscustomobject]@{}) }
 $d = $cfg.profiles.defaults
 setp $d 'colorScheme' 'kokuen'
-setp $d 'font' ([pscustomobject]@{ face='SF Mono'; size=12; weight='normal' })
+setp $d 'font' ([pscustomobject]@{ face='JetBrains Mono'; size=12; weight='normal' })
 setp $d 'padding' '14'
 setp $d 'cursorShape' 'bar'
 setp $d 'opacity' 100                  # solid, fully opaque
