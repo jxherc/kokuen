@@ -1,168 +1,242 @@
-# 黒鉛 kokuen — component catalog & recipes
+# kokuen — full reference
 
-The "why" behind the laws, plus copy-paste patterns. Class names match `kokuen.css`. Source of
-truth: `C:/Users/jxh/Desktop/website/style.css` (green) and `C:/Users/jxh/alles/static/style.css`
-(purple). When this doc and those files disagree, the files win.
-
----
-
-## The palette, explained
-
-| token | dark | light | what it's for |
-|-------|------|-------|---------------|
-| `--bg` | `#0a0a0a` | `#f5f4f1` | the paper. near-black / warm bone — never pure #000 or #fff |
-| `--text` | `#e8e6e3` | `#111111` | ink. body copy, values, the thing you actually read |
-| `--muted` | `#6e6e6e` | `#888888` | pencil-grey. labels, keys, secondary text, hover targets |
-| `--faint` | `#2e2e2e` | `#d4d2ce` | ghost-grey. borders, dividers, bar tracks, disabled |
-| `--panel` | `#0e0e0e` | `#efede9` | raised/hover surface — one notch off `--bg` |
-| `--signal` | per project | per project | the ONE non-grey. a status sign — right / live / updated / on. never decoration |
-| `--error` | `#f87171` | — | destructive / mic recording / validation |
-| `--green` | `#4ade80` | — | success / positive delta (when the signal isn't already green) |
-
-The whole base is **black & white** — the grey ramp `bg → text → muted → faint` is the spine,
-and most of the UI is built out of just those four. `--signal` is *not* part of the aesthetic;
-it's information. It appears only to say "this is right / live / updated / on", and it should
-feel like spending something. A screen with zero signal on it is completely normal.
-
-**Why warm light mode:** `#f5f4f1` paper + `#111` ink reads like newsprint, not a glaring white
-SaaS dashboard. Keep the warmth; don't "fix" it to `#fff`.
+Everything with real numbers. Class names match `kokuen.css`. When this disagrees with the source,
+the source wins: `C:/Users/jxh/Desktop/website/style.css` and `C:/Users/jxh/alles/static/style.css`.
 
 ---
 
-## Typography in detail
+## palette
 
-- **Families:** `Inter` (UI/prose) with the system fallback stack; `JetBrains Mono` for code, IDs,
-  timestamps, token counts, file paths — anything that came from a machine.
-- **Feature settings:** `'cv11','ss01','ss03'` on the root (single-story a, stylistic alts). It's
-  subtle but it's part of the fingerprint — keep it.
-- **Weights:** `400` body · `500` labels/brand/emphasis · `300` for large thin display headers ·
-  `600` only for a loud number (countdown, big stat). That's the whole scale.
-- **The two-mode letter-spacing rule** (most important type tell):
-  - prose / headings / values → **tight**: `-0.005em` to `-0.025em`
-  - labels / buttons / meta / stamps → **wide + lowercase**: `+0.04em` to `+0.08em`, `text-transform:lowercase`
-- **Size ladder** (rem): `0.6` micro-meta · `0.62–0.66` stamps/cat-labels · `0.68–0.72` buttons/labels ·
-  `0.78–0.82` list rows · `0.875` kv/body-small · `0.95–1.06` intro/prose · `1.15` card heading ·
-  `1.9` page display. Living above ~1.1rem for UI text is a smell.
-- **Numbers:** `font-variant-numeric:tabular-nums` on anything that ticks (clock, age, timer),
-  ranks, or column-aligns. Use the `.tnum` helper.
+| token | dark | light | what it does |
+|-------|------|-------|--------------|
+| `--bg` | `#0a0a0a` | `#f5f4f1` | the paper. near-black, or warm bone in light. never pure `#000`/`#fff` |
+| `--text` | `#e8e6e3` | `#111111` | ink. body, values, the thing you read |
+| `--muted` | `#6e6e6e` | `#888888` | pencil. labels, keys, secondary text, the hover target colour |
+| `--faint` | `#2e2e2e` | `#d4d2ce` | ghost. borders, dividers, bar tracks, disabled |
+| `--panel` | `#0e0e0e` | `#efede9` | raised/hover surface. one notch off bg |
+| `--accent` | per project | per project | identity colour. interaction + brand. **optional** (my site sets none) |
+| `--signal` | per project | per project | status colour. right / live / updated / on. defaults to accent |
+| `--error` | `#f87171` | same | destructive, validation, recording |
+| `--green` | `#4ade80` | same | success / positive delta (toasts, diff-add) |
 
----
+The grey ramp `bg → text → muted → faint` is the spine. `--panel` is for the slightly-raised stuff.
+Light mode is warm paper on purpose — keep it warm.
 
-## Components
+### accent vs signal, again
 
-### Ghost button (`.btn`)
-The default button. No fill, 1px `--faint` border, lowercase + tracked. Hover wakes text to
-`--text`, border to `--muted`, background to `--panel`. `.active` = same as hover (sticky).
-Variants seen in the wild: bordered (`.btn`), bare text (`.btn-bare`), and pill-of-buttons
-toggle groups (`.toggle-row` of `.btn`, one `.active`).
+People collapse these into one thing. They're different jobs:
 
-### Live dot (`.live-dot`)
-5px signal circle, `live-pulse` 2s (opacity 0.3↔1). Means "this is live / now / happening". The
-static cousin `.dot` is faint and only turns signal (`.dot.on`) when its row is active/selected.
+- **accent** = "this is interactive / this is the brand." Active nav, focus ring, primary button,
+  checked box, the logo, a name in a greeting. A project can have none and stay pure b&w.
+- **signal** = "this is right / live / updated / on." A live dot, the winning bar, a done tick.
+  Pure information.
 
-### Key/value row (`.kv`)
-`min-width` key in muted + wide-tracking, value in text. As a link it dims to 0.7 opacity and its
-trailing `.arrow` (a faint `↗`) kicks `translate(3px,-3px)`. The backbone of "about/contact/specs"
-lists.
+They *can* be the same colour (alles: one purple). They can differ (my site: no accent, green signal).
+`--signal` falls back to `--accent` if unset.
 
-### Bar (`.bar-wrap` + `.bar`)
-3px track in `--faint`, fill in `--muted` (or `--signal` via `.win`, i.e. the bar that's "winning"). Animate by adding `.fill` →
-`scaleX(0→1)` over the house easing. Used for top-songs, genres, year-vs-year. Width-animation
-(`transition:width`) is an acceptable alt for variable-length fills.
-
-### Hover-underline link (`.ul`)
-Underline is a `::after` 1px bar that `scaleX`-sweeps from the left on hover. Cleaner than
-`text-decoration`. Use for inline nav and lists.
-
-### Card (`.card`)
-Flat: 1px faint border, micro-radius, optional `--panel` hover. Add `.lift` for the `translateY(-2px)`
-raise. Image cards (covers/portraits) do the same lift on a wrapping element and fade the `<img>`
-in via an `.loaded` class (opacity 0→1) once it loads. No drop shadows.
-
-### Dialog / overlay (`.overlay` + `.dialog`)
-Overlay `rgba(0,0,0,0.6)`, fades in via `.show`. Dialog is a `--panel` card that slides up 8px on
-entrance. Min 260 / max 380px. Same recipe powers confirm dialogs, meme modals, settings popovers.
-
-### Stagger entrance (`.rise`)
-Direct children start at `opacity:0; translateY(6px)` and animate up on `nth-child` delays ~0.07s
-apart (house easing, 0.7s). This is how every page "arrives". `kokuen.css` ships delays for 10
-children; extend the list if a container has more. Pair with `prefers-reduced-motion` (already in
-the base).
+Real usage counts, so you believe me: on my site `var(--accent)` appears 3 times total — `.live-dot`,
+`.year-card.winner .year-bar`, `.pace-arrow`. All status. In alles it appears 40+ times — active
+sessions, focus glows, checked controls, tinted hovers, selected days, the logo. That's the
+difference between "no accent, signal only" and "full identity colour."
 
 ---
 
-## Custom controls — the recipes (NEVER ship native)
+## typography
 
-Standing user rule: no default browser widgets. Each of these replaces one.
-
-### Toggle switch (`.switch`) — replaces `<input type=checkbox>` as an on/off
-34×20 pill, 16px white knob with a soft shadow (the *only* sanctioned shadow), `top/left:2px`,
-slides to `left:16px` and track→signal when on (on = a state, so the signal color is correct here).
-Drive with `aria-checked="true"` or `.on`. Wire a
-click handler in JS; it's a `<div>`, not an input.
-
-### Checkbox (`.chk`) — replaces `<input type=checkbox>` as a tick
-15px box, 1.5px `--muted` border, 3px radius. Checked → signal fill + a CSS `::after` tick (rotated
-border trick, white). `role="checkbox" aria-checked`.
-
-### Slider (`.slider`) — restyled `<input type=range>`
-The one native element we keep, but `appearance:none` strips all chrome: 4px faint track, 15px round
-signal thumb ringed by `box-shadow:0 0 0 1px var(--signal)` and a 2px `--bg` border so it floats off
-the track. Thumb scales 1.18 on hover. Style both `::-webkit-slider-thumb` and `::-moz-range-thumb`.
-
-### Select — replaces native `<select>`
-Don't use `<select>`. Build a `.btn`-styled trigger (`.custom-select`: faint underline/border,
-chevron, `min-height:31px`) that opens an absolutely-positioned `--panel` menu of rows; rows hover
-to `--panel`/`--text`, selected row gets a check or signal text. Close on outside-click / Esc.
-
-### Color picker — replaces `<input type=color>`
-If you need one: saturation box + hue slider built from divs, same as alles' `accent-custom`. Native
-color input only as a last-resort hidden fallback.
-
-### Scrollbars
-Already global in `kokuen.css`: 3px, `--faint` thumb → `--muted` on hover, transparent track,
-`scrollbar-width:thin`. Don't override back to native.
+- **families:** Inter (`'Inter',-apple-system,BlinkMacSystemFont,sans-serif`) for everything readable.
+  JetBrains Mono (`'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace`) for code,
+  IDs, timestamps, counts, paths.
+- **features:** `font-feature-settings:'cv11','ss01','ss03'` on the root. antialiased +
+  `-moz-osx-font-smoothing:grayscale`. subtle but it's part of the fingerprint.
+- **weights:** 400 body · 500 labels/brand/emphasis · 300 big thin display · 600 one loud number. done.
+- **the two-mode letter-spacing** (most important rule):
+  - prose, headings, values → tight, negative, −0.005 to −0.025em
+  - labels, buttons, captions, meta, stamps → wide + lowercase, +0.04 to +0.08em, `text-transform:lowercase`
+- **size ladder (rem):** `0.6` micro · `0.62–0.66` caption/stamp · `0.68–0.72` label/button ·
+  `0.78–0.82` list row · `0.875` body-small / kv / textarea · `0.95–1.06` prose/intro · `1.15` card head ·
+  `1.9` page display.
+- **line-heights:** 1.5 base, 1.55–1.7 for prose, 1 for tight stacked numbers, 1.6 for textareas.
+- **numbers:** `font-variant-numeric:tabular-nums` (`.tnum`) on anything ticking or aligned.
 
 ---
 
-## Motion cheatsheet
+## spacing & layout
 
-- **Easing:** `var(--ease)` = `cubic-bezier(0.2,0.7,0.2,1)` for transforms & entrances. Plain `ease`
-  for color/border/background fades.
-- **Durations:** `0.12–0.18s` micro (hover color, knob slide) · `0.2–0.3s` standard (borders,
-  dialogs) · `0.5–0.7s` entrances & bar fills · `1s` long bar/genre fills.
-- **Hover vocabulary:** lift `translateY(-2px)` · arrow kick `translate(3px,-3px)` · underline
-  `scaleX(0→1)` · img `scale(1.04)` + `brightness(0.7)` · thumb `scale(1.18)`.
-- **Keyframes:** `rise` (up+in), `fade-in`, `live-pulse` (dot), `mic-pulse`/`think-shimmer` for
-  busy/recording states.
+No rigid scale, but the rhythm in both files: section gaps `2.5–3rem`, control padding `0.3–0.45rem`
+vertical / `0.5–0.9rem` horizontal, list row padding `0.4rem 0.9–1.1rem`, card padding `1–1.25rem`.
 
----
-
-## Light-mode checklist (when adding `[data-theme="light"]`)
-
-The four tokens + `--panel` flip automatically. What you must hand-fix:
-1. Any hardcoded dark hex you used for image/placeholder backgrounds (`#161616`, `#1a1a1a`, `#0e0e0e`)
-   → light equivalents (`#e8e6e2`, `#e2e0dc`, `--panel`).
-2. `:hover` backgrounds that referenced a literal dark panel → repoint to `--panel` or a light hex.
-3. Re-check signal contrast on `#f5f4f1` — a neon that pops on black can vanish on paper.
-4. Never introduce pure `#fff`/`#000`; stay on the warm ramp.
-
-Provide a `.theme-toggle` (fixed, top-right, faint→muted on hover) that flips `data-theme` on
-`<html>` and persists to `localStorage`.
+- reading column: `max-width: 560px`, centered, `body` padding `6rem 2rem 5rem` (the site).
+- app shell: fixed `100vh`, flex, `.sidebar` is `248px` fixed width with a `1px var(--faint)` right border.
+- grids: `repeat(4,1fr)` album-style with `1rem` gaps; drop to 3 cols under 600px.
+- dividers: `1px var(--faint)`, or a dashed `stroke-dasharray:2 4` feel for a softer split.
 
 ---
 
-## Quick smell-test before shipping
+## components
 
-- [ ] Base is pure black & white, and the only non-grey is `var(--signal)` *reporting state* (right/live/updated/on), not decorating?
-- [ ] Every `border-radius` ≤ 4px (except the toggle)?
-- [ ] No native checkbox / select / scrollbar / range chrome visible?
-- [ ] Labels lowercase + wide-tracked; prose tight-tracked?
+Exact values. All of these are in `kokuen.css`.
+
+### buttons
+- **`.btn`** (default, ghost): no fill, `1px var(--faint)`, radius 2px, `0.68rem`, lowercase,
+  `letter-spacing:0.05em`, padding `0.35rem 0.75rem`, colour `--muted`. Hover → text colour, `--muted`
+  border, `--panel` bg. `.active` looks the same as hover (sticky).
+- **`.btn-bare`**: text only, no border, `0.7rem`, muted → text on hover.
+- **`.btn-primary`**: accent text + `45%` accent border; hover adds `12%` accent bg. The rare loud one.
+- **`.btn-danger`**: same shape in `--error`.
+- **`.seg`**: a row of `.btn`; the `.active` one gets `12%` accent bg + `40%` accent border + accent text.
+
+### inputs
+- **`.field`**: underline only. transparent bg, `border-bottom:1px var(--faint)`, `0.72rem`, placeholder
+  in `--faint`, focus → `--muted` underline. This is the default input.
+- **`.field-box`**: boxed, sits on `--panel`, radius 3px, focus → muted border.
+- **`.field-glow`**: the important one (main composer). focus → accent border + the glow:
+  `box-shadow:0 0 0 1px var(--accent), 0 0 16px color-mix(in srgb,var(--accent) 25%,transparent)`.
+- textareas: `resize:none`, `line-height:1.6`.
+
+### custom controls
+- **`.switch`** (replaces a checkbox used as on/off): 34×20 pill, `--faint` track, 16px white knob at
+  `top/left:2px` with `box-shadow:0 1px 3px rgba(0,0,0,.35)` (one of the only shadows in the system).
+  `.on` / `aria-checked="true"` → track `--accent`, knob slides to `left:16px`. It's a div — wire the
+  click in JS.
+- **`.chk`** (checkbox): 15px, `1.5px var(--muted)` border, radius 3px. checked → accent fill + a CSS
+  `::after` tick (rotated bottom-right border, white). `role="checkbox" aria-checked`.
+- **`.slider`** (range): `appearance:none`, 4px `--faint` track, 15px round accent thumb ringed with
+  `box-shadow:0 0 0 1px var(--accent)` and a `2px var(--bg)` border so it floats. thumb `scale(1.18)`
+  on hover. style both `::-webkit-slider-thumb` and `::-moz-range-thumb`.
+- **select**: build it. a `.btn`-style trigger (`min-height:31px`, a chevron, faint underline/border)
+  that opens an absolutely-positioned `--panel` list; rows hover to `--panel`/`--text`, the selected
+  row gets a tick or accent text. close on outside-click and Esc. never `<select>`.
+
+### status marks (these are `--signal`)
+- **`.live-dot`**: 5px circle, `live-pulse` 2s (opacity 0.3↔1). means live/now.
+- **`.dot`** / **`.dot.on`**: 5px, faint by default, turns signal when the row is active/live.
+- **`.ok`**: signal-coloured text or tick. "right / correct / done."
+- **`.badge-new`**: a `.badge` with signal border. "updated / new."
+- **`.bar`** + **`.bar.win`**: 3px track (`--faint`), fill `--muted`, animates by adding `.fill`
+  (`scaleX 0→1`). the winning/best bar swaps fill to `--signal`.
+
+### badges / tags
+- **`.badge`**: greyscale by default. `0.62rem`, lowercase, `1px faint` border, radius 2px,
+  padding `0.05rem 0.35rem`. add a semantic colour class to tint it.
+
+### key/value rows
+- **`.kv`**: muted key (`min-width:84px`, `0.72rem`, wide) + text value. as a link it dims to `0.7`
+  opacity and the trailing `.arrow` (faint `↗`) nudges `translate(3px,-3px)` on hover.
+
+### links
+- **`.ul`**: hover-underline that sweeps in from the left (`::after` 1px bar, `scaleX 0→1`, 0.25s).
+  cleaner than `text-decoration`. use for inline nav.
+
+### list rows
+- **`.row`**: flex, `0.8rem`, muted, padding `0.4rem 0.9rem`. hover → text + `--panel`.
+- **`.row.active`**: `12%` accent bg + text colour (the soft selected state).
+- **`.row.sel`**: solid `--accent` bg, `--bg` text. inverted. for hard selection (a picked day).
+
+### cards
+- **`.card`**: `1px faint`, radius 3px, padding `1rem 1.25rem`, flat. hover → muted border + panel bg.
+- **`.card.lift`**: adds `translateY(-2px)` on hover.
+- image cards: wrap the `<img>`, start it `opacity:0`, add `.loaded` (→ opacity 1) once it loads;
+  hover the wrapper does the lift, the img does `scale(1.04)` + `brightness(0.7)`.
+
+### overlay + dialog
+- **`.overlay`**: fixed, `rgba(0,0,0,.6)`, fades in via `.show`.
+- **`.dialog`**: a `--panel` card, `min 260 / max 380px`, slides up 8px on entrance. same recipe for
+  confirms, modals, settings popovers.
+
+### toast
+- **`.toasts`** container fixed bottom-right, `gap 0.4rem`. **`.toast`**: panel bg, faint border,
+  `0.78rem`, `rise` in. `.success` → green border+text, `.error` → error border+text.
+
+### context menu
+- **`.ctx`**: fixed, panel bg, faint border, `min-width:140px`, `fade-in`. **`.ctx-item`**: `0.78rem`
+  muted, hover → text + `--bg`. **`.ctx-item.danger`** in `--error`.
+
+### tooltip
+- **`.tip`**: panel bg, faint border, `0.66rem`, `white-space:nowrap`, `pointer-events:none`, `fade-in`.
+
+### code / kbd
+- **`.code`**: `#111` bg (light: `#ebe9e5`), faint border, mono `0.75rem`, `line-height:1.55`.
+- **`kbd`**: faint border, radius 3px, `0.7rem`, muted.
+
+### empty / loading
+- **`.empty`**: faint, `0.78rem`, italic. for "nothing here yet."
+- **`.skel`**: panel bg, `shimmer` (opacity 0.35↔0.7). skeleton row while loading.
+
+### momentary accent bits
+- **`.stream-cursor`**: 2px×0.9em accent bar, `blink` 0.9s step-end. for streaming text.
+- **`.flash`**: `name-flash` 1.5s, accent → text. flash a value that just changed.
+
+### entrance
+- **`.rise`**: put it on a container. direct kids start hidden + 6px down and animate up on
+  `nth-child` delays ~0.07s apart, 0.7s, house easing. `kokuen.css` ships 10 delays — extend the list
+  if a container has more kids.
+
+---
+
+## motion cheatsheet
+
+- ease: `cubic-bezier(0.2,0.7,0.2,1)` for transform/entrance, plain `ease` for colour fades.
+- durations: `0.12–0.18s` micro · `0.2–0.3s` standard · `0.5–0.7s` entrance + bar · `1s` long fill.
+- hover moves: lift `-2px`, arrow `+3/-3`, underline `scaleX`, img `scale 1.04 + brightness .7`,
+  thumb `scale 1.18`.
+- keyframes: `rise`, `fade-in`, `live-pulse`, `blink`, `name-flash`, `shimmer`.
+
+---
+
+## light mode
+
+The five tokens flip via `[data-theme="light"]`. What you hand-fix:
+
+1. hardcoded dark hexes you used for image/placeholder bg (`#161616`, `#1a1a1a`, `#111`) → light
+   equivalents (`#e8e6e2`, `#e2e0dc`, `#ebe9e5`).
+2. any `:hover` bg that pointed at a literal dark panel → repoint to `--panel`.
+3. re-check **both** accent and signal contrast on `#f5f4f1`. a neon that pops on black can vanish on
+   paper (my green `#00ff2a` is borderline in light — bump it if needed).
+4. never introduce pure `#fff`/`#000`. stay warm.
+
+Ship a `.theme-toggle` (fixed top-right, faint → muted on hover) that flips `data-theme` on `<html>`
+and saves to `localStorage`.
+
+---
+
+## smell test before shipping
+
+- [ ] base is greyscale; colour only shows up to be interactive (accent) or report state (signal)?
+- [ ] you know which of your colours is accent and which is signal, and they're used for the right jobs?
+- [ ] every radius ≤ 4px except the toggle?
+- [ ] no native checkbox / radio / select / range / scrollbar visible?
+- [ ] labels lowercase + wide; prose tight?
 - [ ] UI text mostly 0.6–0.9rem?
-- [ ] Borders 1px `--faint`, waking to `--muted` on hover?
-- [ ] Moving things use `cubic-bezier(0.2,0.7,0.2,1)`?
-- [ ] Numbers `tabular-nums`?
-- [ ] No shadows except under the toggle knob?
-- [ ] Page elements `rise` in on load?
+- [ ] borders 1px faint, waking to muted on hover?
+- [ ] moving things use the one easing?
+- [ ] numbers tabular?
+- [ ] no shadows except the toggle knob + focus glow?
+- [ ] stuff `rise`s in on load, and reduced-motion is handled?
 
-If all ten are yes, it's kokuen.
+---
+
+## worked examples
+
+**a "now playing" row, my-site style (no accent, green signal):**
+```css
+:root{ --accent:var(--text); --signal:#00ff2a; }
+```
+```html
+<div class="row">
+  <span class="live-dot"></span>            <!-- green, pulsing -->
+  <span class="ul">song title</span>
+  <span class="muted">artist</span>
+  <span class="cap" style="margin-left:auto">2m ago</span>
+</div>
+```
+
+**a sidebar session item, alles style (one purple doing both):**
+```css
+:root{ --accent:#818cf8; }   /* signal inherits */
+```
+```html
+<div class="row active">                    <!-- 12% purple tint bg -->
+  <span class="dot on"></span>              <!-- purple -->
+  <span>session name</span>
+</div>
+```
