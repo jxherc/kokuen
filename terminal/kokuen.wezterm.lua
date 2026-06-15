@@ -1,4 +1,4 @@
--- kokuen for wezterm. square, flat, JetBrains Mono (ligatures), grey ramp + green signal.
+-- kokuen for wezterm. square, flat, JetBrains Mono (ligatures), all grey / no accent.
 -- drop this at  C:\Users\<you>\.wezterm.lua  (or ~/.config/wezterm/wezterm.lua)
 -- the prompt + syntax colours come from the powershell profile (see kokuen-prompt.ps1).
 
@@ -20,7 +20,7 @@ config.window_background_opacity = 1.0           -- solid, no acrylic
 config.window_padding = { left = 14, right = 14, top = 10, bottom = 8 }
 config.adjust_window_size_when_changing_font_size = false
 
--- thin green bar cursor (the one signal colour)
+-- thin grey bar cursor (no accent)
 config.default_cursor_style = 'SteadyBar'
 config.cursor_thickness = '1.5px'
 
@@ -39,9 +39,9 @@ config.window_frame = {
 config.colors = {
   foreground    = '#e8e6e3',
   background    = '#0a0a0a',
-  cursor_bg     = '#00ff2a',
+  cursor_bg     = '#e8e6e3',
   cursor_fg     = '#0a0a0a',
-  cursor_border = '#00ff2a',
+  cursor_border = '#e8e6e3',
   selection_bg  = '#2e2e2e',
   selection_fg  = '#e8e6e3',
   scrollbar_thumb = '#2e2e2e',

@@ -26,19 +26,22 @@ if (Get-Module -ListAvailable -Name PSReadLine) {
   Import-Module PSReadLine -ErrorAction SilentlyContinue
   Set-PSReadLineOption -EditMode Windows
   $e = [char]27
+  $T = "${e}[38;2;232;230;227m"   # text
+  $M = "${e}[38;2;110;110;110m"   # muted
+  # no accents — fully grey. no syntax colours. command bright, secondary dim
   Set-PSReadLineOption -Colors @{
-    Command   = "${e}[38;2;232;230;227m"   # text
-    Parameter = "${e}[38;2;110;110;110m"   # muted
-    Operator  = "${e}[38;2;110;110;110m"
-    Variable  = "${e}[38;2;232;230;227m"
-    String    = "${e}[38;2;0;255;42m"      # signal green
-    Number    = "${e}[38;2;0;255;42m"
-    Type      = "${e}[38;2;212;210;206m"
-    Comment   = "${e}[38;2;110;110;110m"
-    Keyword   = "${e}[38;2;232;230;227m"
-    Error     = "${e}[38;2;248;113;113m"   # error red
-    Selection = "${e}[48;2;46;46;46m"      # faint bg
-    Default   = "${e}[38;2;232;230;227m"
+    Command   = $T
+    Parameter = $M
+    Operator  = $M
+    Variable  = $T
+    String    = $T
+    Number    = $T
+    Type      = $T
+    Comment   = $M
+    Keyword   = $T
+    Error     = $M
+    Selection = "${e}[48;2;46;46;46m"
+    Default   = $T
   }
   try { Set-PSReadLineOption -Colors @{ InlinePrediction = "${e}[38;2;46;46;46m" } } catch {}
 }
