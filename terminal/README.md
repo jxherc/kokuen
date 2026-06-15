@@ -1,7 +1,7 @@
 # kokuen for your terminal
 
-The kokuen look for a terminal: SF Mono, grey-on-near-black, green only as the signal, solid flat
-background, padding, a green bar cursor. Matches the conhost theme and your site. Two setups below —
+The kokuen look for a terminal: JetBrains Mono, grey-on-near-black, a green bar cursor, solid flat
+background, padding. Matches the conhost theme and your site. Two setups below —
 WezTerm (square corners, no title bar) or Windows Terminal.
 
 ## WezTerm
@@ -53,7 +53,7 @@ Two gotchas it works around, both of which silently broke an earlier version:
 | setting | value | why |
 |---|---|---|
 | colorScheme | kokuen | the grey ramp + green signal |
-| font | SF Mono, 12 | you installed it already |
+| font | JetBrains Mono, 12 | ligatures on |
 | opacity + useAcrylic | 100 + false | solid flat bg, no transparency |
 | padding | 14 | room to breathe; conhost can't pad |
 | cursorShape | bar | thin mac-style caret |
@@ -68,8 +68,7 @@ Two gotchas it works around, both of which silently broke an earlier version:
 - default is solid. if you ever want a little transparency, drop `opacity` below 100 — with
   `useAcrylic` false that's clean non-blurred transparency.
 - bigger text? bump `font.size`.
-- heads up: SF Mono has no programming ligatures, so don't expect `->` to fuse. If you want that,
-  swap the font face for something like "Maple Mono" or "JetBrains Mono" and keep everything else.
+- font is JetBrains Mono (ligatures on — `->` `!=` `>=` fuse). want plain SF Mono back? change `font.face`.
 
 ## manual way (if you'd rather not run the script)
 

@@ -43,11 +43,10 @@ if (Get-Module -ListAvailable -Name PSReadLine) {
   try { Set-PSReadLineOption -Colors @{ InlinePrediction = "${e}[38;2;46;46;46m" } } catch {}
 }
 
-# muted time + path on one line, a green > on the next (red if the last command failed)
+# muted time + path on one line, a dim grey > on the next
 function global:prompt {
   $reset = "$([char]27)[0m"
   $muted = Ansi $script:kk.Muted
   $text  = Ansi $script:kk.Text
-  $sig   = if ($?) { Ansi $script:kk.Signal } else { Ansi $script:kk.Danger }
-  "$muted$(Get-Date -Format HH:mm)$reset $text$(ShortPath)$reset`n$sig>$reset "
+  "$muted$(Get-Date -Format HH:mm)$reset $text$(ShortPath)$reset`n$muted>$reset "
 }
