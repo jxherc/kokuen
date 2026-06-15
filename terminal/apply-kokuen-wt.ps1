@@ -66,9 +66,8 @@ $theme = [pscustomobject]@{
 if (-not $cfg.PSObject.Properties['themes']) { setp $cfg 'themes' @() }
 $cfg.themes = @($cfg.themes | Where-Object { $_.name -ne 'kokuen' }) + $theme
 setp $cfg 'theme' 'kokuen'
-
-# open straight into focus mode (no tab bar / title bar) instead of toggling it by hand
-setp $cfg 'launchMode' 'focus'
+# leave launchMode default (normal window with a close button). WT can't do square corners or a
+# clean closable borderless window — use the WezTerm config for that.
 
 $cfg | ConvertTo-Json -Depth 32 | Set-Content $path -Encoding UTF8
 Write-Host "kokuen applied. restart Windows Terminal to see it." -ForegroundColor Green

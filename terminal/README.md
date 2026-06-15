@@ -1,7 +1,17 @@
-# kokuen for Windows Terminal
+# kokuen for your terminal
 
-The kokuen look for WT: SF Mono, grey-on-near-black, green only as the signal, solid flat background,
-padding, a green bar cursor. Matches the conhost theme and your site.
+The kokuen look for a terminal: SF Mono, grey-on-near-black, green only as the signal, solid flat
+background, padding, a green bar cursor. Matches the conhost theme and your site. Two setups below —
+WezTerm (square corners, no title bar) or Windows Terminal.
+
+## WezTerm
+
+Copy [`kokuen.wezterm.lua`](kokuen.wezterm.lua) to `C:\Users\<you>\.wezterm.lua` and open WezTerm.
+That's the whole setup — it launches Windows PowerShell so your kokuen prompt loads too.
+
+`window_decorations = 'RESIZE|INTEGRATED_BUTTONS'` drops the OS title bar (square corners on win11)
+but keeps min/max/close in a slim strip, so you can still mouse-close. Close a tab with Ctrl+Shift+W,
+the window with Alt+F4. Solid bg, no acrylic.
 
 ## do this
 
@@ -16,8 +26,11 @@ padding, a green bar cursor. Matches the conhost theme and your site.
 4. Restart Windows Terminal.
 
 The script backs up your `settings.json` first (`settings.json.kokuen-bak`, keeps the original on
-re-runs) and is safe to re-run. It also sets `launchMode: focus` so WT opens straight into focus
-mode — no tab bar, no title bar.
+re-runs) and is safe to re-run.
+
+Note: WT can't do square corners (Win11 rounds every window, no setting for it), and focus mode has
+no close button. That's why WezTerm above exists. If you stay on WT and want focus mode, add
+`"launchMode": "focus"` — close with Alt+F4 / `exit` / Ctrl+Shift+W.
 
 ## the prompt + syntax colours
 
