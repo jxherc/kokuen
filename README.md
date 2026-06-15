@@ -1,26 +1,27 @@
 # 黒鉛 kokuen
 
-A near-black web design system. Four shades of grey on near-black paper (warm bone-white in light
-mode), and exactly **one** color allowed to show through — the accent, like the single bright mark
-a pencil can't make. *Kokuen* (黒鉛) means graphite.
+A **black-and-white** web design system. Four shades of grey on near-black paper (warm bone-white in
+light mode) — and *no accent*. The only non-grey on screen is a single functional **signal**: a sign
+that something is right, live, or updated. Like a proofreader's tick, not a brand color. *Kokuen*
+(黒鉛) means graphite.
 
-It's the house style behind [jxherc/website](https://github.com/jxherc/website) (accent green) and
-`alles` (accent purple) — same bones, different nameplate. This repo is that style pulled out so any
-new thing can speak it.
+It's the house style behind [jxherc/website](https://github.com/jxherc/website) (green signal) and
+`alles` (purple signal) — both monochrome UIs where the color only ever reports state. This repo is
+that style pulled out so any new thing can speak it.
 
 ```
---bg #0a0a0a   --text #e8e6e3   --muted #6e6e6e   --faint #2e2e2e   + one --accent
+--bg #0a0a0a   --text #e8e6e3   --muted #6e6e6e   --faint #2e2e2e   + one --signal (status only)
 ```
 
 ## Use it
 
-Link the stylesheet, set your one accent, build against the documented class names:
+Link the stylesheet, set your one signal color, build against the documented class names:
 
 ```html
 <link rel="stylesheet" href="kokuen.css">
 ```
 ```css
-:root{ --accent:#818cf8; }   /* the only thing you change per project */
+:root{ --signal:#818cf8; }   /* the only thing you change per project — and it only marks state */
 ```
 
 - **[`kokuen.css`](kokuen.css)** — drop-in: tokens, reset, base typography, thin scrollbars, inverted
@@ -34,7 +35,7 @@ Link the stylesheet, set your one accent, build against the documented class nam
 
 ## The 9 laws
 
-1. **Four greys, near-black paper, one accent.** The accent is the only saturated hue and it stays rare.
+1. **Black & white — the only color is a signal.** No decorative accent. One non-grey hue exists and it's *semantic*: it marks right / live / updated / on. Most screens show zero or one.
 2. **Inter for words, JetBrains Mono for data.** `font-feature-settings:'cv11','ss01','ss03'`, antialiased.
 3. **Letter-spacing has two modes.** Prose/headings tight (negative); labels/buttons wide + lowercase (positive).
 4. **Everything is small.** UI text lives at 0.6–0.9rem.
@@ -50,7 +51,7 @@ Link the stylesheet, set your one accent, build against the documented class nam
 :root{
   --bg:#0a0a0a; --text:#e8e6e3; --muted:#6e6e6e; --faint:#2e2e2e;
   --panel:#0e0e0e;
-  --accent:#818cf8;              /* swap per project */
+  --signal:#818cf8;             /* the one non-grey — status only (right/live/updated). swap per project */
   --error:#f87171; --green:#4ade80;
 }
 [data-theme="light"]{

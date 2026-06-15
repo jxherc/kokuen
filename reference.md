@@ -15,12 +15,14 @@ truth: `C:/Users/jxh/Desktop/website/style.css` (green) and `C:/Users/jxh/alles/
 | `--muted` | `#6e6e6e` | `#888888` | pencil-grey. labels, keys, secondary text, hover targets |
 | `--faint` | `#2e2e2e` | `#d4d2ce` | ghost-grey. borders, dividers, bar tracks, disabled |
 | `--panel` | `#0e0e0e` | `#efede9` | raised/hover surface — one notch off `--bg` |
-| `--accent` | per project | per project | THE color. live/active/winner/focus only |
+| `--signal` | per project | per project | the ONE non-grey. a status sign — right / live / updated / on. never decoration |
 | `--error` | `#f87171` | — | destructive / mic recording / validation |
-| `--green` | `#4ade80` | — | success / positive delta (when accent isn't green) |
+| `--green` | `#4ade80` | — | success / positive delta (when the signal isn't already green) |
 
-The grey ramp `bg → text → muted → faint` is the spine. Most of the UI is built out of just
-those four. Reach for `--accent` and you should feel like you're spending something.
+The whole base is **black & white** — the grey ramp `bg → text → muted → faint` is the spine,
+and most of the UI is built out of just those four. `--signal` is *not* part of the aesthetic;
+it's information. It appears only to say "this is right / live / updated / on", and it should
+feel like spending something. A screen with zero signal on it is completely normal.
 
 **Why warm light mode:** `#f5f4f1` paper + `#111` ink reads like newsprint, not a glaring white
 SaaS dashboard. Keep the warmth; don't "fix" it to `#fff`.
@@ -55,8 +57,8 @@ Variants seen in the wild: bordered (`.btn`), bare text (`.btn-bare`), and pill-
 toggle groups (`.toggle-row` of `.btn`, one `.active`).
 
 ### Live dot (`.live-dot`)
-5px accent circle, `live-pulse` 2s (opacity 0.3↔1). Means "this is live / now / happening". The
-static cousin `.dot` is faint and only turns accent (`.dot.on`) when its row is active/selected.
+5px signal circle, `live-pulse` 2s (opacity 0.3↔1). Means "this is live / now / happening". The
+static cousin `.dot` is faint and only turns signal (`.dot.on`) when its row is active/selected.
 
 ### Key/value row (`.kv`)
 `min-width` key in muted + wide-tracking, value in text. As a link it dims to 0.7 opacity and its
@@ -64,7 +66,7 @@ trailing `.arrow` (a faint `↗`) kicks `translate(3px,-3px)`. The backbone of "
 lists.
 
 ### Bar (`.bar-wrap` + `.bar`)
-3px track in `--faint`, fill in `--muted` (or `--accent` via `.win`). Animate by adding `.fill` →
+3px track in `--faint`, fill in `--muted` (or `--signal` via `.win`, i.e. the bar that's "winning"). Animate by adding `.fill` →
 `scaleX(0→1)` over the house easing. Used for top-songs, genres, year-vs-year. Width-animation
 (`transition:width`) is an acceptable alt for variable-length fills.
 
@@ -95,22 +97,23 @@ Standing user rule: no default browser widgets. Each of these replaces one.
 
 ### Toggle switch (`.switch`) — replaces `<input type=checkbox>` as an on/off
 34×20 pill, 16px white knob with a soft shadow (the *only* sanctioned shadow), `top/left:2px`,
-slides to `left:16px` and track→accent when on. Drive with `aria-checked="true"` or `.on`. Wire a
+slides to `left:16px` and track→signal when on (on = a state, so the signal color is correct here).
+Drive with `aria-checked="true"` or `.on`. Wire a
 click handler in JS; it's a `<div>`, not an input.
 
 ### Checkbox (`.chk`) — replaces `<input type=checkbox>` as a tick
-15px box, 1.5px `--muted` border, 3px radius. Checked → accent fill + a CSS `::after` tick (rotated
+15px box, 1.5px `--muted` border, 3px radius. Checked → signal fill + a CSS `::after` tick (rotated
 border trick, white). `role="checkbox" aria-checked`.
 
 ### Slider (`.slider`) — restyled `<input type=range>`
 The one native element we keep, but `appearance:none` strips all chrome: 4px faint track, 15px round
-accent thumb ringed by `box-shadow:0 0 0 1px var(--accent)` and a 2px `--bg` border so it floats off
+signal thumb ringed by `box-shadow:0 0 0 1px var(--signal)` and a 2px `--bg` border so it floats off
 the track. Thumb scales 1.18 on hover. Style both `::-webkit-slider-thumb` and `::-moz-range-thumb`.
 
 ### Select — replaces native `<select>`
 Don't use `<select>`. Build a `.btn`-styled trigger (`.custom-select`: faint underline/border,
 chevron, `min-height:31px`) that opens an absolutely-positioned `--panel` menu of rows; rows hover
-to `--panel`/`--text`, selected row gets a check or accent text. Close on outside-click / Esc.
+to `--panel`/`--text`, selected row gets a check or signal text. Close on outside-click / Esc.
 
 ### Color picker — replaces `<input type=color>`
 If you need one: saturation box + hue slider built from divs, same as alles' `accent-custom`. Native
@@ -141,7 +144,7 @@ The four tokens + `--panel` flip automatically. What you must hand-fix:
 1. Any hardcoded dark hex you used for image/placeholder backgrounds (`#161616`, `#1a1a1a`, `#0e0e0e`)
    → light equivalents (`#e8e6e2`, `#e2e0dc`, `--panel`).
 2. `:hover` backgrounds that referenced a literal dark panel → repoint to `--panel` or a light hex.
-3. Re-check accent contrast on `#f5f4f1` — a neon that pops on black can vanish on paper.
+3. Re-check signal contrast on `#f5f4f1` — a neon that pops on black can vanish on paper.
 4. Never introduce pure `#fff`/`#000`; stay on the warm ramp.
 
 Provide a `.theme-toggle` (fixed, top-right, faint→muted on hover) that flips `data-theme` on
@@ -151,7 +154,7 @@ Provide a `.theme-toggle` (fixed, top-right, faint→muted on hover) that flips 
 
 ## Quick smell-test before shipping
 
-- [ ] Only one saturated color on screen, and it's `var(--accent)`?
+- [ ] Base is pure black & white, and the only non-grey is `var(--signal)` *reporting state* (right/live/updated/on), not decorating?
 - [ ] Every `border-radius` ≤ 4px (except the toggle)?
 - [ ] No native checkbox / select / scrollbar / range chrome visible?
 - [ ] Labels lowercase + wide-tracked; prose tight-tracked?

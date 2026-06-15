@@ -1,12 +1,15 @@
-/* 黒鉛 kokuen — drop-in base. link it, set --accent, build against the class names below.
-   lifted straight off jxherc/website + jxherc/alles so it already matches both. */
+/* 黒鉛 kokuen — drop-in base. link it, set --signal, build against the class names below.
+   lifted straight off jxherc/website + jxherc/alles so it already matches both.
+   the UI is black & white. --signal is the ONE non-grey and it only reports state. */
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root{
   --bg:#0a0a0a; --text:#e8e6e3; --muted:#6e6e6e; --faint:#2e2e2e;
   --panel:#0e0e0e;
-  --accent:#818cf8;        /* the one color — change this and nothing else to re-theme */
+  /* the ONE non-grey. not an accent, not decoration — a status sign: right / live / updated.
+     swap the hue per project (website green #00ff2a, alles purple #818cf8). */
+  --signal:#818cf8;
   --error:#f87171; --green:#4ade80;
   --ease:cubic-bezier(0.2,0.7,0.2,1);   /* the house easing */
 }
@@ -80,13 +83,13 @@ code,kbd,samp,.mono{ font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Me
 .field-box{ border:1px solid var(--faint); border-radius:3px; padding:0.45rem 0.6rem; }
 .field-box:focus{ border-color:var(--muted); }
 
-/* ── live dot — pulsing accent, for "live/now/active" ── */
-.live-dot{ width:5px; height:5px; border-radius:50%; background:var(--accent);
+/* ── live dot — pulsing signal, for "live/now/active" ── */
+.live-dot{ width:5px; height:5px; border-radius:50%; background:var(--signal);
   display:inline-block; animation:live-pulse 2s ease-in-out infinite; }
 @keyframes live-pulse{ 0%,100%{ opacity:0.3; } 50%{ opacity:1; } }
 /* static state dot (lists, sessions) */
 .dot{ width:5px; height:5px; border-radius:50%; background:var(--faint); display:inline-block; }
-.dot.on{ background:var(--accent); }
+.dot.on{ background:var(--signal); }
 
 /* ── key/value row ── */
 .kv{ display:inline-flex; align-items:baseline; gap:1rem; font-size:0.875rem;
@@ -104,7 +107,7 @@ a.kv:hover .arrow{ transform:translate(3px,-3px); color:var(--muted); }
   transform:scaleX(0); transform-origin:left center;
   transition:transform 0.55s var(--ease); will-change:transform; }
 .bar.fill{ transform:scaleX(1); }
-.bar.win{ background:var(--accent); }
+.bar.win{ background:var(--signal); }
 
 /* ── hover-underline link (sweeps in from left) ── */
 .ul{ position:relative; display:inline-block; width:fit-content; color:var(--text);
@@ -136,7 +139,7 @@ a.kv:hover .arrow{ transform:translate(3px,-3px); color:var(--muted); }
 /* toggle switch (the one allowed pill). markup: <div class="switch" aria-checked> */
 .switch{ width:34px; height:20px; flex-shrink:0; background:var(--faint);
   border-radius:10px; cursor:pointer; position:relative; transition:background 0.15s; }
-.switch.on,.switch[aria-checked="true"]{ background:var(--accent); }
+.switch.on,.switch[aria-checked="true"]{ background:var(--signal); }
 .switch::after{ content:''; position:absolute; width:16px; height:16px; background:#fff;
   border-radius:50%; top:2px; left:2px; transition:left 0.15s; box-shadow:0 1px 3px rgba(0,0,0,0.35); }
 .switch.on::after,.switch[aria-checked="true"]::after{ left:16px; }
@@ -145,7 +148,7 @@ a.kv:hover .arrow{ transform:translate(3px,-3px); color:var(--muted); }
 .chk{ display:inline-block; width:15px; height:15px; flex-shrink:0; vertical-align:middle;
   border:1.5px solid var(--muted); border-radius:3px; cursor:pointer; position:relative;
   transition:background 0.12s,border-color 0.12s; }
-.chk[aria-checked="true"]{ background:var(--accent); border-color:var(--accent); }
+.chk[aria-checked="true"]{ background:var(--signal); border-color:var(--signal); }
 .chk[aria-checked="true"]::after{ content:""; position:absolute; left:4px; top:1px;
   width:4px; height:8px; border:solid #fff; border-width:0 2px 2px 0; transform:rotate(45deg); }
 
@@ -154,11 +157,11 @@ a.kv:hover .arrow{ transform:translate(3px,-3px); color:var(--muted); }
 .slider{ -webkit-appearance:none; appearance:none; width:100%; height:4px; border-radius:3px;
   background:var(--faint); outline:none; cursor:pointer; }
 .slider::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:15px; height:15px;
-  border-radius:50%; background:var(--accent); border:2px solid var(--bg);
-  box-shadow:0 0 0 1px var(--accent); cursor:pointer; transition:transform 0.1s; }
+  border-radius:50%; background:var(--signal); border:2px solid var(--bg);
+  box-shadow:0 0 0 1px var(--signal); cursor:pointer; transition:transform 0.1s; }
 .slider::-webkit-slider-thumb:hover{ transform:scale(1.18); }
-.slider::-moz-range-thumb{ width:15px; height:15px; border-radius:50%; background:var(--accent);
-  border:2px solid var(--bg); box-shadow:0 0 0 1px var(--accent); cursor:pointer; }
+.slider::-moz-range-thumb{ width:15px; height:15px; border-radius:50%; background:var(--signal);
+  border:2px solid var(--bg); box-shadow:0 0 0 1px var(--signal); cursor:pointer; }
 
 /* ── entrance: children of .rise float up, staggered ── */
 .rise > *{ opacity:0; transform:translateY(6px); animation:rise 0.7s var(--ease) forwards; }
