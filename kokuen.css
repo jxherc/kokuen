@@ -1,17 +1,25 @@
-/* 黒鉛 kokuen — drop-in base. link it, set --signal, build against the class names below.
-   lifted straight off jxherc/website + jxherc/alles so it already matches both.
-   the UI is black & white. --signal is the ONE non-grey and it only reports state. */
+/* kokuen — drop-in base. link it, set your two colours, use the classes.
+   ripped out of jxherc/website + alles so it already looks right. no deps, no build.
+
+   the base UI is greyscale. on top of that there are exactly two colours you can set:
+     --accent  the project's identity colour. interactive + brand stuff. OPTIONAL.
+               my site doesn't set one (pure b&w). alles sets purple.
+     --signal  a status colour. means right / live / updated / on. nothing else.
+               if you don't set it, it just copies --accent.
+   so: alles = one purple doing both. my site = no accent, green signal only. */
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root{
+  /* the grey ramp — never changes. paper / ink / pencil / ghost */
   --bg:#0a0a0a; --text:#e8e6e3; --muted:#6e6e6e; --faint:#2e2e2e;
-  --panel:#0e0e0e;
-  /* the ONE non-grey. not an accent, not decoration — a status sign: right / live / updated.
-     swap the hue per project (website green #00ff2a, alles purple #818cf8). */
-  --signal:#818cf8;
-  --error:#f87171; --green:#4ade80;
-  --ease:cubic-bezier(0.2,0.7,0.2,1);   /* the house easing */
+  --panel:#0e0e0e;                 /* one notch off bg, for raised + hover surfaces */
+
+  --accent:#818cf8;                /* identity colour. set to var(--text) if you want none */
+  --signal:var(--accent);          /* status colour. override when it's a different hue than accent */
+
+  --error:#f87171; --green:#4ade80;   /* semantics: destructive / success. used raw, sparingly */
+  --ease:cubic-bezier(0.2,0.7,0.2,1); /* the one easing for transforms + entrances */
 }
 [data-theme="light"]{
   --bg:#f5f4f1; --text:#111111; --muted:#888888; --faint:#d4d2ce; --panel:#efede9;
@@ -26,158 +34,206 @@ html,body{
   text-rendering:optimizeLegibility;
 }
 
-/* thin scrollbars — never the chunky native ones */
+/* thin scrollbars, never the fat native ones */
 *{ scrollbar-width:thin; scrollbar-color:var(--faint) transparent; }
 ::-webkit-scrollbar{ width:3px; height:3px; }
 ::-webkit-scrollbar-thumb{ background:var(--faint); border-radius:2px; }
 ::-webkit-scrollbar-thumb:hover{ background:var(--muted); }
 
-/* inverted selection — a kokuen signature */
-::selection{ background:var(--text); color:var(--bg); }
+::selection{ background:var(--text); color:var(--bg); }   /* inverted. looks sharp on the dark */
 
-a:focus-visible, button:focus-visible{
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible{
   outline:1px solid var(--muted); outline-offset:4px; border-radius:1px;
 }
 
-/* numbers that align or tick */
-.tnum, [data-num]{ font-variant-numeric:tabular-nums; font-feature-settings:'tnum'; }
-
-/* mono for code / ids / timestamps / raw values */
+/* numbers that line up or tick */
+.tnum,[data-num]{ font-variant-numeric:tabular-nums; font-feature-settings:'tnum'; }
 code,kbd,samp,.mono{ font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
 
-/* ── type helpers ── */
-.label{                       /* wide+lowercase small caps-ish label */
-  font-size:0.7rem; color:var(--muted);
-  letter-spacing:0.04em; font-weight:500; text-transform:lowercase;
-}
+/* ── type bits ── */
+/* labels go wide + lowercase. everything else (prose, headings) goes tight. that contrast is the whole tell */
+.label{ font-size:0.7rem; color:var(--muted); letter-spacing:0.04em; font-weight:500; text-transform:lowercase; }
+.cap{ font-size:0.62rem; color:var(--faint); letter-spacing:0.08em; }   /* tiny caption / stamp */
 .brand{ font-size:0.85rem; color:var(--text); font-weight:500; letter-spacing:-0.01em; }
-.brand .alias,.brand .sep{ color:var(--muted); font-weight:400; }
+.brand .sep,.brand .alias{ color:var(--muted); font-weight:400; }
+.display{ font-weight:300; letter-spacing:-0.025em; }     /* big thin header */
+.accent{ color:var(--accent); }       /* the one identity-coloured span, e.g. a name in a greeting */
 .muted{ color:var(--muted); } .faint{ color:var(--faint); }
-.display{ font-weight:300; letter-spacing:-0.025em; }   /* big thin header */
 
-/* ── ghost button — the default button in this system ── */
+/* ── buttons ── */
+/* ghost is the default. no fill, faint border, lowercase. wakes up on hover */
 .btn{
   background:none; border:1px solid var(--faint); border-radius:2px;
   color:var(--muted); font-family:inherit; font-size:0.68rem;
   letter-spacing:0.05em; text-transform:lowercase;
   padding:0.35rem 0.75rem; cursor:pointer;
-  transition:border-color 0.2s ease,color 0.2s ease,background 0.2s ease;
+  transition:border-color .2s ease,color .2s ease,background .2s ease;
 }
 .btn:hover{ color:var(--text); border-color:var(--muted); background:var(--panel); }
 .btn.active{ color:var(--text); border-color:var(--muted); background:var(--panel); }
-/* text-only ghost: no border, just a colour wake-up */
-.btn-bare{ background:none; border:none; color:var(--muted); font-family:inherit;
-  font-size:0.7rem; letter-spacing:0.04em; text-transform:lowercase; cursor:pointer;
-  padding:0; transition:color 0.2s ease; }
+.btn[disabled]{ opacity:.4; cursor:default; }
+/* text-only, no border */
+.btn-bare{ background:none; border:0; color:var(--muted); font:inherit; font-size:0.7rem;
+  letter-spacing:0.04em; text-transform:lowercase; cursor:pointer; padding:0; transition:color .2s ease; }
 .btn-bare:hover{ color:var(--text); }
+/* the rare loud one — uses accent, for a primary action */
+.btn-primary{ color:var(--accent); border:1px solid color-mix(in srgb,var(--accent) 45%,transparent); }
+.btn-primary:hover{ background:color-mix(in srgb,var(--accent) 12%,transparent); border-color:var(--accent); }
+.btn-danger{ color:var(--error); border-color:color-mix(in srgb,var(--error) 40%,transparent); }
+.btn-danger:hover{ background:color-mix(in srgb,var(--error) 12%,transparent); }
 
-/* ── ghost input — underline only, no box ── */
-.field{
-  width:100%; background:none; border:none; border-bottom:1px solid var(--faint);
-  color:var(--text); font-family:inherit; font-size:0.72rem;
-  padding:0.3rem 0; outline:none; transition:border-color 0.2s ease;
-}
+/* segmented control / toggle group — row of .btn, one .active */
+.seg{ display:inline-flex; gap:0.4rem; }
+.seg .btn.active{ color:var(--accent); border-color:color-mix(in srgb,var(--accent) 40%,transparent);
+  background:color-mix(in srgb,var(--accent) 12%,transparent); }
+
+/* ── inputs ── */
+/* underline-only field, the default */
+.field{ width:100%; background:none; border:0; border-bottom:1px solid var(--faint);
+  color:var(--text); font:inherit; font-size:0.72rem; padding:0.3rem 0; outline:none;
+  transition:border-color .2s ease; }
 .field::placeholder{ color:var(--faint); }
 .field:focus{ border-color:var(--muted); }
-/* boxed input variant */
-.field-box{ border:1px solid var(--faint); border-radius:3px; padding:0.45rem 0.6rem; }
-.field-box:focus{ border-color:var(--muted); }
+/* boxed variant, sits on panel */
+.field-box{ border:1px solid var(--faint); border-radius:3px; background:var(--panel);
+  padding:0.45rem 0.6rem; transition:border-color .2s ease,box-shadow .2s ease; }
+.field-box:focus,.field-box:focus-within{ border-color:var(--muted); }
+/* the loud focus — accent ring + soft glow. for the main composer / important field */
+.field-glow:focus,.field-glow.active{ border-color:var(--accent);
+  box-shadow:0 0 0 1px var(--accent), 0 0 16px color-mix(in srgb,var(--accent) 25%,transparent); }
+textarea.field,textarea.field-box{ resize:none; line-height:1.6; }
 
-/* ── live dot — pulsing signal, for "live/now/active" ── */
-.live-dot{ width:5px; height:5px; border-radius:50%; background:var(--signal);
-  display:inline-block; animation:live-pulse 2s ease-in-out infinite; }
-@keyframes live-pulse{ 0%,100%{ opacity:0.3; } 50%{ opacity:1; } }
-/* static state dot (lists, sessions) */
-.dot{ width:5px; height:5px; border-radius:50%; background:var(--faint); display:inline-block; }
-.dot.on{ background:var(--signal); }
-
-/* ── key/value row ── */
-.kv{ display:inline-flex; align-items:baseline; gap:1rem; font-size:0.875rem;
-  color:var(--text); text-decoration:none; width:fit-content; transition:opacity 0.2s ease; }
-.kv .k{ color:var(--muted); font-size:0.72rem; letter-spacing:0.04em; min-width:84px; }
-.kv .v{ color:var(--text); }
-.kv .arrow{ color:var(--faint); font-size:0.7rem; margin-left:0.1rem;
-  transition:transform 0.25s ease,color 0.25s ease; }
-a.kv:hover{ opacity:0.7; }
-a.kv:hover .arrow{ transform:translate(3px,-3px); color:var(--muted); }
-
-/* ── bar — 3px track, fills via scaleX (animate by toggling .fill) ── */
-.bar-wrap{ height:3px; background:var(--faint); border-radius:2px; overflow:hidden; }
-.bar{ display:block; height:100%; width:100%; background:var(--muted);
-  transform:scaleX(0); transform-origin:left center;
-  transition:transform 0.55s var(--ease); will-change:transform; }
-.bar.fill{ transform:scaleX(1); }
-.bar.win{ background:var(--signal); }
-
-/* ── hover-underline link (sweeps in from left) ── */
-.ul{ position:relative; display:inline-block; width:fit-content; color:var(--text);
-  text-decoration:none; }
-.ul::after{ content:""; position:absolute; left:0; right:0; bottom:-0.1em; height:1px;
-  background:var(--text); transform:scaleX(0); transform-origin:left;
-  transition:transform 0.25s ease; }
-.ul:hover::after{ transform:scaleX(1); }
-
-/* ── card — flat, lifts 2px on hover ── */
-.card{ border:1px solid var(--faint); border-radius:3px; padding:1rem 1.25rem;
-  background:var(--bg); transition:border-color 0.3s ease,background 0.3s ease,transform 0.3s var(--ease); }
-.card:hover{ border-color:var(--muted); background:var(--panel); }
-.card.lift:hover{ transform:translateY(-2px); }
-
-/* ── dialog / overlay ── */
-.overlay{ position:fixed; inset:0; z-index:2000; background:rgba(0,0,0,0.6);
-  display:flex; align-items:center; justify-content:center;
-  opacity:0; pointer-events:none; transition:opacity 0.2s ease; }
-.overlay.show{ opacity:1; pointer-events:auto; }
-.dialog{ background:var(--panel); border:1px solid var(--faint); border-radius:3px;
-  padding:1.25rem 1.4rem; min-width:260px; max-width:380px; width:90%;
-  display:flex; flex-direction:column; gap:0.75rem;
-  transform:translateY(8px); transition:transform 0.25s var(--ease); }
-.overlay.show .dialog{ transform:translateY(0); }
-
-/* ── CUSTOM CONTROLS — never use the native ones ── */
-
-/* toggle switch (the one allowed pill). markup: <div class="switch" aria-checked> */
-.switch{ width:34px; height:20px; flex-shrink:0; background:var(--faint);
-  border-radius:10px; cursor:pointer; position:relative; transition:background 0.15s; }
-.switch.on,.switch[aria-checked="true"]{ background:var(--signal); }
+/* ── custom controls. don't ship the native ones ── */
+/* switch (the only allowed pill). div, drive with .on / aria-checked */
+.switch{ width:34px; height:20px; flex-shrink:0; background:var(--faint); border-radius:10px;
+  cursor:pointer; position:relative; transition:background .15s; }
+.switch.on,.switch[aria-checked="true"]{ background:var(--accent); }
 .switch::after{ content:''; position:absolute; width:16px; height:16px; background:#fff;
-  border-radius:50%; top:2px; left:2px; transition:left 0.15s; box-shadow:0 1px 3px rgba(0,0,0,0.35); }
+  border-radius:50%; top:2px; left:2px; transition:left .15s; box-shadow:0 1px 3px rgba(0,0,0,.35); }
 .switch.on::after,.switch[aria-checked="true"]::after{ left:16px; }
 
-/* checkbox. markup: <div class="chk" role="checkbox" aria-checked> */
+/* checkbox. div role=checkbox */
 .chk{ display:inline-block; width:15px; height:15px; flex-shrink:0; vertical-align:middle;
   border:1.5px solid var(--muted); border-radius:3px; cursor:pointer; position:relative;
-  transition:background 0.12s,border-color 0.12s; }
-.chk[aria-checked="true"]{ background:var(--signal); border-color:var(--signal); }
-.chk[aria-checked="true"]::after{ content:""; position:absolute; left:4px; top:1px;
-  width:4px; height:8px; border:solid #fff; border-width:0 2px 2px 0; transform:rotate(45deg); }
+  transition:background .12s,border-color .12s; }
+.chk[aria-checked="true"]{ background:var(--accent); border-color:var(--accent); }
+.chk[aria-checked="true"]::after{ content:''; position:absolute; left:4px; top:1px; width:4px; height:8px;
+  border:solid #fff; border-width:0 2px 2px 0; transform:rotate(45deg); }
 
-/* slider. markup: <input type="range" class="slider"> (only place a native input is touched,
-   and it's fully restyled — appearance:none kills the chrome) */
+/* slider. the one native input we keep — appearance:none strips the chrome */
 .slider{ -webkit-appearance:none; appearance:none; width:100%; height:4px; border-radius:3px;
   background:var(--faint); outline:none; cursor:pointer; }
 .slider::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:15px; height:15px;
-  border-radius:50%; background:var(--signal); border:2px solid var(--bg);
-  box-shadow:0 0 0 1px var(--signal); cursor:pointer; transition:transform 0.1s; }
+  border-radius:50%; background:var(--accent); border:2px solid var(--bg);
+  box-shadow:0 0 0 1px var(--accent); cursor:pointer; transition:transform .1s; }
 .slider::-webkit-slider-thumb:hover{ transform:scale(1.18); }
-.slider::-moz-range-thumb{ width:15px; height:15px; border-radius:50%; background:var(--signal);
-  border:2px solid var(--bg); box-shadow:0 0 0 1px var(--signal); cursor:pointer; }
+.slider::-moz-range-thumb{ width:15px; height:15px; border-radius:50%; background:var(--accent);
+  border:2px solid var(--bg); box-shadow:0 0 0 1px var(--accent); cursor:pointer; }
+
+/* ── status marks — these use --signal (right / live / updated) ── */
+.live-dot{ width:5px; height:5px; border-radius:50%; background:var(--signal); display:inline-block;
+  animation:live-pulse 2s ease-in-out infinite; }
+@keyframes live-pulse{ 0%,100%{ opacity:.3; } 50%{ opacity:1; } }
+.dot{ width:5px; height:5px; border-radius:50%; background:var(--faint); display:inline-block; flex-shrink:0; }
+.dot.on{ background:var(--signal); }            /* this row is active/live */
+.ok{ color:var(--signal); }                     /* "right / correct / done" text or tick */
+.badge-new{ color:var(--signal); border-color:color-mix(in srgb,var(--signal) 40%,transparent); }  /* "updated/new" */
+
+/* small tag / badge (greyscale by default) */
+.badge{ display:inline-flex; align-items:center; gap:0.3rem; font-size:0.62rem; letter-spacing:0.04em;
+  text-transform:lowercase; color:var(--muted); border:1px solid var(--faint); border-radius:2px;
+  padding:0.05rem 0.35rem; line-height:1.6; }
+
+/* ── key/value rows ── */
+.kv{ display:inline-flex; align-items:baseline; gap:1rem; font-size:0.875rem; color:var(--text);
+  text-decoration:none; width:fit-content; transition:opacity .2s ease; }
+.kv .k{ color:var(--muted); font-size:0.72rem; letter-spacing:0.04em; min-width:84px; }
+.kv .arrow{ color:var(--faint); font-size:0.7rem; margin-left:0.1rem; transition:transform .25s ease,color .25s ease; }
+a.kv:hover{ opacity:.7; } a.kv:hover .arrow{ transform:translate(3px,-3px); color:var(--muted); }
+
+/* ── bars (3px, fill via scaleX, add .fill to animate) ── */
+.bar-wrap{ height:3px; background:var(--faint); border-radius:2px; overflow:hidden; }
+.bar{ display:block; height:100%; width:100%; background:var(--muted); transform:scaleX(0);
+  transform-origin:left center; transition:transform .55s var(--ease); will-change:transform; }
+.bar.fill{ transform:scaleX(1); }
+.bar.win{ background:var(--signal); }            /* the winning / best one */
+
+/* ── hover-underline link (sweeps in from left) ── */
+.ul{ position:relative; display:inline-block; width:fit-content; color:var(--text); text-decoration:none; }
+.ul::after{ content:''; position:absolute; left:0; right:0; bottom:-0.1em; height:1px; background:var(--text);
+  transform:scaleX(0); transform-origin:left; transition:transform .25s ease; }
+.ul:hover::after{ transform:scaleX(1); }
+
+/* ── list row (sidebar item, table row) ── */
+.row{ display:flex; align-items:center; gap:0.7rem; padding:0.4rem 0.9rem; font-size:0.8rem;
+  color:var(--muted); cursor:pointer; transition:color .15s ease,background .15s ease; }
+.row:hover{ color:var(--text); background:var(--panel); }
+.row.active{ color:var(--text); background:color-mix(in srgb,var(--accent) 12%,transparent); }
+.row.sel{ background:var(--accent); color:var(--bg); }   /* hard-selected (calendar day etc.) — inverted */
+
+/* ── cards ── */
+.card{ border:1px solid var(--faint); border-radius:3px; padding:1rem 1.25rem; background:var(--bg);
+  transition:border-color .3s ease,background .3s ease,transform .3s var(--ease); }
+.card:hover{ border-color:var(--muted); background:var(--panel); }
+.card.lift:hover{ transform:translateY(-2px); }
+
+/* ── overlay + dialog ── */
+.overlay{ position:fixed; inset:0; z-index:2000; background:rgba(0,0,0,.6); display:flex;
+  align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .2s ease; }
+.overlay.show{ opacity:1; pointer-events:auto; }
+.dialog{ background:var(--panel); border:1px solid var(--faint); border-radius:3px; padding:1.25rem 1.4rem;
+  min-width:260px; max-width:380px; width:90%; display:flex; flex-direction:column; gap:0.75rem;
+  transform:translateY(8px); transition:transform .25s var(--ease); }
+.overlay.show .dialog{ transform:translateY(0); }
+
+/* ── toast (bottom-right) ── */
+.toasts{ position:fixed; bottom:1.5rem; right:1.5rem; display:flex; flex-direction:column; gap:0.4rem; z-index:500; }
+.toast{ background:var(--panel); border:1px solid var(--faint); border-radius:3px; padding:0.55rem 0.9rem;
+  font-size:0.78rem; color:var(--text); cursor:pointer; animation:rise .2s ease forwards; }
+.toast.success{ border-color:var(--green); color:var(--green); }
+.toast.error{ border-color:var(--error); color:var(--error); }
+
+/* ── context menu ── */
+.ctx{ position:fixed; z-index:300; background:var(--panel); border:1px solid var(--faint); border-radius:3px;
+  padding:0.3rem 0; min-width:140px; animation:fade-in .1s ease; }
+.ctx-item{ padding:0.38rem 0.85rem; font-size:0.78rem; color:var(--muted); cursor:pointer;
+  transition:color .15s,background .15s; }
+.ctx-item:hover{ color:var(--text); background:var(--bg); }
+.ctx-item.danger{ color:var(--error); }
+
+/* ── tooltip ── */
+.tip{ position:absolute; background:var(--panel); border:1px solid var(--faint); border-radius:3px;
+  padding:0.25rem 0.5rem; font-size:0.66rem; color:var(--text); letter-spacing:0.02em; white-space:nowrap;
+  pointer-events:none; z-index:400; animation:fade-in .12s ease; }
+
+/* ── code block ── */
+.code{ background:#111; border:1px solid var(--faint); border-radius:3px; padding:0.7rem 0.85rem;
+  font-family:'JetBrains Mono',monospace; font-size:0.75rem; line-height:1.55; overflow:auto; }
+[data-theme="light"] .code{ background:#ebe9e5; }
+kbd{ border:1px solid var(--faint); border-radius:3px; padding:0.05rem 0.35rem; font-size:0.7rem; color:var(--muted); }
+
+/* ── empty state + skeleton ── */
+.empty{ color:var(--faint); font-size:0.78rem; font-style:italic; }
+.skel{ background:var(--panel); border-radius:2px; opacity:.6; animation:shimmer 1.2s ease-in-out infinite; }
+@keyframes shimmer{ 0%,100%{ opacity:.35; } 50%{ opacity:.7; } }
+
+/* ── streaming cursor + name flash (accent, momentary) ── */
+.stream-cursor{ display:inline-block; width:2px; height:0.9em; background:var(--accent); margin-left:1px;
+  vertical-align:text-bottom; animation:blink .9s step-end infinite; }
+@keyframes blink{ 50%{ opacity:0; } }
+.flash{ animation:name-flash 1.5s ease forwards; }
+@keyframes name-flash{ 0%{ color:var(--accent); } 100%{ color:var(--text); } }
 
 /* ── entrance: children of .rise float up, staggered ── */
-.rise > *{ opacity:0; transform:translateY(6px); animation:rise 0.7s var(--ease) forwards; }
-.rise > *:nth-child(1){ animation-delay:0.05s; }
-.rise > *:nth-child(2){ animation-delay:0.12s; }
-.rise > *:nth-child(3){ animation-delay:0.19s; }
-.rise > *:nth-child(4){ animation-delay:0.26s; }
-.rise > *:nth-child(5){ animation-delay:0.33s; }
-.rise > *:nth-child(6){ animation-delay:0.40s; }
-.rise > *:nth-child(7){ animation-delay:0.47s; }
-.rise > *:nth-child(8){ animation-delay:0.54s; }
-.rise > *:nth-child(9){ animation-delay:0.61s; }
-.rise > *:nth-child(10){ animation-delay:0.68s; }
+.rise>*{ opacity:0; transform:translateY(6px); animation:rise .7s var(--ease) forwards; }
+.rise>*:nth-child(1){ animation-delay:.05s; } .rise>*:nth-child(2){ animation-delay:.12s; }
+.rise>*:nth-child(3){ animation-delay:.19s; } .rise>*:nth-child(4){ animation-delay:.26s; }
+.rise>*:nth-child(5){ animation-delay:.33s; } .rise>*:nth-child(6){ animation-delay:.40s; }
+.rise>*:nth-child(7){ animation-delay:.47s; } .rise>*:nth-child(8){ animation-delay:.54s; }
+.rise>*:nth-child(9){ animation-delay:.61s; } .rise>*:nth-child(10){ animation-delay:.68s; }
 @keyframes rise{ to{ opacity:1; transform:translateY(0); } }
 @keyframes fade-in{ from{ opacity:0; } to{ opacity:1; } }
 
 @media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{ animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
+  *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
 }

@@ -1,56 +1,83 @@
-<img src="banner.svg" alt="黒鉛 kokuen — a black & white design system" width="100%">
+<img src="banner.svg" alt="kokuen — a black and white UI system" width="100%">
 
-<p align="center"><em>black &amp; white. four greys, one signal, nothing else.</em></p>
+# kokuen (黒鉛)
 
----
+The look I put on basically everything. Near-black, greyscale, no rounded corners, small type, quiet
+until you touch it. I got tired of rebuilding the same CSS for every project so I pulled the tokens
+out of [my site](https://github.com/jxherc/website) and alles and dumped them here.
 
-**kokuen** (黒鉛, *graphite*) is a near-black web design system. The whole UI is drawn in four shades
-of grey on near-black paper — warm bone-white in light mode — and **there is no accent**. The only
-non-grey on screen is a single **signal**: a sign that something is *right*, *live*, or *updated*.
-Like a proofreader's tick, not a brand colour. The signal hue is swappable per project; everything
-else is fixed.
+*Kokuen* means graphite. It's a pencil drawing — four greys do all the work and colour only shows up
+when it's actually telling you something.
 
-It's the house style behind [jxherc/website](https://github.com/jxherc/website) and `alles` — both
-monochrome UIs where colour only ever reports state. This repo is that style pulled out so anything
-new can speak it.
+## colours: there are two, and they're not the same thing
 
-## quickstart
+This trips people up so I'll be blunt about it.
+
+The **base is grey**. Five shades, fixed, that's the actual aesthetic. On top of that you get two
+colours, and they do different jobs:
+
+- **accent** — the project's identity colour. Active states, focus rings, a primary button, the logo.
+  Normal accent stuff. It's *optional*. alles has one (purple). My own site has none, it's straight
+  black and white.
+- **signal** — a status colour. Means right, live, updated, on. A pulsing dot, the winning bar, a
+  "done" tick. That's it, it never decorates. On my site the green is *only* this — it shows up in
+  three places and nowhere else.
+
+They can be the same colour or different. If you only set `--accent`, the signal just copies it (that's
+alles, one purple doing both). Set them apart when the status colour should be its own thing (that's my
+site: no accent, green signal).
+
+```
+my site →  no accent (pure b&w) + green signal
+alles   →  purple accent, signal inherits it
+```
+
+## use it
 
 ```html
 <link rel="stylesheet" href="kokuen.css">
 ```
 ```css
-:root{ --signal:#818cf8; }   /* the only thing you set per project — and it only marks state */
+:root{
+  --accent:#818cf8;   /* your identity colour. or var(--text) if you want none, like my site */
+  --signal:#00ff2a;   /* status. delete this and it copies the accent */
+}
 ```
+
+Then it's just classes:
 
 ```html
 <button class="btn">save</button>
-<span class="live-dot"></span>          <!-- pulsing: "live / now" -->
+<span class="live-dot"></span>             <!-- signal, pulsing -->
 <div class="switch on" aria-checked="true"></div>
-<div class="chk" role="checkbox" aria-checked="true"></div>
+<a class="ul" href="#">a link</a>
 ```
 
-Set `--signal`, write your markup against the documented class names, done. No build step, no deps.
+No build, no dependencies. Every class is readable in [`kokuen.css`](kokuen.css).
 
-## the 9 laws
+## the rules
 
-1. **Black &amp; white — the only colour is a signal.** No decorative accent. One non-grey hue, and it's *semantic*: right / live / updated / on. Most screens show zero or one.
-2. **Inter for words, JetBrains Mono for data.** `font-feature-settings:'cv11','ss01','ss03'`, antialiased.
-3. **Letter-spacing has two modes.** Prose &amp; headings tight (negative); labels &amp; buttons wide + lowercase (positive). This contrast is the strongest tell.
-4. **Everything is small.** UI text lives at 0.6–0.9rem.
-5. **Micro-radii only.** `border-radius` 1–4px. The only pill is a real toggle.
-6. **1px faint borders that wake on hover** (`--faint` → `--muted`). Flat surfaces, no shadows.
-7. **One easing for everything that moves:** `cubic-bezier(0.2,0.7,0.2,1)`.
-8. **Numbers are `tabular-nums`.**
-9. **No native chrome — ever.** Build the checkbox, toggle, slider, select, scrollbar yourself.
+The stuff that makes it look right. Skip these and it falls apart.
+
+1. Grey first. Colour needs a reason — it's either interactive (accent) or it's reporting state
+   (signal). A screen with zero colour is fine.
+2. Inter for words, JetBrains Mono for anything machine-shaped (code, IDs, timestamps, raw numbers).
+3. Letter-spacing goes two ways: prose tight (negative), labels and buttons wide + lowercase. This
+   one does most of the heavy lifting.
+4. Small. UI text is 0.6–0.9rem. If it looks like a normal website font size it's too big.
+5. Barely-rounded. 1–4px. The only pill is a toggle switch.
+6. 1px faint borders that go to muted on hover. Flat surfaces. No drop shadows.
+7. One easing for everything that moves: `cubic-bezier(0.2,0.7,0.2,1)`.
+8. `tabular-nums` on numbers that tick or line up.
+9. No native controls, ever. Build the checkbox, toggle, slider, select, scrollbar yourself.
 
 ## tokens
 
 ```css
 :root{
-  --bg:#0a0a0a; --text:#e8e6e3; --muted:#6e6e6e; --faint:#2e2e2e;   /* the graphite ramp */
-  --panel:#0e0e0e;                                                   /* raised / hover surface */
-  --signal:#818cf8;          /* the one non-grey — status only. swap per project */
+  --bg:#0a0a0a; --text:#e8e6e3; --muted:#6e6e6e; --faint:#2e2e2e; --panel:#0e0e0e;
+  --accent:#818cf8;          /* var(--text) for none */
+  --signal:var(--accent);    /* override for a separate hue */
   --error:#f87171; --green:#4ade80;
 }
 [data-theme="light"]{
@@ -58,17 +85,16 @@ Set `--signal`, write your markup against the documented class names, done. No b
 }
 ```
 
-`--bg → --faint` is the ramp: **paper · ink · pencil · ghost**. Light mode is warm paper, not white —
-keep the warmth.
+paper, ink, pencil, ghost. Light mode is warm paper, not white — leave it warm.
 
-## what's inside
+## what's in here
 
 | file | what |
 |------|------|
-| [`kokuen.css`](kokuen.css) | drop-in: tokens, reset, base type, thin scrollbars, inverted selection, focus rings, the `rise` / `live-pulse` / `fade-in` keyframes, and every custom control (button, toggle, checkbox, slider, ghost input). |
-| [`reference.md`](reference.md) | the full catalog: palette &amp; type explained, every component, the custom-control recipes, a motion cheatsheet, a light-mode checklist, and a 10-point ship smell-test. |
-| [`SKILL.md`](SKILL.md) | the same system as a [Claude Code](https://claude.com/claude-code) skill — drop the folder in `~/.claude/skills/kokuen/` and Claude applies the style on request. |
+| [`kokuen.css`](kokuen.css) | the drop-in. tokens, reset, type, scrollbars, every component and custom control, the keyframes. |
+| [`reference.md`](reference.md) | the long version. every component with real numbers, the accent tint scale, light-mode notes, a ship checklist, worked examples. |
+| [`SKILL.md`](SKILL.md) | same thing as a [Claude Code](https://claude.com/claude-code) skill. drop the folder in `~/.claude/skills/kokuen/` and it'll style stuff for you. |
 
 ---
 
-<sub>MIT · built by [jxherc](https://github.com/jxherc) · 黒鉛</sub>
+<sub>MIT. built by <a href="https://github.com/jxherc">jxherc</a>. 黒鉛</sub>
