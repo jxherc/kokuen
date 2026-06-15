@@ -1,0 +1,69 @@
+<svg viewBox="0 0 1200 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="kokuen — a black and white design system">
+  <defs>
+    <style>
+      .sans { font-family: 'Inter','Helvetica Neue',Arial,sans-serif; }
+      .cjk  { font-family: 'Hiragino Sans','Yu Gothic','Noto Sans JP','Microsoft YaHei',sans-serif; }
+      .mono { font-family: 'JetBrains Mono','SFMono-Regular',Consolas,monospace; }
+    </style>
+    <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="sig" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0"    stop-color="#a78bfa"/>
+      <stop offset="0.28" stop-color="#38bdf8"/>
+      <stop offset="0.55" stop-color="#f59e0b"/>
+      <stop offset="0.8"  stop-color="#fb7185"/>
+      <stop offset="1"    stop-color="#c084fc"/>
+    </linearGradient>
+  </defs>
+
+  <!-- paper -->
+  <rect x="0" y="0" width="1200" height="460" fill="#0a0a0a"/>
+  <rect x="24" y="24" width="1152" height="412" rx="4" fill="none" stroke="#2e2e2e" stroke-width="1"/>
+
+  <!-- ── left: brand + thesis ── -->
+  <!-- the signal, here playing "live" — pulses, and its hue is swappable -->
+  <circle cx="86" cy="92" r="4.5" fill="#a78bfa" opacity="0.95" filter="url(#glow)">
+    <animate attributeName="fill" values="#a78bfa;#38bdf8;#f59e0b;#fb7185;#a78bfa" dur="9s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.35;1;0.35" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <text x="104" y="97" class="sans" font-size="13" font-weight="500" letter-spacing="3" fill="#6e6e6e">BLACK &amp; WHITE DESIGN SYSTEM</text>
+
+  <text x="78" y="248" class="cjk" font-size="150" font-weight="700" letter-spacing="2" fill="#e8e6e3">黒鉛</text>
+  <text x="86" y="312" class="sans" font-size="46" font-weight="300" letter-spacing="18" fill="#e8e6e3">kokuen</text>
+
+  <text x="88" y="372" class="sans" font-size="19" font-weight="400" letter-spacing="0.2" fill="#e8e6e3">four greys. one signal. nothing else.</text>
+  <text x="88" y="400" class="sans" font-size="13" font-weight="500" letter-spacing="2.5" fill="#6e6e6e">THE ONE COLOUR ONLY EVER MEANS — RIGHT · LIVE · UPDATED</text>
+
+  <!-- vertical divider -->
+  <line x1="700" y1="64" x2="700" y2="396" stroke="#2e2e2e" stroke-width="1"/>
+
+  <!-- ── right: tokens ── -->
+  <text x="744" y="96" class="sans" font-size="12" font-weight="500" letter-spacing="4" fill="#6e6e6e">TOKENS</text>
+
+  <!-- the fixed greyscale ramp -->
+  <g>
+    <rect x="744" y="118" width="40" height="40" rx="3" fill="#0a0a0a" stroke="#2e2e2e"/>
+    <text x="804" y="137" class="mono" font-size="15" fill="#e8e6e3">#0a0a0a</text>
+    <text x="804" y="153" class="sans" font-size="11" letter-spacing="2" fill="#6e6e6e">paper · bg</text>
+
+    <rect x="744" y="172" width="40" height="40" rx="3" fill="#e8e6e3" stroke="#2e2e2e"/>
+    <text x="804" y="191" class="mono" font-size="15" fill="#e8e6e3">#e8e6e3</text>
+    <text x="804" y="207" class="sans" font-size="11" letter-spacing="2" fill="#6e6e6e">ink · text</text>
+
+    <rect x="744" y="226" width="40" height="40" rx="3" fill="#6e6e6e" stroke="#2e2e2e"/>
+    <text x="804" y="245" class="mono" font-size="15" fill="#e8e6e3">#6e6e6e</text>
+    <text x="804" y="261" class="sans" font-size="11" letter-spacing="2" fill="#6e6e6e">pencil · muted</text>
+
+    <rect x="744" y="280" width="40" height="40" rx="3" fill="#2e2e2e" stroke="#2e2e2e"/>
+    <text x="804" y="299" class="mono" font-size="15" fill="#e8e6e3">#2e2e2e</text>
+    <text x="804" y="315" class="sans" font-size="11" letter-spacing="2" fill="#6e6e6e">ghost · faint</text>
+  </g>
+
+  <!-- hairline, then the one swappable signal -->
+  <line x1="744" y1="340" x2="1044" y2="340" stroke="#2e2e2e" stroke-width="1" stroke-dasharray="2 4"/>
+  <text x="744" y="362" class="sans" font-size="12" font-weight="500" letter-spacing="4" fill="#6e6e6e">THE SIGNAL</text>
+  <rect x="744" y="372" width="300" height="22" rx="3" fill="url(#sig)" filter="url(#glow)"/>
+  <text x="744" y="412" class="sans" font-size="12" letter-spacing="1.5" fill="#6e6e6e">one hue, swappable per project · it only marks state</text>
+</svg>
