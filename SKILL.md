@@ -4,7 +4,8 @@ description: >-
   Apply 黒鉛 kokuen — jxherc's signature near-black "graphite" web design language,
   reverse-engineered from jxherc/website and jxherc/alles. A four-step gray ramp on
   near-black (or bone-white in light mode), Inter + JetBrains Mono, micro border-radii,
-  one swappable accent color, the cubic-bezier(0.2,0.7,0.2,1) easing, the "rise" stagger,
+  NO decorative accent — black & white only, with one functional "signal" color that marks
+  state (right / live / updated), the cubic-bezier(0.2,0.7,0.2,1) easing, the "rise" stagger,
   inverted text selection, and fully custom (never-native) controls. Use whenever building
   or restyling ANY web page / app UI / component for this user, or when they say "my style",
   "the usual look", "kokuen", "黒鉛", or "match my site / alles".
@@ -13,20 +14,25 @@ description: >-
 # 黒鉛 kokuen
 
 The house style. *Kokuen* = graphite, pencil lead. The whole UI is drawn in four shades of
-grey on near-black paper, and exactly **one** color is allowed to show through — the accent,
-like the single bright mark a pencil can't make. Get the greys and the motion right and it
-reads as "mine" instantly; the accent is just the nameplate.
+grey on near-black paper. **There is no accent — the look is black and white, full stop.**
+Exactly one non-grey color is ever allowed on screen, and it is never decoration: it's a
+**signal** — a sign that something is *right*, *live*, or *updated*. Think proofreader's tick
+in the margin, not a brand color. Get the greys and the motion right and it reads as "mine"
+instantly; the signal just tells you what's happening.
 
-Two real codebases already speak it: `jxherc/website` (accent = green `#00ff2a`) and
-`jxherc/alles` (accent = purple `#818cf8`). Same bones, different nameplate. When you build
-something new, you're adding a third.
+Two real codebases already speak it: `jxherc/website` (signal = green `#00ff2a`) and
+`jxherc/alles` (signal = purple `#818cf8`). Both are black-and-white UIs; the color only ever
+shows up to report state. Same bones, different signal. When you build something new, you're
+adding a third.
 
 ## The 9 laws (don't break these — everything else is taste)
 
-1. **Four greys, near-black paper, one accent.** Background, text, muted, faint — that's the
-   whole palette. The accent is the *only* saturated hue and it stays rare: live dots, the
-   active state, a winner bar, a focused thumb. If two accent things are adjacent, one of them
-   is wrong.
+1. **Black & white — the only color is a signal.** Background, text, muted, faint: that's the
+   whole palette, and it's monochrome. There is *no* decorative accent. Exactly one non-grey
+   color exists and it's *semantic* — it marks **right / live / updated**: a pulsing live dot,
+   a ✓, a winner bar, the on-state of a control, freshly-changed data. If a colored thing is
+   there for looks rather than to report state, it doesn't belong. Used right, the signal is
+   rare; most screens have zero or one.
 2. **Inter for words, JetBrains Mono for data.** `font-feature-settings:'cv11','ss01','ss03'`,
    always antialiased. Mono is for code, IDs, timestamps, raw values — anything machine-ish.
 3. **Letter-spacing has two modes.** Prose & headings go *tight* (negative, −0.005 to −0.025em).
@@ -53,7 +59,7 @@ something new, you're adding a third.
 :root{
   --bg:#0a0a0a; --text:#e8e6e3; --muted:#6e6e6e; --faint:#2e2e2e;
   --panel:#0e0e0e;                /* raised / hover surface */
-  --accent:#818cf8;              /* THE one color — swap per project */
+  --signal:#818cf8;              /* the ONE non-grey — a status sign (right/live/updated), NOT decoration. swap hue per project */
   --error:#f87171; --green:#4ade80;
 }
 [data-theme="light"]{
@@ -64,14 +70,15 @@ something new, you're adding a third.
 `--bg → --faint` is the graphite ramp: paper, ink, pencil-grey, ghost-grey. Memorize the order.
 Light mode is warm paper (`#f5f4f1`), not white — keep the warmth.
 
-**Picking an accent for a new project:** one saturated color, readable on both `#0a0a0a` and
-`#f5f4f1`. Greens/indigos/violets fit the family. Run it through the same `var(--accent)` slot —
-never hardcode it, so a future re-theme is one line.
+**Picking the signal color for a new project:** one saturated hue, readable on both `#0a0a0a`
+and `#f5f4f1`. Greens/indigos/violets fit the family. It exists *only* to report state
+(right/live/updated) — never as a fill, a heading, a link, or a button. Run it through the
+`var(--signal)` slot; never hardcode it, so a future re-signal is one line.
 
 ## How to apply
 
 - **New page/app:** start from `kokuen.css` (drop-in: tokens + reset + base + all the primitives
-  and custom controls). Set `--accent`, write your markup against the documented class names.
+  and custom controls). Set `--signal`, write your markup against the documented class names.
 - **Restyle / matching an existing thing:** lift the tokens block and the 9 laws; translate their
   components onto the grey ramp. Kill every `border-radius > 4px`, every native control, every
   shadow that isn't under a knob.
@@ -85,7 +92,7 @@ Honor the user's standing rule: **no default browser widgets** — if you're abo
 
 - **`kokuen.css`** — the drop-in stylesheet. Tokens, reset, base typography, scrollbars, selection,
   focus, the `rise`/`live-pulse`/`fade-in` keyframes, and every custom control (button, toggle,
-  checkbox, slider, ghost input). Link it, set `--accent`, go.
+  checkbox, slider, ghost input). Link it, set `--signal`, go.
 - **`reference.md`** — the full component catalog & recipes: ghost button, live dot, key/value rows,
   scaleX bars, hover-underline links, lift-on-hover cards, the stagger-entrance pattern, dialog/overlay,
   toggle/checkbox/slider/select internals, and the light-mode checklist. Read it when you need a
