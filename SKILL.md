@@ -4,29 +4,26 @@ description: >-
   Apply kokuen (黒鉛), jxherc's house web UI style, pulled from jxherc/website and alles.
   Greyscale near-black base (warm bone-white in light mode), Inter + JetBrains Mono, tiny text,
   1–4px radii, the cubic-bezier(0.2,0.7,0.2,1) easing, inverted text selection, staggered "rise"
-  entrances, and hand-built (never native) controls. Two colours sit on the grey: an OPTIONAL
-  --accent (identity/interaction) and a --signal (status: right/live/updated). Use this whenever
+  entrances, and hand-built (never native) controls. One optional colour sits on the grey: --accent
+  for interaction, with --signal for status (right/live/updated) when it differs. Use this whenever
   building or restyling any web page, app, or component for jxherc, or when they say "my style",
   "the usual look", "kokuen", "黒鉛", or "match my site / alles".
 ---
 
 # kokuen (黒鉛)
 
-This is the look I put on basically everything. Near-black, greyscale, no rounded corners, small
-type, quiet until you touch it. The tokens here are lifted straight out of [jxherc/website](https://github.com/jxherc/website)
-and `alles`, so if you build against them it'll match without me having to redo the same CSS again.
+The look I put on basically everything. Near-black, greyscale, square corners, small type, quiet
+until you touch it. Tokens lifted from [jxherc/website](https://github.com/jxherc/website) and `alles`
+so building against them matches without redoing the CSS.
 
-*Kokuen* means graphite. That's the whole idea: a pencil drawing. Four greys doing all the work,
-and colour shows up only when it's carrying information.
+黒鉛 = graphite. Greys do the work. One optional colour, used only when it carries information.
 
-Read this file for the model and the rules. `reference.md` has the full component catalog with exact
-values. `kokuen.css` is the drop-in if you just want to start.
+This file is the model and the rules. `reference.md` is the full component catalog with exact values.
+`kokuen.css` is the drop-in.
 
-## the colour model (read this part, it's the thing people get wrong)
+## the colour model
 
-There are three layers and you should keep them straight:
-
-**1. The greys — fixed, never change.** This is the actual aesthetic. Four steps plus a panel shade:
+**The greys are fixed.** A four-step ramp plus a panel shade. This is the actual aesthetic:
 
 ```
 --bg #0a0a0a   --text #e8e6e3   --muted #6e6e6e   --faint #2e2e2e   --panel #0e0e0e
@@ -35,34 +32,19 @@ There are three layers and you should keep them straight:
 paper, ink, pencil, ghost. Most of any screen is built from just these. If you can do something in
 grey, do it in grey.
 
-**2. The accent — the project's identity colour. Optional.** This is a normal accent like any design
-system has: it tints active/selected states, focus glows, a primary button, a name in a greeting, the
-logo if you want. Some projects have one, some don't.
+**One optional colour goes on top, used sparingly.** It does one of two jobs:
 
-- `alles` has one: purple `#818cf8`. It's all over the app (active session, focus ring, checked boxes, hover tints).
-- **my own site has none.** It's pure black and white. No identity colour at all. That's a deliberate choice, not the default.
+- interaction (`--accent`): active/selected states, focus glow, a primary button, a checked box, a
+  name in a greeting, the logo.
+- status (`--signal`): a live dot, the winning bar, a "done" tick, freshly-changed data.
 
-To go accentless like my site, set `--accent: var(--text)` — anything that would've tinted just goes
-to ink, and you stay monochrome.
-
-**3. The signal — a status colour. Means right / live / updated / on.** This is *not* decoration and
-it's *not* the same job as the accent. It only appears to tell you something about state: a live dot
-pulsing, the winning bar, a "this is correct" tick, freshly-changed data. On my site the green
-`#00ff2a` is *only* this. It shows up in exactly three places (the live dot, the winner bar, the pace
-arrow) and nowhere else.
-
-`--signal` defaults to `--accent`, so if you only set one colour it does both jobs (that's alles).
-Set them separately when the status colour should differ from the identity colour (that's my site:
-no accent, green signal).
-
-So the two real configs, to make it concrete:
+`--signal` defaults to `--accent`, so one colour can do both. Split them when status should be a
+different hue. Set `--accent: var(--text)` to drop the interaction hue and stay grey except for status.
 
 | | accent | signal | result |
 |---|---|---|---|
-| **my site** | none (`var(--text)`) | green `#00ff2a` | black & white, green only marks state |
-| **alles** | purple `#818cf8` | inherits accent | one purple does identity + status |
-
-When you build something new you're picking where on that spectrum it sits.
+| **alles** | purple `#818cf8` | inherits accent | one purple does interaction + status |
+| **my site** | `var(--text)` (none) | green `#00ff2a` | greys, green only marks state: live dot, winner bar, pace arrow |
 
 ## quickstart
 
@@ -71,8 +53,8 @@ When you build something new you're picking where on that spectrum it sits.
 ```
 ```css
 :root{
-  --accent:#818cf8;    /* your identity colour. or var(--text) for none */
-  --signal:#00ff2a;    /* status. drop this line and it copies the accent */
+  --accent:#818cf8;    /* the optional colour. or var(--text) for none */
+  --signal:#00ff2a;    /* status hue. drop this line and it copies the accent */
 }
 ```
 ```html
@@ -92,7 +74,7 @@ The stuff that actually makes it read as mine. Break these and it stops looking 
    Reach for accent or signal and you should have a reason (it's interactive/branded, or it's
    reporting state). A screen with no colour at all is normal and fine.
 
-2. **Two type families.** Inter for words and UI, JetBrains Mono for anything machine-shaped — code,
+2. **Two type families.** Inter for words and UI, JetBrains Mono for anything machine-shaped: code,
    IDs, timestamps, token counts, file paths, raw numbers you want monospaced. Keep
    `font-feature-settings:'cv11','ss01','ss03'` on the root, it's part of the look.
 
@@ -117,17 +99,16 @@ The stuff that actually makes it read as mine. Break these and it stops looking 
 
 8. **`tabular-nums` on numbers** that tick, rank, or line up in a column. Clocks, timers, counts, stats.
 
-9. **Never ship a native control.** Browser checkbox, radio, select, range, scrollbar — all replaced.
-   Recipes are in `reference.md`. A default widget instantly breaks it. (jxherc's standing rule, don't
-   forget it.)
+9. **Never ship a native control.** Browser checkbox, radio, select, range, scrollbar: all replaced.
+   Recipes are in `reference.md`. A default widget instantly breaks it.
 
 ## tokens
 
 ```css
 :root{
   --bg:#0a0a0a; --text:#e8e6e3; --muted:#6e6e6e; --faint:#2e2e2e; --panel:#0e0e0e;
-  --accent:#818cf8;            /* identity. var(--text) = none */
-  --signal:var(--accent);      /* status. override for a separate hue */
+  --accent:#818cf8;            /* the optional colour. var(--text) = none */
+  --signal:var(--accent);      /* status hue. override for a separate one */
   --error:#f87171; --green:#4ade80;
   --ease:cubic-bezier(0.2,0.7,0.2,1);
 }
@@ -176,13 +157,13 @@ number. That's the whole range, don't add more.
 
 Each replaces a native element. Markup + behaviour:
 
-- **switch** `.switch` — 34×20 pill, 16px white knob, slides + track turns accent when on. It's a
+- **switch** `.switch`: 34×20 pill, 16px white knob, slides + track turns accent when on. It's a
   `<div>`, toggle `.on` / `aria-checked` in JS on click.
-- **checkbox** `.chk` — 15px box, accent fill + CSS tick when checked. `role="checkbox" aria-checked`.
-- **slider** `.slider` — restyled `<input type=range>`, `appearance:none`, 4px track, round accent thumb.
-- **select** — don't use `<select>`. Build a `.btn`-style trigger that opens a panel of rows; rows
+- **checkbox** `.chk`: 15px box, accent fill + CSS tick when checked. `role="checkbox" aria-checked`.
+- **slider** `.slider`: restyled `<input type=range>`, `appearance:none`, 4px track, round accent thumb.
+- **select**: don't use `<select>`. Build a `.btn`-style trigger that opens a panel of rows; rows
   hover to panel/text, selected row gets a tick or accent text. Close on outside-click / Esc.
-- **scrollbar** — already global (3px). Don't override it back.
+- **scrollbar**: already global (3px). Don't override it back.
 
 Accessibility: these are divs, so add the roles (`role="checkbox"`, `aria-checked`, `tabindex="0"`)
 and handle keyboard (space/enter to toggle, arrows for sliders). Focus styling is already global
@@ -193,7 +174,7 @@ and handle keyboard (space/enter to toggle, arrows for sliders). Focus styling i
 - **New page/app:** start from `kokuen.css`, set `--accent` (or `var(--text)` for none) and `--signal`,
   build with the classes. Read `reference.md` when you need a component you don't see.
 - **Restyling something:** pull the tokens block and the rules. Then go kill everything that fights
-  them — rounded corners over 4px, native controls, drop shadows, big fonts, decorative colour. Move
+  them: rounded corners over 4px, native controls, drop shadows, big fonts, decorative colour. Move
   colour usage onto accent (interaction) vs signal (status).
 - **One component on its own:** still pull the tokens so the `var(--*)` resolve, then follow the recipe.
 

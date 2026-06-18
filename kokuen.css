@@ -1,21 +1,19 @@
-/* kokuen — drop-in base. link it, set your two colours, use the classes.
+/* kokuen: drop-in base. link it, set the optional colour, use the classes.
    ripped out of jxherc/website + alles so it already looks right. no deps, no build.
 
-   the base UI is greyscale. on top of that there are exactly two colours you can set:
-     --accent  the project's identity colour. interactive + brand stuff. OPTIONAL.
-               my site doesn't set one (pure b&w). alles sets purple.
-     --signal  a status colour. means right / live / updated / on. nothing else.
-               if you don't set it, it just copies --accent.
-   so: alles = one purple doing both. my site = no accent, green signal only. */
+   the base UI is greyscale. on top of that there's one optional colour, used sparingly:
+     --accent  interaction: active/selected, focus glow, primary button, checked box. var(--text) for none.
+     --signal  status: right / live / updated / on. copies --accent if you don't set it.
+   alles = one purple for both. my site = no interaction hue, just the green signal. */
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root{
-  /* the grey ramp — never changes. paper / ink / pencil / ghost */
+  /* the grey ramp, never changes. paper / ink / pencil / ghost */
   --bg:#0a0a0a; --text:#e8e6e3; --muted:#6e6e6e; --faint:#2e2e2e;
   --panel:#0e0e0e;                 /* one notch off bg, for raised + hover surfaces */
 
-  --accent:#818cf8;                /* identity colour. set to var(--text) if you want none */
+  --accent:#818cf8;                /* the optional colour. set to var(--text) if you want none */
   --signal:var(--accent);          /* status colour. override when it's a different hue than accent */
 
   --error:#f87171; --green:#4ade80;   /* semantics: destructive / success. used raw, sparingly */
@@ -57,7 +55,7 @@ code,kbd,samp,.mono{ font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Me
 .brand{ font-size:0.85rem; color:var(--text); font-weight:500; letter-spacing:-0.01em; }
 .brand .sep,.brand .alias{ color:var(--muted); font-weight:400; }
 .display{ font-weight:300; letter-spacing:-0.025em; }     /* big thin header */
-.accent{ color:var(--accent); }       /* the one identity-coloured span, e.g. a name in a greeting */
+.accent{ color:var(--accent); }       /* the one accent-coloured span, e.g. a name in a greeting */
 .muted{ color:var(--muted); } .faint{ color:var(--faint); }
 
 /* ── buttons ── */
@@ -76,13 +74,13 @@ code,kbd,samp,.mono{ font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Me
 .btn-bare{ background:none; border:0; color:var(--muted); font:inherit; font-size:0.7rem;
   letter-spacing:0.04em; text-transform:lowercase; cursor:pointer; padding:0; transition:color .2s ease; }
 .btn-bare:hover{ color:var(--text); }
-/* the rare loud one — uses accent, for a primary action */
+/* the rare loud one, uses accent, for a primary action */
 .btn-primary{ color:var(--accent); border:1px solid color-mix(in srgb,var(--accent) 45%,transparent); }
 .btn-primary:hover{ background:color-mix(in srgb,var(--accent) 12%,transparent); border-color:var(--accent); }
 .btn-danger{ color:var(--error); border-color:color-mix(in srgb,var(--error) 40%,transparent); }
 .btn-danger:hover{ background:color-mix(in srgb,var(--error) 12%,transparent); }
 
-/* segmented control / toggle group — row of .btn, one .active */
+/* segmented control / toggle group: row of .btn, one .active */
 .seg{ display:inline-flex; gap:0.4rem; }
 .seg .btn.active{ color:var(--accent); border-color:color-mix(in srgb,var(--accent) 40%,transparent);
   background:color-mix(in srgb,var(--accent) 12%,transparent); }
@@ -98,7 +96,7 @@ code,kbd,samp,.mono{ font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Me
 .field-box{ border:1px solid var(--faint); border-radius:3px; background:var(--panel);
   padding:0.45rem 0.6rem; transition:border-color .2s ease,box-shadow .2s ease; }
 .field-box:focus,.field-box:focus-within{ border-color:var(--muted); }
-/* the loud focus — accent ring + soft glow. for the main composer / important field */
+/* the loud focus: accent ring + soft glow. for the main composer / important field */
 .field-glow:focus,.field-glow.active{ border-color:var(--accent);
   box-shadow:0 0 0 1px var(--accent), 0 0 16px color-mix(in srgb,var(--accent) 25%,transparent); }
 textarea.field,textarea.field-box{ resize:none; line-height:1.6; }
@@ -120,7 +118,7 @@ textarea.field,textarea.field-box{ resize:none; line-height:1.6; }
 .chk[aria-checked="true"]::after{ content:''; position:absolute; left:4px; top:1px; width:4px; height:8px;
   border:solid #fff; border-width:0 2px 2px 0; transform:rotate(45deg); }
 
-/* slider. the one native input we keep — appearance:none strips the chrome */
+/* slider. the one native input we keep, appearance:none strips the chrome */
 .slider{ -webkit-appearance:none; appearance:none; width:100%; height:4px; border-radius:3px;
   background:var(--faint); outline:none; cursor:pointer; }
 .slider::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:15px; height:15px;
@@ -130,7 +128,7 @@ textarea.field,textarea.field-box{ resize:none; line-height:1.6; }
 .slider::-moz-range-thumb{ width:15px; height:15px; border-radius:50%; background:var(--accent);
   border:2px solid var(--bg); box-shadow:0 0 0 1px var(--accent); cursor:pointer; }
 
-/* ── status marks — these use --signal (right / live / updated) ── */
+/* ── status marks, these use --signal (right / live / updated) ── */
 .live-dot{ width:5px; height:5px; border-radius:50%; background:var(--signal); display:inline-block;
   animation:live-pulse 2s ease-in-out infinite; }
 @keyframes live-pulse{ 0%,100%{ opacity:.3; } 50%{ opacity:1; } }
@@ -169,7 +167,7 @@ a.kv:hover{ opacity:.7; } a.kv:hover .arrow{ transform:translate(3px,-3px); colo
   color:var(--muted); cursor:pointer; transition:color .15s ease,background .15s ease; }
 .row:hover{ color:var(--text); background:var(--panel); }
 .row.active{ color:var(--text); background:color-mix(in srgb,var(--accent) 12%,transparent); }
-.row.sel{ background:var(--accent); color:var(--bg); }   /* hard-selected (calendar day etc.) — inverted */
+.row.sel{ background:var(--accent); color:var(--bg); }   /* hard-selected (calendar day etc.), inverted */
 
 /* ── cards ── */
 .card{ border:1px solid var(--faint); border-radius:3px; padding:1rem 1.25rem; background:var(--bg);
