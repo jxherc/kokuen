@@ -1,4 +1,4 @@
-# kokuen — full reference
+# kokuen reference
 
 Everything with real numbers. Class names match `kokuen.css`. When this disagrees with the source,
 the source wins: `C:/Users/jxh/Desktop/website/style.css` and `C:/Users/jxh/alles/static/style.css`.
@@ -14,30 +14,25 @@ the source wins: `C:/Users/jxh/Desktop/website/style.css` and `C:/Users/jxh/alle
 | `--muted` | `#6e6e6e` | `#888888` | pencil. labels, keys, secondary text, the hover target colour |
 | `--faint` | `#2e2e2e` | `#d4d2ce` | ghost. borders, dividers, bar tracks, disabled |
 | `--panel` | `#0e0e0e` | `#efede9` | raised/hover surface. one notch off bg |
-| `--accent` | per project | per project | identity colour. interaction + brand. **optional** (my site sets none) |
-| `--signal` | per project | per project | status colour. right / live / updated / on. defaults to accent |
+| `--accent` | per project | per project | the optional colour. interaction (button, focus, active) or status. `var(--text)` for none |
+| `--signal` | per project | per project | separate status hue, when status should differ from accent. defaults to accent |
 | `--error` | `#f87171` | same | destructive, validation, recording |
 | `--green` | `#4ade80` | same | success / positive delta (toasts, diff-add) |
 
 The grey ramp `bg → text → muted → faint` is the spine. `--panel` is for the slightly-raised stuff.
-Light mode is warm paper on purpose — keep it warm.
+Light mode is warm paper on purpose, keep it warm.
 
-### accent vs signal, again
+### the optional colour
 
-People collapse these into one thing. They're different jobs:
+Greys carry the UI. One colour goes on top, used sparingly, for one of two jobs:
 
-- **accent** = "this is interactive / this is the brand." Active nav, focus ring, primary button,
-  checked box, the logo, a name in a greeting. A project can have none and stay pure b&w.
-- **signal** = "this is right / live / updated / on." A live dot, the winning bar, a done tick.
-  Pure information.
+- interaction: active nav, focus ring, primary button, checked box, a name in a greeting.
+- status: a live dot, the winning bar, a done tick.
 
-They *can* be the same colour (alles: one purple). They can differ (my site: no accent, green signal).
-`--signal` falls back to `--accent` if unset.
-
-Real usage counts, so you believe me: on my site `var(--accent)` appears 3 times total — `.live-dot`,
-`.year-card.winner .year-bar`, `.pace-arrow`. All status. In alles it appears 40+ times — active
-sessions, focus glows, checked controls, tinted hovers, selected days, the logo. That's the
-difference between "no accent, signal only" and "full identity colour."
+`--accent` is the interaction hue, `--signal` is the status hue, and `--signal` falls back to
+`--accent` if unset. Use one colour for both (alles uses purple) or split them. Set
+`--accent: var(--text)` to drop the interaction hue and keep status only. That's what my site does:
+one green, in `.live-dot`, `.year-card.winner .year-bar`, and `.pace-arrow`.
 
 ---
 
@@ -96,7 +91,7 @@ Exact values. All of these are in `kokuen.css`.
 ### custom controls
 - **`.switch`** (replaces a checkbox used as on/off): 34×20 pill, `--faint` track, 16px white knob at
   `top/left:2px` with `box-shadow:0 1px 3px rgba(0,0,0,.35)` (one of the only shadows in the system).
-  `.on` / `aria-checked="true"` → track `--accent`, knob slides to `left:16px`. It's a div — wire the
+  `.on` / `aria-checked="true"` → track `--accent`, knob slides to `left:16px`. It's a div, wire the
   click in JS.
 - **`.chk`** (checkbox): 15px, `1.5px var(--muted)` border, radius 3px. checked → accent fill + a CSS
   `::after` tick (rotated bottom-right border, white). `role="checkbox" aria-checked`.
@@ -168,7 +163,7 @@ Exact values. All of these are in `kokuen.css`.
 
 ### entrance
 - **`.rise`**: put it on a container. direct kids start hidden + 6px down and animate up on
-  `nth-child` delays ~0.07s apart, 0.7s, house easing. `kokuen.css` ships 10 delays — extend the list
+  `nth-child` delays ~0.07s apart, 0.7s, house easing. `kokuen.css` ships 10 delays, extend the list
   if a container has more kids.
 
 ---
@@ -191,7 +186,7 @@ The five tokens flip via `[data-theme="light"]`. What you hand-fix:
    equivalents (`#e8e6e2`, `#e2e0dc`, `#ebe9e5`).
 2. any `:hover` bg that pointed at a literal dark panel → repoint to `--panel`.
 3. re-check **both** accent and signal contrast on `#f5f4f1`. a neon that pops on black can vanish on
-   paper (my green `#00ff2a` is borderline in light — bump it if needed).
+   paper (my green `#00ff2a` is borderline in light, bump it if needed).
 4. never introduce pure `#fff`/`#000`. stay warm.
 
 Ship a `.theme-toggle` (fixed top-right, faint → muted on hover) that flips `data-theme` on `<html>`
@@ -217,7 +212,7 @@ and saves to `localStorage`.
 
 ## worked examples
 
-**a "now playing" row, my-site style (no accent, green signal):**
+**a "now playing" row, my-site style (greys + green status, no interaction hue):**
 ```css
 :root{ --accent:var(--text); --signal:#00ff2a; }
 ```
