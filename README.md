@@ -1,61 +1,65 @@
 <img src="banner.svg" alt="kokuen" width="100%">
 
-# kokuen (黒鉛)
+# KOKUEN
 
-Near-black greyscale UI. Square corners, small type, 1px borders. Tokens pulled out of
-[my site](https://github.com/jxherc/website) and alles so I stop rewriting the same CSS.
+A reusable, product-neutral UI template for the parts every app needs: foundations, buttons, fields,
+selection, lists, dialogs, feedback, and universal command/search.
 
-黒鉛 = graphite. Greys do the work. One optional colour, used sparingly.
+It is deliberately not a palette doctrine. Choose a visual direction per product, then keep the
+shared UI behavior and spacing coherent.
 
-## use it
+## What is included
+
+- [`SKILL.md`](SKILL.md): the Codex workflow for applying KOKUEN.
+- [`reference.md`](reference.md): component, accessibility, command, Figma, and verification contracts.
+- [`kokuen.css`](kokuen.css): a no-build semantic CSS baseline.
+- [`preview.html`](preview.html): an interactive component lab.
+- [`docs/CUSTOM_THEME.md`](docs/CUSTOM_THEME.md): professional custom-theme brief and theme review.
+- [`tokens/kokuen.tokens.json`](tokens/kokuen.tokens.json): DTCG-aligned starter tokens.
+- [`scripts/validate_theme.py`](scripts/validate_theme.py): token/alias validation.
+- [`docs/KOKUEN_V3_BRIEF.md`](docs/KOKUEN_V3_BRIEF.md): historical v3 scope and component inventory.
+
+## Use it
 
 ```html
 <link rel="stylesheet" href="kokuen.css">
-```
-```css
-:root{
-  --accent:#818cf8;   /* the optional colour. var(--text) to drop it */
-  --signal:#00ff2a;   /* status hue, if it differs from accent. else delete this line */
-}
-```
-```html
-<button class="btn">save</button>
-<span class="live-dot"></span>
-<div class="switch on" aria-checked="true"></div>
-<a class="ul" href="#">link</a>
+
+<button class="ui-button ui-button--primary">Save changes</button>
+<input class="ui-field" aria-label="Search notes" placeholder="Search notes, tasks, and commands">
 ```
 
-No build, no deps. Every class is readable in [`kokuen.css`](kokuen.css).
-
-## tokens
+Set semantic project tokens once:
 
 ```css
-:root{
-  --bg:#0a0a0a; --text:#e8e6e3; --muted:#6e6e6e; --faint:#2e2e2e; --panel:#0e0e0e;
-  --accent:#818cf8;          /* var(--text) for none */
-  --signal:var(--accent);    /* override for a separate status hue */
-  --error:#f87171; --green:#4ade80;
-}
-[data-theme="light"]{
-  --bg:#f5f4f1; --text:#111111; --muted:#888888; --faint:#d4d2ce; --panel:#efede9;
+:root {
+  --ui-canvas: #f7f6f2;
+  --ui-surface: #ffffff;
+  --ui-text: #1d1c1a;
+  --ui-muted: #6e6b66;
+  --ui-border: #d9d5ce;
+  --ui-focus: #1d1c1a;
+  --ui-error: #b42318;
 }
 ```
 
-paper, ink, pencil, ghost. Light mode is warm paper, not white.
+Open `preview.html` in a browser to test the command dialog, Arrow/Home/End navigation, Escape
+focus restoration, selection controls, and slider keyboard behavior.
 
-## colour
+## Create a custom theme
 
-Base is greyscale: `bg`, `text`, `muted`, `faint`, plus a `panel` shade. Fixed.
+Start with [`docs/CUSTOM_THEME.md`](docs/CUSTOM_THEME.md), then replace the starter values in
+`tokens/kokuen.tokens.json` with product decisions. Preserve the primitive → semantic → component
+token ladder and validate aliases before handing it off:
 
-One optional colour (`--accent`) on top, used sparingly: interaction (button, focus ring, active row)
-or status (live dot, a done tick). Set `--accent: var(--text)` to drop it and stay grey. `--signal` is
-there if the status hue should differ from the interaction hue; it defaults to `--accent`.
+```sh
+python3 scripts/validate_theme.py tokens/kokuen.tokens.json
+```
 
-alles uses purple for both. My site uses one green, in three places, all status.
+## Figma
 
-## the rest
-
-Rules and every component value are in [`reference.md`](reference.md). [`SKILL.md`](SKILL.md) is the
-same thing as a Claude Code skill: drop the folder in `~/.claude/skills/kokuen/`.
+[Open the KOKUEN Figma library](https://www.figma.com/design/dMpK3ZOhraefh9L6m4BgBi). It contains
+the starter foundations, Button variants, Field variants, Universal Command, and the Alles home
+screen direction. The current Figma Starter plan has reached its MCP write quota, so the command-open
+screen state will be added when that quota resets or the file is upgraded.
 
 MIT.

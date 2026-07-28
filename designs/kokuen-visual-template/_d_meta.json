@@ -1,0 +1,19 @@
+{
+  "type": "design",
+  "designSystems": [],
+  "primaryDesignSystem": null,
+  "assets": {
+    "KOKUEN universal visual template": {
+      "versions": [
+        {
+          "path": "Universal UI Template.html",
+          "createdAt": "2026-07-28T07:49:27.125Z",
+          "status": "needs-review",
+          "subtitle": "Expanded product-neutral common UI and spacing reference"
+        }
+      ]
+    }
+  },
+  "createdAt": "2026-07-28T07:49:27.130Z",
+  "updatedAt": "2026-07-28T14:03:33.110Z"
+}

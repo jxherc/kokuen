@@ -1,0 +1,4 @@
+interface:
+  display_name: "KOKUEN"
+  short_description: "Professional universal product UI system"
+  default_prompt: "Use $kokuen to design and verify a coherent, accessible product UI surface."

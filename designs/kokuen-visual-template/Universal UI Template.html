@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>KOKUEN - Universal Visual Template</title>
+  <style>
+    /* Default KOKUEN direction: original dark paper/ink palette, one restrained interaction color. */
+    :root {
+      --bg: #0a0a0a;
+      --text: #e8e6e3;
+      --muted: #6e6e6e;
+      --faint: #2e2e2e;
+      --panel: #0e0e0e;
+      --accent: #818cf8;
+      --error: #f87171;
+      --green: #4ade80;
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 24px;
+      --space-6: 32px;
+      --space-7: 48px;
+      --control: 44px;
+      --ease: cubic-bezier(.2,.7,.2,1);
+    }
+    * { box-sizing: border-box; }
+    html { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Noto Sans SC", sans-serif; }
+    body { min-width: 320px; margin: 0; background: var(--bg); }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible { outline: 1px solid var(--accent); outline-offset: 4px; }
+    .home { width: min(900px, 100%); min-height: 100vh; margin: auto; padding: clamp(48px, 13vh, 112px) var(--space-5) 64px; }
+    .home-head { position: relative; margin-bottom: var(--space-7); }
+    .wordmark { color: var(--text); font-size: 38px; font-weight: 600; letter-spacing: -.055em; line-height: 1; }
+    .greeting { margin: var(--space-4) 0 0; color: var(--text); font-size: 17px; letter-spacing: .01em; }
+    .greeting span { color: var(--accent); }
+    .subline { margin: var(--space-1) 0 0; color: var(--muted); font-size: 12px; letter-spacing: .03em; }
+    .head-actions { position: absolute; top: 0; right: 0; display: flex; gap: var(--space-2); }
+    .text-button, .save-button { min-height: 32px; border: 1px solid var(--faint); border-radius: 2px; background: transparent; color: var(--muted); padding: 0 var(--space-2); font-size: 11px; letter-spacing: .05em; text-transform: lowercase; transition: color .16s ease, border-color .16s ease, background .16s ease; }
+    .text-button:hover { color: var(--text); border-color: var(--muted); background: var(--panel); }
+    .home-section { display: grid; gap: var(--space-3); margin-top: var(--space-6); }
+    .section-label { color: var(--muted); font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: lowercase; }
+    .capture { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--space-3); padding: var(--space-2) 0; border-bottom: 1px solid var(--faint); }
+    .capture-modes { display: flex; gap: var(--space-1); }
+    .mode { min-height: 28px; border: 0; background: transparent; color: var(--muted); padding: 0 var(--space-1); font-size: 12px; }
+    .mode[aria-pressed="true"] { color: var(--accent); }
+    .capture input, .aide-input, .command input { min-width: 0; min-height: var(--control); border: 0; background: transparent; color: var(--text); outline: 0; font-size: 14px; }
+    input::placeholder { color: var(--muted); }
+    .save-button { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 42%, transparent); }
+    .save-button:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+    .aide-line { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--space-3); padding: var(--space-2) 0; border-bottom: 1px solid var(--faint); }
+    .aide-name { color: var(--accent); font-size: 12px; font-weight: 650; }
+    .aide-send { border: 0; background: transparent; color: var(--muted); font-size: 13px; }
+    .aide-send:hover { color: var(--text); }
+    .field-group { width: min(560px, 100%); display: grid; gap: var(--space-2); }
+    .field-label { color: var(--accent); font-size: 12px; font-weight: 650; }
+    .field-shell { min-height: var(--control); display: flex; align-items: center; gap: var(--space-2); border-bottom: 1px solid var(--faint); }
+    .field-shell:focus-within { border-color: var(--accent); }
+    .field-shell .aide-input { width: 100%; }
+    .field-clear { width: var(--control); min-height: var(--control); flex: 0 0 var(--control); border: 0; background: transparent; color: var(--muted); font-size: 12px; }
+    .field-clear:hover { color: var(--text); }
+    .control-line { min-height: var(--control); display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-4); padding: var(--space-2) 0; border-bottom: 1px solid var(--faint); }
+    .choice { min-height: var(--control); display: inline-flex; align-items: center; gap: var(--space-2); border: 0; background: transparent; color: var(--muted); padding: 0; font-size: 13px; }
+    .choice:hover { color: var(--text); }
+    .check-control, .radio-control { width: 15px; height: 15px; display: grid; place-items: center; border: 1px solid var(--muted); color: var(--bg); }
+    .check-control { border-radius: 2px; }
+    .radio-control { border-radius: 50%; }
+    .choice[aria-checked="true"] { color: var(--text); }
+    .choice[aria-checked="true"] .check-control { border-color: var(--accent); background: var(--accent); }
+    .choice[aria-checked="true"] .radio-control::after { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+    .switch-control { width: 32px; height: 18px; position: relative; border: 1px solid var(--muted); border-radius: 9px; background: transparent; }
+    .switch-control::after { content: ""; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--muted); transition: left .16s ease, background .16s ease; }
+    .choice[aria-checked="true"] .switch-control { border-color: var(--accent); }
+    .choice[aria-checked="true"] .switch-control::after { left: 16px; background: var(--accent); }
+    .slider { width: min(240px, 100%); min-height: var(--control); position: relative; border: 0; background: transparent; }
+    .slider::before { content: ""; position: absolute; top: 20px; left: 0; right: 0; height: 3px; border-radius: 2px; background: var(--faint); }
+    .slider::after { content: ""; position: absolute; top: 15px; left: var(--slider-position, 40%); width: 13px; height: 13px; border-radius: 50%; background: var(--accent); transform: translateX(-50%); }
+    .field-error { color: var(--error); }
+    .field-disabled { opacity: .45; pointer-events: none; }
+    .textarea-line { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: var(--space-3); padding: var(--space-2) 0; border-bottom: 1px solid var(--faint); }
+    .textarea-line textarea { width: 100%; min-height: 88px; resize: vertical; border: 0; background: transparent; color: var(--text); padding: var(--space-2) 0; outline: 0; font: inherit; font-size: 14px; line-height: 1.5; }
+    .select-wrap { position: relative; width: min(280px, 100%); }
+    .select-trigger { width: 100%; min-height: var(--control); display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); border: 0; border-bottom: 1px solid var(--faint); background: transparent; color: var(--text); padding: 0; text-align: left; font-size: 14px; }
+    .select-trigger span:last-child { color: var(--muted); }
+    .select-list { position: absolute; z-index: 1; top: calc(100% + var(--space-1)); width: 100%; border: 1px solid var(--faint); border-radius: 2px; background: var(--panel); padding: var(--space-1) 0; }
+    .select-list[hidden] { display: none; }
+    .select-option { width: 100%; min-height: 36px; border: 0; background: transparent; color: var(--muted); padding: 0 var(--space-3); text-align: left; font-size: 13px; }
+    .select-option:hover, .select-option[aria-selected="true"] { background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--text); }
+    .tab-row { display: flex; align-items: center; gap: var(--space-3); border-bottom: 1px solid var(--faint); }
+    .tab { min-height: var(--control); border: 0; border-bottom: 1px solid transparent; background: transparent; color: var(--muted); padding: 0; font-size: 13px; }
+    .tab[aria-selected="true"] { color: var(--text); border-color: var(--accent); }
+    .menu-wrap { position: relative; }
+    .menu { position: absolute; top: calc(100% + var(--space-1)); left: 0; z-index: 1; min-width: 180px; padding: var(--space-1) 0; border: 1px solid var(--faint); border-radius: 2px; background: var(--panel); }
+    .menu[hidden] { display: none; }
+    .menu button { width: 100%; min-height: 36px; border: 0; background: transparent; color: var(--muted); padding: 0 var(--space-3); text-align: left; font-size: 13px; }
+    .menu button:hover { color: var(--text); background: color-mix(in srgb, var(--accent) 10%, transparent); }
+    .table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .table th { padding: 0 0 var(--space-2); color: var(--muted); font-size: 11px; font-weight: 600; text-align: left; }
+    .table td { padding: var(--space-3) 0; border-top: 1px solid var(--faint); }
+    .table th:last-child, .table td:last-child { text-align: right; }
+    .pagination { display: flex; align-items: center; gap: var(--space-2); padding-top: var(--space-3); }
+    .page-button { min-width: 28px; min-height: 28px; border: 1px solid var(--faint); border-radius: 2px; background: transparent; color: var(--muted); font-size: 12px; }
+    .page-button[aria-current="page"] { color: var(--accent); border-color: var(--accent); }
+    .page-button:disabled { opacity: .35; cursor: default; }
+    .feedback-line { display: flex; align-items: baseline; gap: var(--space-2); padding: var(--space-2) 0; border-bottom: 1px solid var(--faint); color: var(--muted); font-size: 13px; }
+    .feedback-line strong { color: var(--green); font-weight: 600; }
+    .feedback-line.error strong { color: var(--error); }
+    .action-line { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); padding: var(--space-2) 0; border-bottom: 1px solid var(--faint); }
+    .danger-button { color: var(--error); border-color: color-mix(in srgb, var(--error) 42%, transparent); }
+    .danger-button:hover { border-color: var(--error); background: color-mix(in srgb, var(--error) 10%, transparent); }
+    .busy-button[aria-busy="true"] { color: var(--muted); cursor: wait; }
+    .today { display: grid; gap: 0; }
+    .today-row { width: 100%; min-height: var(--control); display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--space-3); border: 0; border-bottom: 1px solid var(--faint); background: transparent; color: var(--text); padding: var(--space-2) 0; text-align: left; }
+    .today-row:hover { color: var(--accent); }
+    .check { width: 15px; height: 15px; display: grid; place-items: center; border: 1px solid var(--muted); border-radius: 2px; color: var(--bg); font-size: 10px; }
+    .today-row[data-complete="true"] .check { border-color: var(--accent); background: var(--accent); }
+    .today-row[data-complete="true"] .task-name { color: var(--muted); text-decoration: line-through; }
+    .task-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; }
+    .task-meta { color: var(--muted); font-size: 12px; }
+    .command-entry { width: 100%; min-height: var(--control); display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); border: 0; border-bottom: 1px solid var(--faint); background: transparent; color: var(--muted); padding: 0; text-align: left; font-size: 14px; }
+    .command-entry:hover { color: var(--text); border-color: var(--muted); }
+    kbd { border: 1px solid var(--faint); border-radius: 2px; color: var(--muted); padding: 2px 5px; font-size: 10px; }
+    .apps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-2); }
+    .app-link { min-height: var(--control); display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); border: 0; background: transparent; color: var(--muted); padding: 0; font-size: 13px; text-align: left; }
+    .app-link:hover { color: var(--text); }
+    .app-link small { color: var(--faint); }
+    .foot { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-7); color: var(--faint); font-size: 11px; letter-spacing: .04em; }
+    .live { width: 5px; height: 5px; border-radius: 50%; background: var(--green); }
+    .overlay[hidden] { display: none; }
+    .overlay { position: fixed; inset: 0; z-index: 2; display: grid; place-items: start center; padding: max(var(--space-5), 14vh) var(--space-4); background: rgb(0 0 0 / .65); }
+    .command { width: min(720px, 100%); border: 1px solid var(--faint); border-radius: 3px; background: var(--panel); padding: var(--space-3); }
+    .command input { width: 100%; border-bottom: 1px solid var(--muted); padding: 0 var(--space-1); font-size: 18px; }
+    .command-label { padding: var(--space-4) var(--space-1) var(--space-2); color: var(--muted); font-size: 11px; font-weight: 650; letter-spacing: .06em; }
+    .command-option { width: 100%; min-height: var(--control); display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); border: 0; border-radius: 2px; background: transparent; color: var(--text); padding: 0 var(--space-2); text-align: left; font-size: 14px; }
+    .command-option:hover, .command-option[aria-selected="true"] { background: color-mix(in srgb, var(--accent) 13%, transparent); }
+    .command-option span:last-child { color: var(--muted); font-size: 12px; }
+    .confirm { width: min(440px, 100%); border: 1px solid var(--faint); border-radius: 3px; background: var(--panel); padding: var(--space-5); }
+    .confirm h2 { margin: 0; color: var(--text); font-size: 17px; font-weight: 600; }
+    .confirm p { margin: var(--space-2) 0 var(--space-5); color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .confirm-actions { display: flex; justify-content: flex-end; gap: var(--space-2); }
+    .toast { position: fixed; z-index: 3; right: var(--space-5); bottom: var(--space-5); max-width: min(360px, calc(100vw - 48px)); padding: var(--space-3) 0; border-bottom: 1px solid var(--green); background: var(--bg); color: var(--text); font-size: 13px; }
+    .toast[hidden] { display: none; }
+    @media (max-width: 640px) {
+      .home { padding: var(--space-7) var(--space-4); }
+      .wordmark { font-size: 32px; }
+      .head-actions { position: static; margin-top: var(--space-5); }
+      .capture { grid-template-columns: 1fr auto; }
+      .capture-modes { grid-column: 1 / -1; }
+      .apps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .task-meta { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <main class="home" data-screen-label="KOKUEN universal visual template">
+    <header class="home-head"><div class="wordmark">KOKUEN</div><p class="greeting">universal <span>interface template.</span></p><p class="subline">one quiet visual language for the parts every product repeats</p><div class="head-actions"><button class="text-button" type="button">foundation</button><button class="text-button" type="button">components</button></div></header>
+    <section class="home-section" aria-labelledby="action-label"><div class="section-label" id="action-label">actions · 44px target · 8px group gap</div><div class="capture"><div class="capture-modes"><button class="mode" type="button" aria-pressed="true">default</button><button class="mode" type="button" aria-pressed="false">quiet</button></div><input id="capture-input" aria-label="Example text field" autocomplete="off" placeholder="one clear field anatomy"><button class="save-button" id="save-example" type="button">save</button></div></section>
+    <section class="home-section" aria-labelledby="field-label"><div class="section-label" id="field-label">field · label → input → recovery</div><div class="field-group"><label class="field-label" for="field-example">label</label><div class="field-shell"><input class="aide-input" id="field-example" placeholder="type here…"><button class="field-clear" id="field-clear" type="button">clear</button></div><p class="subline">A field action stays inside the field edge. Use 8px around a field and 16px before the next one.</p></div></section>
+    <section class="home-section" aria-labelledby="states-label"><div class="section-label" id="states-label">field states · default · error · disabled</div><div class="aide-line"><span class="aide-name">default</span><input class="aide-input" aria-label="Default field state" value="A useful value"><button class="aide-send" type="button">edit</button></div><div class="aide-line field-error"><span class="aide-name">error</span><input class="aide-input" aria-label="Invalid field state" aria-invalid="true" value=""><span>Enter a name to continue.</span></div><div class="aide-line field-disabled"><span class="aide-name">disabled</span><input class="aide-input" aria-label="Disabled field state" disabled value="Unavailable until enabled"><span>locked</span></div></section>
+    <section class="home-section" aria-labelledby="input-types-label"><div class="section-label" id="input-types-label">input types · multiline · select</div><div class="textarea-line"><span class="aide-name">message</span><textarea aria-label="Example multiline field" placeholder="A multi-line intent gets a real textarea."></textarea></div><div class="control-line"><span class="aide-name">scope</span><div class="select-wrap"><button class="select-trigger" id="scope-trigger" type="button" role="combobox" aria-controls="scope-list" aria-expanded="false" aria-haspopup="listbox"><span id="scope-value">Everything</span><span aria-hidden="true">⌄</span></button><div class="select-list" id="scope-list" role="listbox" aria-label="Search scope" hidden><button class="select-option" type="button" role="option" aria-selected="true">Everything</button><button class="select-option" type="button" role="option" aria-selected="false">Notes</button><button class="select-option" type="button" role="option" aria-selected="false">Tasks</button></div></div></div></section>
+    <section class="home-section" aria-labelledby="selection-label"><div class="section-label" id="selection-label">selection · checkbox · radio · switch · range</div><div class="control-line"><button class="choice choice-check" type="button" role="checkbox" aria-checked="false"><span class="check-control" aria-hidden="true"></span>checkbox</button><button class="choice choice-radio" type="button" role="radio" aria-checked="true"><span class="radio-control" aria-hidden="true"></span>radio</button><button class="choice choice-switch" type="button" role="switch" aria-checked="false"><span class="switch-control" aria-hidden="true"></span>switch</button><button class="slider" type="button" role="slider" aria-label="Example range" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40" style="--slider-position:40%"></button></div></section>
+    <section class="home-section" aria-labelledby="row-label"><div class="section-label" id="row-label">collection row · one action per row</div><div class="today" id="today-list"><button class="today-row" type="button" data-complete="false"><span class="check" aria-hidden="true"></span><span class="task-name">default row with a primary label</span><span class="task-meta">meta</span></button><button class="today-row" type="button" data-complete="false"><span class="check" aria-hidden="true"></span><span class="task-name">long content truncates before it breaks alignment</span><span class="task-meta">state</span></button><button class="today-row" type="button" data-complete="true"><span class="check" aria-hidden="true">✓</span><span class="task-name">selected or complete state is explicit</span><span class="task-meta">done</span></button></div></section>
+    <section class="home-section" aria-labelledby="command-label"><div class="section-label" id="command-label">universal command · navigation, search, creation, action</div><button class="command-entry" id="command-trigger" type="button"><span>search notes, tasks, and commands</span><kbd>⌘ K</kbd></button></section>
+    <section class="home-section" aria-labelledby="navigation-label"><div class="section-label" id="navigation-label">navigation · tabs · menu</div><div class="tab-row" role="tablist" aria-label="Example sections"><button class="tab" type="button" role="tab" aria-selected="true">overview</button><button class="tab" type="button" role="tab" aria-selected="false">activity</button><button class="tab" type="button" role="tab" aria-selected="false">archive</button><div class="menu-wrap"><button class="text-button" id="menu-trigger" type="button" aria-expanded="false" aria-haspopup="menu">more</button><div class="menu" id="example-menu" role="menu" hidden><button type="button" role="menuitem">rename</button><button type="button" role="menuitem">duplicate</button><button type="button" role="menuitem">delete</button></div></div></div></section>
+    <section class="home-section" aria-labelledby="data-label"><div class="section-label" id="data-label">data · table · pagination · empty and feedback states</div><table class="table"><thead><tr><th scope="col">Item</th><th scope="col">Updated</th><th scope="col">State</th></tr></thead><tbody><tr><td>Default row</td><td>12 min ago</td><td>Ready</td></tr><tr><td>Longer piece of content</td><td>Yesterday</td><td>Draft</td></tr></tbody></table><div class="pagination" aria-label="Pagination"><button class="page-button" type="button" disabled>‹</button><button class="page-button" type="button" aria-current="page">1</button><button class="page-button" type="button">2</button><button class="page-button" type="button">›</button></div><div class="feedback-line"><strong>Saved</strong><span>Non-blocking confirmation lives with the work.</span></div><div class="feedback-line error"><strong>Can’t sync</strong><span>Try again when the connection returns.</span></div><div class="feedback-line"><span>No results yet. Explain the empty state and offer the next relevant action.</span></div></section>
+    <section class="home-section" aria-labelledby="async-label"><div class="section-label" id="async-label">async and irreversible · pending · confirmation · toast</div><div class="action-line"><button class="text-button busy-button" id="busy-trigger" type="button" aria-busy="false">run action</button><button class="text-button" id="toast-trigger" type="button">show confirmation</button><button class="text-button danger-button" id="delete-trigger" type="button">delete item</button></div></section>
+    <section class="home-section" aria-labelledby="rhythm-label"><div class="section-label" id="rhythm-label">spacing rhythm</div><div class="apps"><button class="app-link" type="button">4 <small>icon / label</small></button><button class="app-link" type="button">8 <small>controls</small></button><button class="app-link" type="button">16 <small>groups</small></button><button class="app-link" type="button">24 <small>sections</small></button></div></section>
+  </main>
+  <div class="overlay" id="command-overlay" hidden><section class="command" role="dialog" aria-modal="true" aria-label="Universal command"><input id="command-input" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="command-list" aria-activedescendant="command-new-note" placeholder="search notes, tasks, and commands"><div id="command-list" role="listbox"><div class="command-label">CREATE</div><button id="command-new-note" class="command-option" type="button" role="option" aria-selected="true"><span>New note</span><span>capture</span></button><button id="command-new-task" class="command-option" type="button" role="option" aria-selected="false"><span>New task</span><span>today</span></button><div class="command-label">GO TO</div><button id="command-search" class="command-option" type="button" role="option" aria-selected="false"><span>Open search</span><span>everything</span></button><button id="command-summarize" class="command-option" type="button" role="option" aria-selected="false"><span>Summarize selection</span><span>ask Aide</span></button></div></section></div>
+  <div class="overlay" id="confirm-overlay" hidden><section class="confirm" role="dialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-copy"><h2 id="confirm-title">Delete this item?</h2><p id="confirm-copy">This removes the item from the current collection. This sample makes confirmation and recovery explicit.</p><div class="confirm-actions"><button class="text-button" id="delete-cancel" type="button">cancel</button><button class="text-button danger-button" id="delete-confirm" type="button">delete</button></div></section></div>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden>Saved. The confirmation is brief, local, and does not interrupt the task.</div>
+  <script>
+    const overlay = document.getElementById("command-overlay");
+    const trigger = document.getElementById("command-trigger");
+    const commandInput = document.getElementById("command-input");
+    const commandOptions = [...document.querySelectorAll(".command-option")];
+    let activeIndex = 0;
+    let opener = trigger;
+    const setActive = (index) => { activeIndex = (index + commandOptions.length) % commandOptions.length; commandOptions.forEach((option, i) => option.setAttribute("aria-selected", String(i === activeIndex))); commandInput.setAttribute("aria-activedescendant", commandOptions[activeIndex].id); };
+    const openCommand = (source) => { opener = source; overlay.hidden = false; setActive(0); commandInput.focus(); };
+    const closeCommand = () => { overlay.hidden = true; opener.focus(); };
+    trigger.addEventListener("click", () => openCommand(trigger));
+    document.addEventListener("keydown", (event) => { if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") { event.preventDefault(); openCommand(document.activeElement instanceof HTMLElement ? document.activeElement : trigger); } });
+    overlay.addEventListener("click", (event) => { if (event.target === overlay) closeCommand(); });
+    commandInput.addEventListener("keydown", (event) => { if (event.key === "ArrowDown") { event.preventDefault(); setActive(activeIndex + 1); } else if (event.key === "ArrowUp") { event.preventDefault(); setActive(activeIndex - 1); } else if (event.key === "Home") { event.preventDefault(); setActive(0); } else if (event.key === "End") { event.preventDefault(); setActive(commandOptions.length - 1); } else if (event.key === "Escape") { event.preventDefault(); closeCommand(); } else if (event.key === "Enter") { event.preventDefault(); closeCommand(); } });
+    commandOptions.forEach((option, index) => option.addEventListener("click", () => { setActive(index); closeCommand(); }));
+    document.querySelectorAll(".mode").forEach((mode) => mode.addEventListener("click", () => { document.querySelectorAll(".mode").forEach((item) => item.setAttribute("aria-pressed", String(item === mode))); document.getElementById("capture-input").setAttribute("aria-label", mode.textContent === "quiet" ? "Quiet action example" : "Default action example"); document.getElementById("capture-input").placeholder = mode.textContent === "quiet" ? "quiet action treatment" : "one clear field anatomy"; }));
+    document.getElementById("field-clear").addEventListener("click", () => { const field = document.getElementById("field-example"); field.value = ""; field.focus(); });
+    const bindTask = (row) => row.addEventListener("click", () => { const complete = row.dataset.complete === "true"; row.dataset.complete = String(!complete); row.querySelector(".check").textContent = complete ? "" : "✓"; });
+    document.querySelectorAll(".today-row").forEach(bindTask);
+    document.getElementById("save-example").addEventListener("click", () => { const input = document.getElementById("capture-input"); const text = input.value.trim(); if (!text) { input.focus(); return; } const row = document.createElement("button"); row.className = "today-row"; row.type = "button"; row.dataset.complete = "false"; row.innerHTML = '<span class="check" aria-hidden="true"></span><span class="task-name"></span><span class="task-meta">new</span>'; row.querySelector(".task-name").textContent = text; bindTask(row); document.getElementById("today-list").prepend(row); input.value = ""; });
+    document.querySelectorAll(".choice-check,.choice-switch").forEach((choice) => choice.addEventListener("click", () => choice.setAttribute("aria-checked", String(choice.getAttribute("aria-checked") !== "true"))));
+    document.querySelectorAll(".choice-radio").forEach((choice) => choice.addEventListener("click", () => document.querySelectorAll(".choice-radio").forEach((item) => item.setAttribute("aria-checked", String(item === choice)))));
+    document.querySelectorAll(".slider").forEach((slider) => slider.addEventListener("keydown", (event) => { const current = Number(slider.getAttribute("aria-valuenow")); const next = event.key === "Home" ? 0 : event.key === "End" ? 100 : event.key === "ArrowLeft" || event.key === "ArrowDown" ? Math.max(0, current - 10) : event.key === "ArrowRight" || event.key === "ArrowUp" ? Math.min(100, current + 10) : current; if (next !== current || event.key === "Home" || event.key === "End") { event.preventDefault(); slider.setAttribute("aria-valuenow", String(next)); slider.style.setProperty("--slider-position", `${next}%`); } }));
+    document.querySelectorAll(".tab").forEach((tab) => tab.addEventListener("click", () => document.querySelectorAll(".tab").forEach((item) => item.setAttribute("aria-selected", String(item === tab)))));
+    const menuTrigger = document.getElementById("menu-trigger"); const exampleMenu = document.getElementById("example-menu");
+    menuTrigger.addEventListener("click", () => { exampleMenu.hidden = !exampleMenu.hidden; menuTrigger.setAttribute("aria-expanded", String(!exampleMenu.hidden)); });
+    exampleMenu.addEventListener("click", () => { exampleMenu.hidden = true; menuTrigger.setAttribute("aria-expanded", "false"); menuTrigger.focus(); });
+    const scopeTrigger = document.getElementById("scope-trigger"); const scopeList = document.getElementById("scope-list"); const scopeOptions = [...scopeList.querySelectorAll("[role=option]")];
+    const closeScope = () => { scopeList.hidden = true; scopeTrigger.setAttribute("aria-expanded", "false"); scopeTrigger.focus(); };
+    const chooseScope = (index) => { scopeOptions.forEach((option, i) => option.setAttribute("aria-selected", String(i === index))); document.getElementById("scope-value").textContent = scopeOptions[index].textContent; closeScope(); };
+    scopeTrigger.addEventListener("click", () => { scopeList.hidden = !scopeList.hidden; scopeTrigger.setAttribute("aria-expanded", String(!scopeList.hidden)); if (!scopeList.hidden) scopeOptions[0].focus(); });
+    scopeTrigger.addEventListener("keydown", (event) => { if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) { event.preventDefault(); scopeList.hidden = false; scopeTrigger.setAttribute("aria-expanded", "true"); scopeOptions[event.key === "End" || event.key === "ArrowUp" ? scopeOptions.length - 1 : 0].focus(); } else if (event.key === "Escape" && !scopeList.hidden) { closeScope(); } });
+    scopeOptions.forEach((option, index) => option.addEventListener("click", () => chooseScope(index)));
+    scopeList.addEventListener("keydown", (event) => { const current = scopeOptions.indexOf(document.activeElement); if (event.key === "Escape") { event.preventDefault(); closeScope(); } else if (event.key === "Home" || event.key === "End" || event.key === "ArrowDown" || event.key === "ArrowUp") { event.preventDefault(); const next = event.key === "Home" ? 0 : event.key === "End" ? scopeOptions.length - 1 : (current + (event.key === "ArrowDown" ? 1 : -1) + scopeOptions.length) % scopeOptions.length; scopeOptions[next].focus(); } else if (event.key === "Enter" || event.key === " ") { event.preventDefault(); chooseScope(current); } });
+    const toast = document.getElementById("toast"); let toastTimer; const showToast = (message) => { toast.textContent = message; toast.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { toast.hidden = true; }, 3600); };
+    document.getElementById("toast-trigger").addEventListener("click", () => showToast("Saved. The confirmation is brief, local, and does not interrupt the task."));
+    document.getElementById("busy-trigger").addEventListener("click", (event) => { const button = event.currentTarget; button.setAttribute("aria-busy", "true"); button.textContent = "working…"; setTimeout(() => { button.setAttribute("aria-busy", "false"); button.textContent = "run action"; showToast("Action complete."); }, 900); });
+    const confirmOverlay = document.getElementById("confirm-overlay"); const deleteTrigger = document.getElementById("delete-trigger"); const closeConfirm = () => { confirmOverlay.hidden = true; deleteTrigger.focus(); };
+    deleteTrigger.addEventListener("click", () => { confirmOverlay.hidden = false; document.getElementById("delete-cancel").focus(); });
+    document.getElementById("delete-cancel").addEventListener("click", closeConfirm);
+    document.getElementById("delete-confirm").addEventListener("click", () => { closeConfirm(); showToast("Item deleted. A real product would offer recovery when possible."); });
+    confirmOverlay.addEventListener("click", (event) => { if (event.target === confirmOverlay) closeConfirm(); });
+    document.addEventListener("keydown", (event) => { if (event.key === "Escape" && !confirmOverlay.hidden) { event.preventDefault(); closeConfirm(); } });
+  </script>
+</body>
+</html>
