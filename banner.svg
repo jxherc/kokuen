@@ -1,58 +1,27 @@
-<svg viewBox="0 0 1200 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="kokuen, a greyscale UI system">
-  <defs>
-    <style>
-      .sans { font-family: 'Inter','Helvetica Neue',Arial,sans-serif; }
-      .cjk  { font-family: 'Hiragino Sans','Yu Gothic','Noto Sans JP','Microsoft YaHei',sans-serif; }
-      .mono { font-family: 'JetBrains Mono','SFMono-Regular',Consolas,monospace; }
-    </style>
-  </defs>
+<svg viewBox="0 0 1200 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">KOKUEN design operating system</title>
+  <desc id="desc">A sparse graphite banner describing KOKUEN's shared interface contracts.</desc>
 
-  <rect x="0" y="0" width="1200" height="460" fill="#0a0a0a"/>
-  <rect x="24" y="24" width="1152" height="412" rx="4" fill="none" stroke="#2e2e2e" stroke-width="1"/>
+  <rect width="1200" height="520" fill="#0a0a0a"/>
 
-  <!-- left: brand + what it is. the one coloured thing is a live-dot (signal, opacity pulse only) -->
-  <circle cx="86" cy="92" r="4.5" fill="#00ff2a">
-    <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
-  </circle>
-  <text x="104" y="97" class="sans" font-size="13" font-weight="500" letter-spacing="3" fill="#6e6e6e">GREYSCALE UI SYSTEM</text>
+  <g fill="#e8e6e3" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif">
+    <text x="64" y="78" font-size="18" font-weight="650" letter-spacing="1.5">KOKUEN</text>
+    <text x="58" y="300" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif" font-size="188" font-weight="700">黒鉛</text>
+    <text x="68" y="370" font-size="34" font-weight="450" letter-spacing="10">kokuen</text>
 
-  <text x="78" y="248" class="cjk" font-size="150" font-weight="700" letter-spacing="2" fill="#e8e6e3">黒鉛</text>
-  <text x="86" y="312" class="sans" font-size="46" font-weight="300" letter-spacing="18" fill="#e8e6e3">kokuen</text>
+    <text x="672" y="148" font-size="48" font-weight="650" letter-spacing="-1.8">Design operating</text>
+    <text x="672" y="204" font-size="48" font-weight="650" letter-spacing="-1.8">system.</text>
+    <text x="675" y="260" fill="#a8a8a4" font-size="21" font-weight="400">Shared behavior. Product-owned character.</text>
 
-  <text x="88" y="372" class="sans" font-size="19" font-weight="400" fill="#e8e6e3">monochrome base, plus one optional colour.</text>
-  <text x="88" y="400" class="sans" font-size="12.5" font-weight="500" letter-spacing="2" fill="#6e6e6e">ONE OPTIONAL COLOUR  ·  INTERACTION, OR STATUS</text>
+    <text x="675" y="332" font-size="17" font-weight="600">44px targets</text>
+    <text x="675" y="368" font-size="17" font-weight="600">one control, one boundary</text>
+    <text x="675" y="404" font-size="17" font-weight="600">complete keyboard and focus models</text>
+    <text x="675" y="440" font-size="17" font-weight="600">rendered proof before completion</text>
+  </g>
 
-  <line x1="700" y1="64" x2="700" y2="396" stroke="#2e2e2e" stroke-width="1"/>
-
-  <!-- right: tokens -->
-  <text x="744" y="92" class="sans" font-size="12" font-weight="500" letter-spacing="4" fill="#6e6e6e">GREYS · FIXED</text>
-
-  <rect x="744" y="106" width="34" height="34" rx="3" fill="#0a0a0a" stroke="#2e2e2e"/>
-  <text x="794" y="123" class="mono" font-size="14" fill="#e8e6e3">#0a0a0a</text>
-  <text x="794" y="138" class="sans" font-size="10.5" letter-spacing="2" fill="#6e6e6e">paper · bg</text>
-
-  <rect x="744" y="148" width="34" height="34" rx="3" fill="#e8e6e3" stroke="#2e2e2e"/>
-  <text x="794" y="165" class="mono" font-size="14" fill="#e8e6e3">#e8e6e3</text>
-  <text x="794" y="180" class="sans" font-size="10.5" letter-spacing="2" fill="#6e6e6e">ink · text</text>
-
-  <rect x="744" y="190" width="34" height="34" rx="3" fill="#6e6e6e" stroke="#2e2e2e"/>
-  <text x="794" y="207" class="mono" font-size="14" fill="#e8e6e3">#6e6e6e</text>
-  <text x="794" y="222" class="sans" font-size="10.5" letter-spacing="2" fill="#6e6e6e">pencil · muted</text>
-
-  <rect x="744" y="232" width="34" height="34" rx="3" fill="#2e2e2e" stroke="#2e2e2e"/>
-  <text x="794" y="249" class="mono" font-size="14" fill="#e8e6e3">#2e2e2e</text>
-  <text x="794" y="264" class="sans" font-size="10.5" letter-spacing="2" fill="#6e6e6e">ghost · faint</text>
-
-  <line x1="744" y1="286" x2="1100" y2="286" stroke="#2e2e2e" stroke-width="1" stroke-dasharray="2 4"/>
-
-  <!-- the optional colour, two jobs. flat single hues, no glow -->
-  <text x="744" y="312" class="sans" font-size="12" font-weight="500" letter-spacing="3" fill="#6e6e6e">ACCENT</text>
-  <text x="816" y="312" class="sans" font-size="11" letter-spacing="1" fill="#454545">interaction</text>
-  <rect x="744" y="320" width="300" height="16" rx="3" fill="#818cf8"/>
-
-  <text x="744" y="364" class="sans" font-size="12" font-weight="500" letter-spacing="3" fill="#6e6e6e">SIGNAL</text>
-  <text x="816" y="364" class="sans" font-size="11" letter-spacing="1" fill="#454545">status · live / updated</text>
-  <rect x="744" y="372" width="300" height="16" rx="3" fill="#00ff2a"/>
-
-  <text x="744" y="412" class="sans" font-size="11" letter-spacing="1" fill="#6e6e6e">one hue, or none. the greys never move.</text>
+  <g stroke="#6e6e6e" stroke-width="2" stroke-linecap="round">
+    <path d="M64 452H576"/>
+    <path d="M64 444V460M128 448V456M192 448V456M256 444V460M320 448V456M384 448V456M448 444V460M512 448V456M576 444V460"/>
+  </g>
+  <text x="64" y="490" fill="#a8a8a4" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="14">0 · 4 · 8 · 12 · 16 · 24 · 32 · 48 · 64</text>
 </svg>

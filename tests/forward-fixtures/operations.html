@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Relay ledger - KOKUEN forward test</title>
+  <link rel="stylesheet" href="../../kokuen.css">
+  <style>
+    :root {
+      color-scheme: dark;
+      --k-canvas: #15120e;
+      --k-surface: #1c1813;
+      --k-surface-raised: #262018;
+      --k-text: #f2ead8;
+      --k-text-secondary: #b9ad94;
+      --k-text-disabled: #7f7564;
+      --k-text-inverse: #15120e;
+      --k-edge: #4b4134;
+      --k-edge-strong: #8d8068;
+      --k-focus: #f2cf85;
+      --k-selection: #d9c49a;
+      --k-selection-text: #15120e;
+      --k-error: #ff9b8e;
+      --k-warning: #f2cf85;
+      --k-success: #a7c3a5;
+      --k-scrim: rgb(10 8 6 / 78%);
+      --ledger-row: #201b15;
+      --ledger-urgent: #2b1d18;
+    }
+
+    html,
+    body {
+      max-width: 100%;
+      overflow-x: clip;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--k-canvas);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .ops-shell {
+      min-width: 0;
+    }
+
+    .ops-head {
+      min-height: 72px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: var(--k-space-4);
+      padding: var(--k-space-3) clamp(16px, 3vw, 32px);
+      background: var(--k-surface);
+    }
+
+    .ops-title {
+      min-width: 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: var(--k-space-2) var(--k-space-4);
+    }
+
+    .ops-title strong {
+      font-size: 18px;
+      letter-spacing: .01em;
+    }
+
+    .ops-title span,
+    .ops-clock {
+      color: var(--k-text-secondary);
+      font-family: var(--k-font-data);
+      font-size: 14px;
+    }
+
+    .ops-main {
+      min-width: 0;
+      padding: var(--k-space-6) clamp(16px, 3vw, 32px) var(--k-space-8);
+    }
+
+    .ops-summary {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--k-space-5);
+      align-items: end;
+      margin-bottom: var(--k-space-6);
+    }
+
+    .ops-summary h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 48px);
+      line-height: 1;
+      letter-spacing: -.035em;
+    }
+
+    .ops-summary p {
+      margin: var(--k-space-2) 0 0;
+      color: var(--k-text-secondary);
+    }
+
+    .filter-shell {
+      width: min(360px, 100%);
+    }
+
+    .filter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--k-space-4);
+      margin-bottom: var(--k-space-4);
+    }
+
+    .filter-status {
+      color: var(--k-text-secondary);
+      font-size: 14px;
+    }
+
+    .ledger-wrap {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      contain: inline-size layout paint;
+    }
+
+    .ledger {
+      width: 100%;
+      min-width: 780px;
+      border-collapse: collapse;
+      color: var(--k-text);
+    }
+
+    .ledger th,
+    .ledger td {
+      padding: var(--k-space-2) var(--k-space-3);
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    .ledger th {
+      height: 44px;
+      color: var(--k-text-secondary);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .ledger tbody tr {
+      background: var(--ledger-row);
+    }
+
+    .ledger tbody tr[data-severity="urgent"] {
+      background: var(--ledger-urgent);
+    }
+
+    .ledger tbody tr:hover {
+      background: color-mix(in srgb, var(--k-text) 8%, var(--ledger-row));
+    }
+
+    .ledger td:first-child,
+    .ledger th:first-child {
+      width: 52px;
+      padding-left: var(--k-space-1);
+      padding-right: var(--k-space-1);
+    }
+
+    .ledger-code,
+    .ledger-time {
+      font-family: var(--k-font-data);
+      font-size: 14px;
+    }
+
+    .severity {
+      color: var(--k-text-secondary);
+      font-weight: 650;
+    }
+
+    tr[data-severity="urgent"] .severity {
+      color: var(--k-error);
+    }
+
+    .row-check {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      background: transparent;
+      color: var(--k-text);
+    }
+
+    .row-check::before {
+      width: 16px;
+      height: 16px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--k-edge-strong);
+      content: "";
+    }
+
+    .row-check[aria-checked="true"]::before {
+      border-color: var(--k-selection);
+      background: var(--k-selection);
+      color: var(--k-selection-text);
+      content: "✓";
+      font-size: 14px;
+    }
+
+    .dialog-layer {
+      position: fixed;
+      z-index: var(--k-layer-dialog);
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: var(--k-space-4);
+      background: var(--k-scrim);
+    }
+
+    .dialog-layer[hidden] {
+      display: none;
+    }
+
+    .confirm-sheet {
+      width: min(480px, 100%);
+      background: var(--k-surface-raised);
+      padding: var(--k-space-5);
+    }
+
+    .confirm-sheet h2 {
+      margin: 0 0 var(--k-space-3);
+      font-size: 22px;
+    }
+
+    .confirm-sheet p {
+      margin: 0;
+      color: var(--k-text-secondary);
+      line-height: 1.6;
+    }
+
+    .confirm-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: var(--k-space-2);
+      margin-top: var(--k-space-5);
+    }
+
+    #operation-status {
+      min-height: 24px;
+      margin-top: var(--k-space-4);
+      color: var(--k-text-secondary);
+    }
+
+    @media (max-width: 680px) {
+      .ops-head,
+      .ops-summary {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .ops-clock {
+        display: none;
+      }
+
+      .ops-summary {
+        align-items: start;
+      }
+
+      .filter-row {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .filter-shell {
+        width: 100%;
+      }
+
+      .confirm-actions > * {
+        flex: 1 1 140px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ops-shell">
+    <header class="ops-head">
+      <div class="ops-title">
+        <strong>Relay ledger</strong>
+        <span>north region · evening handoff</span>
+      </div>
+      <time class="ops-clock" datetime="2026-07-30T18:42:00+08:00">18:42:00 UTC+8</time>
+    </header>
+
+    <main class="ops-main">
+      <section class="ops-summary" aria-labelledby="queue-title">
+        <div>
+          <h1 id="queue-title">12 open events</h1>
+          <p>Two require action before the 19:00 handoff.</p>
+        </div>
+        <button class="k-button k-button--danger" id="open-confirm" type="button">Close selected events</button>
+      </section>
+
+      <div class="filter-row">
+        <div class="k-field-shell filter-shell">
+          <input class="k-field" id="event-filter" aria-label="Filter events" placeholder="Filter event, owner, or service">
+          <button class="k-field-action" id="clear-filter" type="button" aria-label="Clear event filter">×</button>
+        </div>
+        <span class="filter-status" id="filter-status" aria-live="polite">Showing 4 of 12 events</span>
+      </div>
+
+      <div class="ledger-wrap" tabindex="0" aria-label="Open events table, horizontally scrollable">
+        <table class="ledger">
+          <thead>
+            <tr>
+              <th scope="col"><span class="k-visually-hidden">Select</span></th>
+              <th scope="col">Event</th>
+              <th scope="col">Service</th>
+              <th scope="col">Owner</th>
+              <th scope="col">Opened</th>
+              <th scope="col">State</th>
+              <th scope="col"><span class="k-visually-hidden">Action</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-severity="urgent">
+              <td><button class="row-check" type="button" role="checkbox" aria-checked="true" aria-label="Select EVT-2041"></button></td>
+              <td class="ledger-code">EVT-2041</td>
+              <td>Payment capture</td>
+              <td>M. Chen</td>
+              <td class="ledger-time">18:03</td>
+              <td class="severity">Urgent</td>
+              <td><button class="k-button k-button--quiet" type="button">Inspect</button></td>
+            </tr>
+            <tr data-severity="urgent">
+              <td><button class="row-check" type="button" role="checkbox" aria-checked="true" aria-label="Select EVT-2038"></button></td>
+              <td class="ledger-code">EVT-2038</td>
+              <td>Warehouse sync</td>
+              <td>R. Iqbal</td>
+              <td class="ledger-time">17:51</td>
+              <td class="severity">Urgent</td>
+              <td><button class="k-button k-button--quiet" type="button">Inspect</button></td>
+            </tr>
+            <tr data-severity="normal">
+              <td><button class="row-check" type="button" role="checkbox" aria-checked="false" aria-label="Select EVT-2034"></button></td>
+              <td class="ledger-code">EVT-2034</td>
+              <td>Customer export</td>
+              <td>S. Navarro</td>
+              <td class="ledger-time">17:28</td>
+              <td class="severity">Monitoring</td>
+              <td><button class="k-button k-button--quiet" type="button">Inspect</button></td>
+            </tr>
+            <tr data-severity="normal">
+              <td><button class="row-check" type="button" role="checkbox" aria-checked="false" aria-label="Select EVT-2029"></button></td>
+              <td class="ledger-code">EVT-2029</td>
+              <td>Search indexing</td>
+              <td>A. Ortega</td>
+              <td class="ledger-time">16:44</td>
+              <td class="severity">Monitoring</td>
+              <td><button class="k-button k-button--quiet" type="button">Inspect</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p id="operation-status" role="status" aria-live="polite"></p>
+    </main>
+  </div>
+
+  <div class="dialog-layer" id="confirm-layer" hidden>
+    <section class="confirm-sheet" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-copy">
+      <h2 id="confirm-title">Close 2 selected events?</h2>
+      <p id="confirm-copy">This records the events as resolved and removes them from the active handoff. Their audit history stays available.</p>
+      <div class="confirm-actions">
+        <button class="k-button" id="cancel-close" type="button">Keep open</button>
+        <button class="k-button k-button--danger" id="confirm-close" type="button">Close 2 events</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const checks = [...document.querySelectorAll('.row-check')];
+    const open = document.querySelector('#open-confirm');
+    const layer = document.querySelector('#confirm-layer');
+    const cancel = document.querySelector('#cancel-close');
+    const confirm = document.querySelector('#confirm-close');
+    const status = document.querySelector('#operation-status');
+    const filter = document.querySelector('#event-filter');
+    const filterStatus = document.querySelector('#filter-status');
+
+    checks.forEach((check) => check.addEventListener('click', () => {
+      check.setAttribute('aria-checked', check.getAttribute('aria-checked') === 'true' ? 'false' : 'true');
+    }));
+
+    function closeDialog() {
+      layer.hidden = true;
+      open.focus();
+    }
+
+    open.addEventListener('click', () => {
+      layer.hidden = false;
+      cancel.focus();
+    });
+    cancel.addEventListener('click', closeDialog);
+    layer.addEventListener('click', (event) => {
+      if (event.target === layer) closeDialog();
+    });
+    layer.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeDialog();
+      if (event.key !== 'Tab') return;
+      if (event.shiftKey && document.activeElement === cancel) {
+        event.preventDefault();
+        confirm.focus();
+      } else if (!event.shiftKey && document.activeElement === confirm) {
+        event.preventDefault();
+        cancel.focus();
+      }
+    });
+    confirm.addEventListener('click', () => {
+      if (confirm.getAttribute('aria-busy') === 'true') return;
+      confirm.setAttribute('aria-busy', 'true');
+      confirm.disabled = true;
+      confirm.textContent = 'Closing events';
+      window.setTimeout(() => {
+        closeDialog();
+        status.textContent = 'EVT-2041 and EVT-2038 closed. Audit history preserved.';
+        confirm.removeAttribute('aria-busy');
+        confirm.disabled = false;
+        confirm.textContent = 'Close 2 events';
+      }, 450);
+    });
+    document.querySelector('#clear-filter').addEventListener('click', () => {
+      filter.value = '';
+      filter.focus();
+      filterStatus.textContent = 'Showing 4 of 12 events';
+    });
+    filter.addEventListener('input', () => {
+      filterStatus.textContent = filter.value ? 'Showing matching events' : 'Showing 4 of 12 events';
+    });
+  </script>
+</body>
+</html>

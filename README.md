@@ -1,120 +1,159 @@
+<p align="center">
+  <img src="banner.svg" alt="KOKUEN design operating system" width="100%">
+</p>
+
 <h1 align="center">KOKUEN</h1>
 
-<p align="center"><strong>A design operating system for product UI.</strong></p>
-
 <p align="center">
-  Coherent controls, spacing, interaction, accessibility, and verification<br>
-  without forcing every product into the same visual theme.
+  A design operating system for the parts of product UI that must stay coherent.<br>
+  Product-owned character, shared interaction discipline, and rendered proof.
 </p>
 
 <p align="center">
-  <a href="SKILL.md">Skill</a> ·
-  <a href="reference.md">Reference</a> ·
-  <a href="designs/kokuen-visual-template/Universal%20UI%20Template.html">Visual template</a> ·
-  <a href="https://www.figma.com/design/dMpK3ZOhraefh9L6m4BgBi">Figma</a>
+  <a href="SKILL.md">Use the skill</a> ·
+  <a href="designs/kokuen-visual-template/Universal%20UI%20Template.html">Open the visual reference</a> ·
+  <a href="reference.md">Read the contracts</a> ·
+  <a href="docs/RESEARCH.md">Review the research</a>
 </p>
 
-## What KOKUEN does
+## What it is
 
-KOKUEN gives an app one reliable contract for the interface that repeats everywhere: spacing,
-controls, forms, navigation, command search, overlays, feedback, AI surfaces, accessibility,
-tokens, and visual verification.
+KOKUEN gives designers and coding agents an exact contract for spacing, controls, fields,
+navigation, command search, overlays, feedback, AI surfaces, accessibility, Figma parity, and
+verification.
 
-It does not prescribe a brand, palette, typeface, or component-library aesthetic.
+It is not a grayscale theme, a component screenshot catalog, an Alles template, or a reusable page
+skeleton.
 
-> **KOKUEN owns recurring behavior. The product owns character.**
+> KOKUEN owns recurring behavior. The product owns character.
 
-That boundary lets a product look completely like itself without every button, field, menu, and
-state behaving as if it came from a different system.
+That means unrelated products can have different palettes, type, imagery, density, composition, and
+signature while their controls remain predictable and complete.
 
-## Install
+## Use it
 
-Clone KOKUEN into the Codex skills directory:
+Clone the repository into the Codex skills directory:
 
-```sh
+```bash
 git clone https://github.com/jxherc/kokuen.git ~/.codex/skills/kokuen
 ```
 
 Then invoke it directly:
 
 ```text
-Use $kokuen to design and verify a coherent, accessible product UI surface.
+Use $kokuen to design and verify this product surface.
 ```
 
-## The contract
+For a new theme or substantial redesign, start with
+[`docs/CUSTOM_THEME.md`](docs/CUSTOM_THEME.md). For one reusable component, start with
+[`docs/COMPONENT_CONTRACT_TEMPLATE.md`](docs/COMPONENT_CONTRACT_TEMPLATE.md).
 
-KOKUEN protects six things across a product:
+## What KOKUEN guarantees
 
-1. **Product character stays product-specific.** No mandatory grayscale theme, accent color, font,
-   radius, dashboard layout, or material treatment.
-2. **Shared geometry stays disciplined.** Use the spacing scale
-   `0, 4, 8, 12, 16, 24, 32, 48, 64` and a 44px default interactive target.
-3. **Common controls stay real.** Buttons, fields, selection controls, menus, dialogs, command,
-   feedback, and async actions receive complete keyboard, focus, disabled, error, and recovery
-   behavior.
-4. **Actions stay close to what they change.** Never stretch a field across spare width and strand
-   `Clear`, `Edit`, validation, or another field action at the far edge.
-5. **Content remains visible by default.** Motion can support state and causality, but an animation
-   cannot decide whether content exists.
-6. **Rendered behavior is the proof.** Source, screenshots, tests, and Figma are supporting evidence.
-   The final delivery surface must still be opened, exercised, and inspected.
+- A deliberate product brief comes before visual styling.
+- Layout uses the `0, 4, 8, 12, 16, 24, 32, 48, 64` spacing scale.
+- Interactive targets default to at least 44 by 44 CSS pixels.
+- One control has one perceived resting boundary and one focus geometry.
+- A visible boundary must provide input affordance, state, containment, clipping, or separation.
+- Field actions remain attached to the field they change.
+- Common controls implement complete pointer, keyboard, focus, disabled, busy, error, and recovery behavior.
+- Content remains visible before motion runs, and controls do not jump on hover.
+- Theme, contrast, and density are independent axes.
+- Figma, screenshots, and source inspection support review, but the current rendered surface is the proof.
 
-## Workflow
+The exact rules live in [`references/`](references/). `SKILL.md` is intentionally a concise router so
+an agent loads only the material relevant to the task.
 
-| Stage | Decision | Primary artifact |
-| --- | --- | --- |
-| 1. Brief | Define the product, users, tasks, visual character, density, and constraints | [Custom-theme brief](docs/CUSTOM_THEME.md) |
-| 2. System | Map primitive values to semantic roles and component decisions | [Design tokens](tokens/kokuen.tokens.json) |
-| 3. Contract | Specify anatomy, states, keyboard behavior, content, and responsive rules | [Component contract](docs/COMPONENT_CONTRACT_TEMPLATE.md) |
-| 4. Build | Reuse the product stack and apply KOKUEN behavior without importing a generic skin | [Skill workflow](SKILL.md) |
-| 5. Prove | Exercise real states at representative sizes in the delivery surface | [Verification reference](reference.md) |
+## From brief to proof
 
-Validate the token graph before handoff:
+```text
+product brief
+    ↓
+visual grammar and semantic tokens
+    ↓
+component anatomy, states, boundaries, keyboard, and content contract
+    ↓
+Figma and code mapping
+    ↓
+real interaction, reflow, accessibility, and visual verification
+```
 
-```sh
+The [universal UI reference](designs/kokuen-visual-template/Universal%20UI%20Template.html) is a
+functional stress surface for common controls. It deliberately avoids a product hero, dashboard
+shell, and modular card layout. It is a reference document, not a product template.
+
+## System inventory
+
+KOKUEN v5 defines 23 candidate contracts across:
+
+- buttons and icon actions;
+- text fields, textarea, checkbox, radio group, switch, slider, and select/listbox;
+- tabs, menu, row/list, table, and pagination;
+- tooltip, popover, dialog, confirmation, toast, and reusable data states;
+- universal command/search;
+- AI composer, generation, streaming, Stop, sources, permissions, failure, and recovery.
+
+The machine-readable registry is
+[`contracts/kokuen.components.json`](contracts/kokuen.components.json). A candidate becomes stable
+only after code, Figma, and rendered fixture proof agree.
+
+## Verify it
+
+Run the deterministic checks:
+
+```bash
 python3 scripts/validate_theme.py tokens/kokuen.tokens.json
+python3 scripts/validate_contracts.py contracts
+python3 scripts/validate_figma_manifest.py
+python3 scripts/lint_ui_rules.py kokuen.css preview.html \
+  "designs/kokuen-visual-template/Universal UI Template.html" \
+  tests/forward-fixtures --forbid-native-controls --warnings-as-errors
 ```
 
-## Universal system, product-specific result
+Run the browser interaction suites:
 
-| Layer | KOKUEN decides | The product decides |
-| --- | --- | --- |
-| Foundations | semantic token roles, spacing scale, control geometry | palette, typography, density, radius, material |
-| Primitives | anatomy, states, focus, keyboard behavior | labels, icons, visual treatment |
-| Patterns | field recovery, collections, command/search, overlays, feedback | task flow and information hierarchy |
-| Screens | responsive and accessibility review requirements | composition, content, brand character |
+```bash
+python3 /Users/jxh/.codex/skills/webapp-testing/scripts/with_server.py \
+  --server "python3 -m http.server 4312 --bind 127.0.0.1" \
+  --port 4312 -- python3 tests/test_visual_template.py
+
+python3 /Users/jxh/.codex/skills/webapp-testing/scripts/with_server.py \
+  --server "python3 -m http.server 4312 --bind 127.0.0.1" \
+  --port 4312 -- python3 tests/test_forward_fixtures.py
+```
+
+The main suite covers component states, keyboard models, focus containment and return, command
+search, async repeat rejection, AI Stop, narrow reflow, a 200-percent equivalent viewport, forced
+colors, reduced motion, target measurement, console errors, and screenshots.
+
+The [three forward tests](docs/FORWARD_TESTS.md) prove the same contracts can produce a manuscript
+workspace, an operational ledger, and a media browser without converging on one KOKUEN look.
 
 ## Repository map
 
-| Artifact | Use it for |
+| Path | Purpose |
 | --- | --- |
-| [`SKILL.md`](SKILL.md) | Designing, implementing, or auditing product UI with KOKUEN |
-| [`reference.md`](reference.md) | Exact component, accessibility, command, overlay, data, AI, and QA contracts |
-| [`docs/CUSTOM_THEME.md`](docs/CUSTOM_THEME.md) | A new theme, rebrand, or substantial visual direction |
-| [`docs/SPACING.md`](docs/SPACING.md) | Screen composition, proximity, field width, and responsive spacing |
-| [`docs/COMPONENT_CONTRACT_TEMPLATE.md`](docs/COMPONENT_CONTRACT_TEMPLATE.md) | Promoting a primitive into the shared system |
-| [`tokens/kokuen.tokens.json`](tokens/kokuen.tokens.json) | Portable primitive, semantic, and component decisions |
-| [`kokuen.css`](kokuen.css) | A no-build semantic baseline, not a mandatory product skin |
-| [`preview.html`](preview.html) | Lightweight interaction and component behavior checks |
-| [Universal UI template](designs/kokuen-visual-template/Universal%20UI%20Template.html) | Product-neutral visual and interaction stress testing |
-| [`scripts/validate_theme.py`](scripts/validate_theme.py) | Token type, alias, and reference validation |
-
-## Definition of done
-
-A KOKUEN implementation is ready only when:
-
-- semantic tokens are valid and every alias resolves;
-- changed controls include their required states and keyboard behavior;
-- focus enters, remains within, and returns from overlays correctly;
-- spacing, action proximity, contrast, and hierarchy survive realistic content;
-- narrow layouts, long strings, empty states, errors, loading, and reduced motion are covered;
-- no content is clipped, obscured, or dependent on an entrance animation;
-- the latest rendered surface has been inspected and every changed interaction has been exercised.
+| [`SKILL.md`](SKILL.md) | Entry point and task router |
+| [`references/`](references/) | Detailed foundation, component, Figma, AI, and QA rules |
+| [`tokens/kokuen.tokens.json`](tokens/kokuen.tokens.json) | Typed primitive, semantic, mode, and component tokens |
+| [`contracts/kokuen.components.json`](contracts/kokuen.components.json) | Machine-readable component contracts and fixture IDs |
+| [`kokuen.css`](kokuen.css) | No-build reference primitives, not a mandatory visual skin |
+| [Universal UI reference](designs/kokuen-visual-template/Universal%20UI%20Template.html) | Functional visual and interaction specimen |
+| [`docs/KOKUEN_V5_MASTER_PLAN.md`](docs/KOKUEN_V5_MASTER_PLAN.md) | Architecture, rules, implementation sequence, and acceptance gates |
+| [`docs/RESEARCH.md`](docs/RESEARCH.md) | Primary standards and professional design-system sources |
+| [`docs/FORWARD_TESTS.md`](docs/FORWARD_TESTS.md) | Product-neutrality proof across three unrelated briefs |
+| [`docs/ANTI_SLOP_AUDIT.md`](docs/ANTI_SLOP_AUDIT.md) | Point-by-point visual anti-pattern and craft audit |
+| [`figma/kokuen.library.json`](figma/kokuen.library.json) | Validated remote library synchronization manifest |
 
 ## Figma
 
-The [KOKUEN Figma file](https://www.figma.com/design/dMpK3ZOhraefh9L6m4BgBi) is a review and
-specification companion. Code and rendered behavior remain the delivery source of truth.
+The [KOKUEN Figma file](https://www.figma.com/design/dMpK3ZOhraefh9L6m4BgBi) is the inspectable
+design companion. It is not currently synchronized with v5: the installed, authenticated Figma MCP
+connector is blocked by the account's Starter-plan tool-call limit. No remote IDs or component keys
+are fabricated.
+
+The exact evidence, remaining work, and resume sequence are recorded in
+[`docs/FIGMA_SYNC.md`](docs/FIGMA_SYNC.md).
 
 ## License
 

@@ -1,0 +1,102 @@
+{
+  "$schema": "./kokuen.library.schema.json",
+  "version": "5.0.0",
+  "file": {
+    "key": "dMpK3ZOhraefh9L6m4BgBi",
+    "url": "https://www.figma.com/design/dMpK3ZOhraefh9L6m4BgBi",
+    "syncStatus": "blocked",
+    "blockedAt": "2026-07-30",
+    "blocker": "Figma MCP Starter-plan tool-call limit rejected discovery and write operations.",
+    "observedPages": [
+      { "id": "0:1", "name": "Cover" }
+    ],
+    "unverified": [
+      "local variable collections and modes",
+      "local styles",
+      "local components and component sets",
+      "subscribed and available libraries"
+    ]
+  },
+  "sourceOfTruth": {
+    "tokens": "tokens/kokuen.tokens.json",
+    "components": "contracts/kokuen.components.json",
+    "visualSpecimen": "designs/kokuen-visual-template/Universal UI Template.html",
+    "figmaRules": "references/figma-contract.md"
+  },
+  "collections": [
+    {
+      "name": "KOKUEN / Primitive",
+      "axis": "fixed",
+      "modes": ["Base"],
+      "includes": ["color.graphite", "color.paper", "color.indigo", "color.red", "color.amber", "color.green", "color.blue", "color.alpha", "dimension", "radius"]
+    },
+    {
+      "name": "KOKUEN / Theme",
+      "axis": "theme",
+      "modes": ["Dark", "Light"],
+      "includes": ["color.canvas", "color.surface", "color.text", "color.edge", "color.focus", "color.selection", "color.status", "color.scrim"]
+    },
+    {
+      "name": "KOKUEN / Contrast",
+      "axis": "contrast",
+      "modes": ["Standard", "More"],
+      "includes": ["color.edge.interactive", "focus.width", "focus.offset"]
+    },
+    {
+      "name": "KOKUEN / Density",
+      "axis": "density",
+      "modes": ["Comfortable", "Compact"],
+      "includes": ["size.control.visual", "space.control.inline", "space.control.gap"]
+    },
+    {
+      "name": "KOKUEN / Fixed",
+      "axis": "fixed",
+      "modes": ["Base"],
+      "includes": ["space", "size.target", "font", "motion", "layer", "button", "field", "overlay", "command"]
+    }
+  ],
+  "pages": [
+    { "order": 0, "name": "Cover", "remoteId": "0:1", "purpose": "Identity, library status, and source revision." },
+    { "order": 1, "name": "Foundations", "remoteId": null, "purpose": "Variables, mode axes, spacing relationships, target geometry, type, focus, and layers." },
+    { "order": 2, "name": "Components", "remoteId": null, "purpose": "Bound components, anatomy, public properties, states, and code status." },
+    { "order": 3, "name": "Do and do not", "remoteId": null, "purpose": "Boundary, bezel, focus, width, proximity, target, color-only, and hover-movement diagnostics." },
+    { "order": 4, "name": "Stress", "remoteId": null, "purpose": "Long English, CJK, empty, loading, error, unavailable, permission, narrow, high contrast, reduced motion, and zoom cases." }
+  ],
+  "components": [
+    { "id": "action.button", "figmaName": "Action / Button", "componentKey": null, "properties": ["Hierarchy", "State", "Icon"] },
+    { "id": "action.icon", "figmaName": "Action / Icon", "componentKey": null, "properties": ["State", "Icon"] },
+    { "id": "field.text", "figmaName": "Field / Text", "componentKey": null, "properties": ["State", "Prefix", "Action"] },
+    { "id": "field.textarea", "figmaName": "Field / Textarea", "componentKey": null, "properties": ["State", "Resize"] },
+    { "id": "choice.checkbox", "figmaName": "Choice / Checkbox", "componentKey": null, "properties": ["State", "Checked", "Indeterminate"] },
+    { "id": "choice.radio-group", "figmaName": "Choice / Radio group", "componentKey": null, "properties": ["State", "Checked"] },
+    { "id": "choice.switch", "figmaName": "Choice / Switch", "componentKey": null, "properties": ["State", "Checked"] },
+    { "id": "choice.slider", "figmaName": "Choice / Slider", "componentKey": null, "properties": ["State", "Value"] },
+    { "id": "choice.select", "figmaName": "Choice / Select", "componentKey": null, "properties": ["State", "Open"] },
+    { "id": "navigation.tabs", "figmaName": "Navigation / Tabs", "componentKey": null, "properties": ["State", "Activation"] },
+    { "id": "navigation.menu", "figmaName": "Navigation / Menu", "componentKey": null, "properties": ["State", "Open", "Danger"] },
+    { "id": "collection.row", "figmaName": "Collection / Row", "componentKey": null, "properties": ["State", "Selection", "Action"] },
+    { "id": "data.table", "figmaName": "Data / Table", "componentKey": null, "properties": ["Density", "Selection", "Sort"] },
+    { "id": "data.pagination", "figmaName": "Data / Pagination", "componentKey": null, "properties": ["State", "Kind"] },
+    { "id": "overlay.tooltip", "figmaName": "Overlay / Tooltip", "componentKey": null, "properties": ["Placement"] },
+    { "id": "overlay.popover", "figmaName": "Overlay / Popover", "componentKey": null, "properties": ["Placement", "State"] },
+    { "id": "overlay.dialog", "figmaName": "Overlay / Dialog", "componentKey": null, "properties": ["Size", "State"] },
+    { "id": "overlay.confirmation", "figmaName": "Overlay / Confirmation", "componentKey": null, "properties": ["Consequence", "State"] },
+    { "id": "feedback.toast", "figmaName": "Feedback / Toast", "componentKey": null, "properties": ["Kind", "Action"] },
+    { "id": "feedback.state", "figmaName": "Feedback / State", "componentKey": null, "properties": ["Kind", "Action"] },
+    { "id": "command.universal", "figmaName": "Command / Universal", "componentKey": null, "properties": ["State", "Scope", "Preview"] },
+    { "id": "ai.composer", "figmaName": "AI / Composer", "componentKey": null, "properties": ["State", "Attachments", "Scope"] },
+    { "id": "ai.response", "figmaName": "AI / Response", "componentKey": null, "properties": ["State", "Sources", "Actions"] }
+  ],
+  "reviewFrames": [
+    { "name": "Boundary ownership", "remoteId": null },
+    { "name": "Target and focus geometry", "remoteId": null },
+    { "name": "Field action proximity", "remoteId": null },
+    { "name": "Long content and CJK", "remoteId": null },
+    { "name": "Data and permission states", "remoteId": null },
+    { "name": "Narrow and zoom", "remoteId": null }
+  ],
+  "codeConnect": {
+    "status": "deferred",
+    "reason": "Component contracts remain candidate until Figma mapping and remote review pass."
+  }
+}

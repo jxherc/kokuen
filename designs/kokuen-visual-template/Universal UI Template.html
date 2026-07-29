@@ -1,221 +1,1467 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark" data-contrast="standard" data-density="comfortable">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="dark">
-  <title>KOKUEN - Universal Visual Template</title>
+  <meta name="color-scheme" content="dark light">
+  <title>KOKUEN v5 universal UI template</title>
+  <link rel="stylesheet" href="../../kokuen.css">
   <style>
-    /* Default KOKUEN direction: original dark paper/ink palette, one restrained interaction color. */
-    :root {
-      --bg: #0a0a0a;
-      --text: #e8e6e3;
-      --muted: #6e6e6e;
-      --faint: #2e2e2e;
-      --panel: #0e0e0e;
-      --accent: #818cf8;
-      --error: #f87171;
-      --green: #4ade80;
-      --space-1: 4px;
-      --space-2: 8px;
-      --space-3: 12px;
-      --space-4: 16px;
-      --space-5: 24px;
-      --space-6: 32px;
-      --space-7: 48px;
-      --control: 44px;
-      --ease: cubic-bezier(.2,.7,.2,1);
+    .spec-skip {
+      position: fixed;
+      z-index: 400;
+      top: var(--k-space-2);
+      left: var(--k-space-2);
+      padding: var(--k-space-3) var(--k-space-4);
+      background: var(--k-text);
+      color: var(--k-text-inverse);
     }
-    * { box-sizing: border-box; }
-    html { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Noto Sans SC", sans-serif; }
-    body { min-width: 320px; margin: 0; background: var(--bg); }
-    button, input { font: inherit; }
-    button { cursor: pointer; }
-    button:focus-visible, input:focus-visible { outline: 1px solid var(--accent); outline-offset: 4px; }
-    .home { width: min(900px, 100%); min-height: 100vh; margin: auto; padding: clamp(48px, 13vh, 112px) var(--space-5) 64px; }
-    .home-head { position: relative; margin-bottom: var(--space-7); }
-    .wordmark { color: var(--text); font-size: 38px; font-weight: 600; letter-spacing: -.055em; line-height: 1; }
-    .greeting { margin: var(--space-4) 0 0; color: var(--text); font-size: 17px; letter-spacing: .01em; }
-    .greeting span { color: var(--accent); }
-    .subline { margin: var(--space-1) 0 0; color: var(--muted); font-size: 12px; letter-spacing: .03em; }
-    .head-actions { position: absolute; top: 0; right: 0; display: flex; gap: var(--space-2); }
-    .text-button, .save-button { min-height: 32px; border: 1px solid var(--faint); border-radius: 2px; background: transparent; color: var(--muted); padding: 0 var(--space-2); font-size: 11px; letter-spacing: .05em; text-transform: lowercase; transition: color .16s ease, border-color .16s ease, background .16s ease; }
-    .text-button:hover { color: var(--text); border-color: var(--muted); background: var(--panel); }
-    .home-section { display: grid; gap: var(--space-3); margin-top: var(--space-6); }
-    .section-label { color: var(--muted); font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: lowercase; }
-    .capture { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--space-3); padding: var(--space-2) 0; border-bottom: 1px solid var(--faint); }
-    .capture-modes { display: flex; gap: var(--space-1); }
-    .mode { min-height: 28px; border: 0; background: transparent; color: var(--muted); padding: 0 var(--space-1); font-size: 12px; }
-    .mode[aria-pressed="true"] { color: var(--accent); }
-    .capture input, .aide-input, .command input { min-width: 0; min-height: var(--control); border: 0; background: transparent; color: var(--text); outline: 0; font-size: 14px; }
-    input::placeholder { color: var(--muted); }
-    .save-button { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 42%, transparent); }
-    .save-button:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
-    .aide-line { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--space-3); padding: var(--space-2) 0; border-bottom: 1px solid var(--faint); }
-    .aide-name { color: var(--accent); font-size: 12px; font-weight: 650; }
-    .aide-send { border: 0; background: transparent; color: var(--muted); font-size: 13px; }
-    .aide-send:hover { color: var(--text); }
-    .field-group { width: min(560px, 100%); display: grid; gap: var(--space-2); }
-    .field-label { color: var(--accent); font-size: 12px; font-weight: 650; }
-    .field-shell { min-height: var(--control); display: flex; align-items: center; gap: var(--space-2); border-bottom: 1px solid var(--faint); }
-    .field-shell:focus-within { border-color: var(--accent); }
-    .field-shell .aide-input { width: 100%; }
-    .field-clear { width: var(--control); min-height: var(--control); flex: 0 0 var(--control); border: 0; background: transparent; color: var(--muted); font-size: 12px; }
-    .field-clear:hover { color: var(--text); }
-    .control-line { min-height: var(--control); display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-4); padding: var(--space-2) 0; border-bottom: 1px solid var(--faint); }
-    .choice { min-height: var(--control); display: inline-flex; align-items: center; gap: var(--space-2); border: 0; background: transparent; color: var(--muted); padding: 0; font-size: 13px; }
-    .choice:hover { color: var(--text); }
-    .check-control, .radio-control { width: 15px; height: 15px; display: grid; place-items: center; border: 1px solid var(--muted); color: var(--bg); }
-    .check-control { border-radius: 2px; }
-    .radio-control { border-radius: 50%; }
-    .choice[aria-checked="true"] { color: var(--text); }
-    .choice[aria-checked="true"] .check-control { border-color: var(--accent); background: var(--accent); }
-    .choice[aria-checked="true"] .radio-control::after { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
-    .switch-control { width: 32px; height: 18px; position: relative; border: 1px solid var(--muted); border-radius: 9px; background: transparent; }
-    .switch-control::after { content: ""; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--muted); transition: left .16s ease, background .16s ease; }
-    .choice[aria-checked="true"] .switch-control { border-color: var(--accent); }
-    .choice[aria-checked="true"] .switch-control::after { left: 16px; background: var(--accent); }
-    .slider { width: min(240px, 100%); min-height: var(--control); position: relative; border: 0; background: transparent; }
-    .slider::before { content: ""; position: absolute; top: 20px; left: 0; right: 0; height: 3px; border-radius: 2px; background: var(--faint); }
-    .slider::after { content: ""; position: absolute; top: 15px; left: var(--slider-position, 40%); width: 13px; height: 13px; border-radius: 50%; background: var(--accent); transform: translateX(-50%); }
-    .field-error { color: var(--error); }
-    .field-disabled { opacity: .45; pointer-events: none; }
-    .textarea-line { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: var(--space-3); padding: var(--space-2) 0; border-bottom: 1px solid var(--faint); }
-    .textarea-line textarea { width: 100%; min-height: 88px; resize: vertical; border: 0; background: transparent; color: var(--text); padding: var(--space-2) 0; outline: 0; font: inherit; font-size: 14px; line-height: 1.5; }
-    .select-wrap { position: relative; width: min(280px, 100%); }
-    .select-trigger { width: 100%; min-height: var(--control); display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); border: 0; border-bottom: 1px solid var(--faint); background: transparent; color: var(--text); padding: 0; text-align: left; font-size: 14px; }
-    .select-trigger span:last-child { color: var(--muted); }
-    .select-list { position: absolute; z-index: 1; top: calc(100% + var(--space-1)); width: 100%; border: 1px solid var(--faint); border-radius: 2px; background: var(--panel); padding: var(--space-1) 0; }
-    .select-list[hidden] { display: none; }
-    .select-option { width: 100%; min-height: 36px; border: 0; background: transparent; color: var(--muted); padding: 0 var(--space-3); text-align: left; font-size: 13px; }
-    .select-option:hover, .select-option[aria-selected="true"] { background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--text); }
-    .tab-row { display: flex; align-items: center; gap: var(--space-3); border-bottom: 1px solid var(--faint); }
-    .tab { min-height: var(--control); border: 0; border-bottom: 1px solid transparent; background: transparent; color: var(--muted); padding: 0; font-size: 13px; }
-    .tab[aria-selected="true"] { color: var(--text); border-color: var(--accent); }
-    .menu-wrap { position: relative; }
-    .menu { position: absolute; top: calc(100% + var(--space-1)); left: 0; z-index: 1; min-width: 180px; padding: var(--space-1) 0; border: 1px solid var(--faint); border-radius: 2px; background: var(--panel); }
-    .menu[hidden] { display: none; }
-    .menu button { width: 100%; min-height: 36px; border: 0; background: transparent; color: var(--muted); padding: 0 var(--space-3); text-align: left; font-size: 13px; }
-    .menu button:hover { color: var(--text); background: color-mix(in srgb, var(--accent) 10%, transparent); }
-    .table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    .table th { padding: 0 0 var(--space-2); color: var(--muted); font-size: 11px; font-weight: 600; text-align: left; }
-    .table td { padding: var(--space-3) 0; border-top: 1px solid var(--faint); }
-    .table th:last-child, .table td:last-child { text-align: right; }
-    .pagination { display: flex; align-items: center; gap: var(--space-2); padding-top: var(--space-3); }
-    .page-button { min-width: 28px; min-height: 28px; border: 1px solid var(--faint); border-radius: 2px; background: transparent; color: var(--muted); font-size: 12px; }
-    .page-button[aria-current="page"] { color: var(--accent); border-color: var(--accent); }
-    .page-button:disabled { opacity: .35; cursor: default; }
-    .feedback-line { display: flex; align-items: baseline; gap: var(--space-2); padding: var(--space-2) 0; border-bottom: 1px solid var(--faint); color: var(--muted); font-size: 13px; }
-    .feedback-line strong { color: var(--green); font-weight: 600; }
-    .feedback-line.error strong { color: var(--error); }
-    .action-line { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); padding: var(--space-2) 0; border-bottom: 1px solid var(--faint); }
-    .danger-button { color: var(--error); border-color: color-mix(in srgb, var(--error) 42%, transparent); }
-    .danger-button:hover { border-color: var(--error); background: color-mix(in srgb, var(--error) 10%, transparent); }
-    .busy-button[aria-busy="true"] { color: var(--muted); cursor: wait; }
-    .today { display: grid; gap: 0; }
-    .today-row { width: 100%; min-height: var(--control); display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--space-3); border: 0; border-bottom: 1px solid var(--faint); background: transparent; color: var(--text); padding: var(--space-2) 0; text-align: left; }
-    .today-row:hover { color: var(--accent); }
-    .check { width: 15px; height: 15px; display: grid; place-items: center; border: 1px solid var(--muted); border-radius: 2px; color: var(--bg); font-size: 10px; }
-    .today-row[data-complete="true"] .check { border-color: var(--accent); background: var(--accent); }
-    .today-row[data-complete="true"] .task-name { color: var(--muted); text-decoration: line-through; }
-    .task-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; }
-    .task-meta { color: var(--muted); font-size: 12px; }
-    .command-entry { width: 100%; min-height: var(--control); display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); border: 0; border-bottom: 1px solid var(--faint); background: transparent; color: var(--muted); padding: 0; text-align: left; font-size: 14px; }
-    .command-entry:hover { color: var(--text); border-color: var(--muted); }
-    kbd { border: 1px solid var(--faint); border-radius: 2px; color: var(--muted); padding: 2px 5px; font-size: 10px; }
-    .apps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-2); }
-    .app-link { min-height: var(--control); display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); border: 0; background: transparent; color: var(--muted); padding: 0; font-size: 13px; text-align: left; }
-    .app-link:hover { color: var(--text); }
-    .app-link small { color: var(--faint); }
-    .foot { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-7); color: var(--faint); font-size: 11px; letter-spacing: .04em; }
-    .live { width: 5px; height: 5px; border-radius: 50%; background: var(--green); }
-    .overlay[hidden] { display: none; }
-    .overlay { position: fixed; inset: 0; z-index: 2; display: grid; place-items: start center; padding: max(var(--space-5), 14vh) var(--space-4); background: rgb(0 0 0 / .65); }
-    .command { width: min(720px, 100%); border: 1px solid var(--faint); border-radius: 3px; background: var(--panel); padding: var(--space-3); }
-    .command input { width: 100%; border-bottom: 1px solid var(--muted); padding: 0 var(--space-1); font-size: 18px; }
-    .command-label { padding: var(--space-4) var(--space-1) var(--space-2); color: var(--muted); font-size: 11px; font-weight: 650; letter-spacing: .06em; }
-    .command-option { width: 100%; min-height: var(--control); display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); border: 0; border-radius: 2px; background: transparent; color: var(--text); padding: 0 var(--space-2); text-align: left; font-size: 14px; }
-    .command-option:hover, .command-option[aria-selected="true"] { background: color-mix(in srgb, var(--accent) 13%, transparent); }
-    .command-option span:last-child { color: var(--muted); font-size: 12px; }
-    .confirm { width: min(440px, 100%); border: 1px solid var(--faint); border-radius: 3px; background: var(--panel); padding: var(--space-5); }
-    .confirm h2 { margin: 0; color: var(--text); font-size: 17px; font-weight: 600; }
-    .confirm p { margin: var(--space-2) 0 var(--space-5); color: var(--muted); font-size: 13px; line-height: 1.5; }
-    .confirm-actions { display: flex; justify-content: flex-end; gap: var(--space-2); }
-    .toast { position: fixed; z-index: 3; right: var(--space-5); bottom: var(--space-5); max-width: min(360px, calc(100vw - 48px)); padding: var(--space-3) 0; border-bottom: 1px solid var(--green); background: var(--bg); color: var(--text); font-size: 13px; }
-    .toast[hidden] { display: none; }
-    @media (max-width: 640px) {
-      .home { padding: var(--space-7) var(--space-4); }
-      .wordmark { font-size: 32px; }
-      .head-actions { position: static; margin-top: var(--space-5); }
-      .capture { grid-template-columns: 1fr auto; }
-      .capture-modes { grid-column: 1 / -1; }
-      .apps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .task-meta { display: none; }
+
+    .spec-skip:not(:focus) {
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      padding: var(--k-space-0);
+      white-space: nowrap;
     }
-    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .01ms !important; } }
+
+    .spec-shell {
+      width: 100%;
+      min-width: 0;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 14rem minmax(0, 1fr);
+    }
+
+    .spec-rail {
+      min-width: 0;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      border-inline-end: var(--k-border) solid var(--k-edge);
+      padding: var(--k-space-7) var(--k-space-5);
+    }
+
+    .spec-wordmark {
+      margin: var(--k-space-0) var(--k-space-0) var(--k-space-7);
+      color: var(--k-text);
+      font-size: var(--k-font-title);
+      font-weight: 650;
+      letter-spacing: -.04em;
+    }
+
+    .spec-version {
+      color: var(--k-text-secondary);
+      font-family: var(--k-font-data);
+      font-size: var(--k-font-metadata);
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    .spec-nav {
+      display: grid;
+      gap: var(--k-space-1);
+    }
+
+    .spec-nav a {
+      min-width: var(--k-target);
+      min-height: var(--k-target);
+      display: flex;
+      align-items: center;
+      color: var(--k-text-secondary);
+      text-decoration: none;
+    }
+
+    .spec-nav a:hover,
+    .spec-nav a[aria-current="location"] {
+      color: var(--k-text);
+      font-weight: 650;
+    }
+
+    .spec-rail-note {
+      margin: auto var(--k-space-0) var(--k-space-0);
+      color: var(--k-text-secondary);
+      font-size: var(--k-font-metadata);
+      line-height: var(--k-line-relaxed);
+    }
+
+    .spec-main {
+      min-width: 0;
+      width: min(64rem, 100%);
+      padding: var(--k-space-7) var(--k-page-gutter) var(--k-space-8);
+    }
+
+    .spec-header {
+      display: grid;
+      gap: var(--k-space-6);
+    }
+
+    .spec-header h1 {
+      max-width: 18ch;
+      margin: var(--k-space-0);
+      font-size: clamp(2rem, 6vw, 4rem);
+      line-height: 1;
+      letter-spacing: -.055em;
+    }
+
+    .spec-header p {
+      max-width: 58ch;
+      margin: var(--k-space-3) var(--k-space-0) var(--k-space-0);
+      color: var(--k-text-secondary);
+      font-size: var(--k-font-lead);
+    }
+
+    .spec-mode-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--k-space-4);
+    }
+
+    .spec-mode-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--k-space-1);
+    }
+
+    .spec-mode-group > span {
+      margin-inline-end: var(--k-space-2);
+      color: var(--k-text-secondary);
+      font-size: var(--k-font-metadata);
+    }
+
+    .spec-mode {
+      min-height: var(--k-target);
+      border: 0;
+      border-bottom: var(--k-focus-width) solid transparent;
+      background: transparent;
+      color: var(--k-text-secondary);
+      padding: var(--k-space-0) var(--k-space-3);
+    }
+
+    .spec-mode:hover,
+    .spec-mode[aria-pressed="true"] {
+      color: var(--k-text);
+    }
+
+    .spec-mode[aria-pressed="true"] {
+      border-bottom-color: var(--k-text);
+      font-weight: 650;
+    }
+
+    .spec-section {
+      margin-top: var(--k-space-8);
+      scroll-margin-top: var(--k-space-4);
+    }
+
+    .spec-section-head {
+      display: grid;
+      grid-template-columns: 2rem minmax(0, 1fr);
+      gap: var(--k-space-4);
+      margin-bottom: var(--k-space-6);
+    }
+
+    .spec-section-index {
+      padding-top: var(--k-space-1);
+      color: var(--k-text-secondary);
+      font-family: var(--k-font-data);
+      font-size: var(--k-font-metadata);
+    }
+
+    .spec-section-head h2 {
+      margin: var(--k-space-0);
+      font-size: var(--k-font-title);
+      line-height: var(--k-line-tight);
+    }
+
+    .spec-section-head p {
+      max-width: 58ch;
+      margin: var(--k-space-2) var(--k-space-0) var(--k-space-0);
+      color: var(--k-text-secondary);
+    }
+
+    .spec-subsection {
+      display: grid;
+      gap: var(--k-space-4);
+      margin-top: var(--k-space-7);
+    }
+
+    .spec-subsection:first-child {
+      margin-top: var(--k-space-0);
+    }
+
+    .spec-subsection h3 {
+      margin: var(--k-space-0);
+      font-size: var(--k-font-lead);
+      font-weight: 650;
+    }
+
+    .spec-subsection > .k-button {
+      justify-self: start;
+    }
+
+    .spec-note,
+    .spec-status {
+      max-width: 58ch;
+      margin: var(--k-space-0);
+      color: var(--k-text-secondary);
+    }
+
+    .spec-status {
+      min-height: var(--k-target);
+      display: flex;
+      align-items: center;
+    }
+
+    .spec-measure {
+      display: grid;
+      gap: var(--k-space-3);
+      max-width: 48rem;
+    }
+
+    .spec-measure-row {
+      display: grid;
+      grid-template-columns: 3rem minmax(0, 1fr) 10rem;
+      align-items: center;
+      gap: var(--k-space-3);
+    }
+
+    .spec-measure-value {
+      color: var(--k-text);
+      font-family: var(--k-font-data);
+      font-size: var(--k-font-metadata);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .spec-measure-track {
+      height: var(--k-space-1);
+      border-radius: var(--k-radius-control);
+      background: var(--k-edge);
+    }
+
+    .spec-measure-track span {
+      display: block;
+      width: var(--measure-width);
+      height: 100%;
+      border-radius: inherit;
+      background: var(--k-text-secondary);
+    }
+
+    .spec-measure-use {
+      color: var(--k-text-secondary);
+      font-size: var(--k-font-metadata);
+    }
+
+    .spec-example-nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--k-space-1);
+    }
+
+    .spec-example-nav a {
+      min-height: var(--k-target);
+      display: inline-flex;
+      align-items: center;
+      padding-inline: var(--k-space-3);
+      color: var(--k-text-secondary);
+      text-decoration: none;
+    }
+
+    .spec-example-nav a:hover,
+    .spec-example-nav a[aria-current="page"] {
+      color: var(--k-text);
+      font-weight: 650;
+    }
+
+    .spec-row-list {
+      max-width: 48rem;
+    }
+
+    .spec-row-label {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .spec-popover-anchor,
+    .spec-tooltip-anchor {
+      position: relative;
+      display: inline-block;
+    }
+
+    .spec-popover-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--k-space-2);
+      margin-top: var(--k-space-4);
+    }
+
+    .spec-boundary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--k-space-6);
+    }
+
+    .spec-boundary-case {
+      margin: var(--k-space-0);
+    }
+
+    .spec-boundary-case figcaption {
+      margin-bottom: var(--k-space-3);
+      color: var(--k-text-secondary);
+    }
+
+    .spec-static-field {
+      min-height: var(--k-target);
+      display: flex;
+      align-items: center;
+      width: min(20rem, 100%);
+      color: var(--k-text);
+      padding-inline: var(--k-space-3);
+      user-select: none;
+    }
+
+    .spec-static-field--correct {
+      border-bottom: var(--k-border) solid var(--k-edge);
+      outline: var(--k-focus-width) solid var(--k-focus);
+      outline-offset: var(--k-focus-offset);
+    }
+
+    .spec-static-shell--wrong {
+      width: 100%;
+      border: var(--k-border) solid var(--k-focus);
+      padding: var(--k-space-2);
+    }
+
+    /* kokuen-lint-disable-next-line nested-boundary: intentionally static bad example in the do-not diagnostic */
+    .spec-static-shell--wrong .spec-static-field {
+      border: var(--k-border) solid var(--k-edge-strong);
+      outline: var(--k-border) solid var(--k-focus);
+    }
+
+    .spec-do,
+    .spec-dont {
+      display: inline-block;
+      margin-bottom: var(--k-space-2);
+      font-weight: 650;
+    }
+
+    .spec-do {
+      color: var(--k-success);
+    }
+
+    .spec-dont {
+      color: var(--k-error);
+    }
+
+    .spec-rule-list {
+      max-width: 58rem;
+      margin: var(--k-space-0);
+      padding-inline-start: var(--k-space-5);
+    }
+
+    .spec-rule-list li + li {
+      margin-top: var(--k-space-2);
+    }
+
+    .spec-stress-copy {
+      max-width: 52rem;
+      display: grid;
+      gap: var(--k-space-3);
+    }
+
+    .spec-stress-copy p {
+      margin: var(--k-space-0);
+    }
+
+    .spec-proof-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    /* kokuen-lint-disable-next-line nested-boundary: shared row rules separate proof requirements without boxing cells */
+    .spec-proof-table th,
+    .spec-proof-table td {
+      padding: var(--k-space-3);
+      border-bottom: var(--k-border) solid var(--k-edge);
+      text-align: start;
+      vertical-align: top;
+    }
+
+    .spec-proof-table th {
+      color: var(--k-text-secondary);
+      font-size: var(--k-font-dense);
+    }
+
+    .spec-footer {
+      margin-top: var(--k-space-8);
+      color: var(--k-text-secondary);
+      font-size: var(--k-font-metadata);
+    }
+
+    .spec-command-close {
+      position: static;
+    }
+
+    .spec-command-wrap {
+      position: relative;
+    }
+
+    .spec-command-wrap .k-command__head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) var(--k-target);
+      align-items: center;
+      gap: var(--k-space-2);
+    }
+
+    .k-dialog > .k-field-group + .k-dialog__actions {
+      margin-top: var(--k-space-5);
+    }
+
+    .spec-ai-output {
+      min-height: var(--k-target);
+    }
+
+    .spec-ai-output p {
+      margin: var(--k-space-0);
+    }
+
+    .spec-ai-scope {
+      color: var(--k-text-secondary);
+      font-size: var(--k-font-metadata);
+    }
+
+    @media (max-width: 800px) {
+      .spec-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .spec-rail {
+        height: auto;
+        position: static;
+        border-inline-end: 0;
+        border-bottom: var(--k-border) solid var(--k-edge);
+        padding: var(--k-space-4);
+      }
+
+      .spec-wordmark {
+        margin-bottom: var(--k-space-3);
+      }
+
+      .spec-nav {
+        display: flex;
+        overflow-x: auto;
+      }
+
+      .spec-nav a {
+        flex: 0 0 auto;
+        padding-inline: var(--k-space-3);
+      }
+
+      .spec-rail-note {
+        display: none;
+      }
+
+      .spec-main {
+        padding-block: var(--k-space-6);
+      }
+
+      .spec-boundary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .spec-measure-row {
+        grid-template-columns: 3rem minmax(0, 1fr);
+      }
+
+      .spec-measure-use {
+        grid-column: 2;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .spec-section-head {
+        grid-template-columns: 1fr;
+        gap: var(--k-space-2);
+      }
+
+      .spec-mode-bar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .spec-example-nav,
+      .k-radio-group {
+        align-items: stretch;
+        flex-direction: column;
+      }
+    }
   </style>
 </head>
 <body>
-  <main class="home" data-screen-label="KOKUEN universal visual template">
-    <header class="home-head"><div class="wordmark">KOKUEN</div><p class="greeting">universal <span>interface template.</span></p><p class="subline">one quiet visual language for the parts every product repeats</p><div class="head-actions"><button class="text-button" type="button">foundation</button><button class="text-button" type="button">components</button></div></header>
-    <section class="home-section" aria-labelledby="action-label"><div class="section-label" id="action-label">actions · 44px target · 8px group gap</div><div class="capture"><div class="capture-modes"><button class="mode" type="button" aria-pressed="true">default</button><button class="mode" type="button" aria-pressed="false">quiet</button></div><input id="capture-input" aria-label="Example text field" autocomplete="off" placeholder="one clear field anatomy"><button class="save-button" id="save-example" type="button">save</button></div></section>
-    <section class="home-section" aria-labelledby="field-label"><div class="section-label" id="field-label">field · label → input → recovery</div><div class="field-group"><label class="field-label" for="field-example">label</label><div class="field-shell"><input class="aide-input" id="field-example" placeholder="type here…"><button class="field-clear" id="field-clear" type="button">clear</button></div><p class="subline">A field action stays inside the field edge. Use 8px around a field and 16px before the next one.</p></div></section>
-    <section class="home-section" aria-labelledby="states-label"><div class="section-label" id="states-label">field states · default · error · disabled</div><div class="aide-line"><span class="aide-name">default</span><input class="aide-input" aria-label="Default field state" value="A useful value"><button class="aide-send" type="button">edit</button></div><div class="aide-line field-error"><span class="aide-name">error</span><input class="aide-input" aria-label="Invalid field state" aria-invalid="true" value=""><span>Enter a name to continue.</span></div><div class="aide-line field-disabled"><span class="aide-name">disabled</span><input class="aide-input" aria-label="Disabled field state" disabled value="Unavailable until enabled"><span>locked</span></div></section>
-    <section class="home-section" aria-labelledby="input-types-label"><div class="section-label" id="input-types-label">input types · multiline · select</div><div class="textarea-line"><span class="aide-name">message</span><textarea aria-label="Example multiline field" placeholder="A multi-line intent gets a real textarea."></textarea></div><div class="control-line"><span class="aide-name">scope</span><div class="select-wrap"><button class="select-trigger" id="scope-trigger" type="button" role="combobox" aria-controls="scope-list" aria-expanded="false" aria-haspopup="listbox"><span id="scope-value">Everything</span><span aria-hidden="true">⌄</span></button><div class="select-list" id="scope-list" role="listbox" aria-label="Search scope" hidden><button class="select-option" type="button" role="option" aria-selected="true">Everything</button><button class="select-option" type="button" role="option" aria-selected="false">Notes</button><button class="select-option" type="button" role="option" aria-selected="false">Tasks</button></div></div></div></section>
-    <section class="home-section" aria-labelledby="selection-label"><div class="section-label" id="selection-label">selection · checkbox · radio · switch · range</div><div class="control-line"><button class="choice choice-check" type="button" role="checkbox" aria-checked="false"><span class="check-control" aria-hidden="true"></span>checkbox</button><button class="choice choice-radio" type="button" role="radio" aria-checked="true"><span class="radio-control" aria-hidden="true"></span>radio</button><button class="choice choice-switch" type="button" role="switch" aria-checked="false"><span class="switch-control" aria-hidden="true"></span>switch</button><button class="slider" type="button" role="slider" aria-label="Example range" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40" style="--slider-position:40%"></button></div></section>
-    <section class="home-section" aria-labelledby="row-label"><div class="section-label" id="row-label">collection row · one action per row</div><div class="today" id="today-list"><button class="today-row" type="button" data-complete="false"><span class="check" aria-hidden="true"></span><span class="task-name">default row with a primary label</span><span class="task-meta">meta</span></button><button class="today-row" type="button" data-complete="false"><span class="check" aria-hidden="true"></span><span class="task-name">long content truncates before it breaks alignment</span><span class="task-meta">state</span></button><button class="today-row" type="button" data-complete="true"><span class="check" aria-hidden="true">✓</span><span class="task-name">selected or complete state is explicit</span><span class="task-meta">done</span></button></div></section>
-    <section class="home-section" aria-labelledby="command-label"><div class="section-label" id="command-label">universal command · navigation, search, creation, action</div><button class="command-entry" id="command-trigger" type="button"><span>search notes, tasks, and commands</span><kbd>⌘ K</kbd></button></section>
-    <section class="home-section" aria-labelledby="navigation-label"><div class="section-label" id="navigation-label">navigation · tabs · menu</div><div class="tab-row" role="tablist" aria-label="Example sections"><button class="tab" type="button" role="tab" aria-selected="true">overview</button><button class="tab" type="button" role="tab" aria-selected="false">activity</button><button class="tab" type="button" role="tab" aria-selected="false">archive</button><div class="menu-wrap"><button class="text-button" id="menu-trigger" type="button" aria-expanded="false" aria-haspopup="menu">more</button><div class="menu" id="example-menu" role="menu" hidden><button type="button" role="menuitem">rename</button><button type="button" role="menuitem">duplicate</button><button type="button" role="menuitem">delete</button></div></div></div></section>
-    <section class="home-section" aria-labelledby="data-label"><div class="section-label" id="data-label">data · table · pagination · empty and feedback states</div><table class="table"><thead><tr><th scope="col">Item</th><th scope="col">Updated</th><th scope="col">State</th></tr></thead><tbody><tr><td>Default row</td><td>12 min ago</td><td>Ready</td></tr><tr><td>Longer piece of content</td><td>Yesterday</td><td>Draft</td></tr></tbody></table><div class="pagination" aria-label="Pagination"><button class="page-button" type="button" disabled>‹</button><button class="page-button" type="button" aria-current="page">1</button><button class="page-button" type="button">2</button><button class="page-button" type="button">›</button></div><div class="feedback-line"><strong>Saved</strong><span>Non-blocking confirmation lives with the work.</span></div><div class="feedback-line error"><strong>Can’t sync</strong><span>Try again when the connection returns.</span></div><div class="feedback-line"><span>No results yet. Explain the empty state and offer the next relevant action.</span></div></section>
-    <section class="home-section" aria-labelledby="async-label"><div class="section-label" id="async-label">async and irreversible · pending · confirmation · toast</div><div class="action-line"><button class="text-button busy-button" id="busy-trigger" type="button" aria-busy="false">run action</button><button class="text-button" id="toast-trigger" type="button">show confirmation</button><button class="text-button danger-button" id="delete-trigger" type="button">delete item</button></div></section>
-    <section class="home-section" aria-labelledby="rhythm-label"><div class="section-label" id="rhythm-label">spacing rhythm</div><div class="apps"><button class="app-link" type="button">4 <small>icon / label</small></button><button class="app-link" type="button">8 <small>controls</small></button><button class="app-link" type="button">16 <small>groups</small></button><button class="app-link" type="button">24 <small>sections</small></button></div></section>
-  </main>
-  <div class="overlay" id="command-overlay" hidden><section class="command" role="dialog" aria-modal="true" aria-label="Universal command"><input id="command-input" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="command-list" aria-activedescendant="command-new-note" placeholder="search notes, tasks, and commands"><div id="command-list" role="listbox"><div class="command-label">CREATE</div><button id="command-new-note" class="command-option" type="button" role="option" aria-selected="true"><span>New note</span><span>capture</span></button><button id="command-new-task" class="command-option" type="button" role="option" aria-selected="false"><span>New task</span><span>today</span></button><div class="command-label">GO TO</div><button id="command-search" class="command-option" type="button" role="option" aria-selected="false"><span>Open search</span><span>everything</span></button><button id="command-summarize" class="command-option" type="button" role="option" aria-selected="false"><span>Summarize selection</span><span>ask Aide</span></button></div></section></div>
-  <div class="overlay" id="confirm-overlay" hidden><section class="confirm" role="dialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-copy"><h2 id="confirm-title">Delete this item?</h2><p id="confirm-copy">This removes the item from the current collection. This sample makes confirmation and recovery explicit.</p><div class="confirm-actions"><button class="text-button" id="delete-cancel" type="button">cancel</button><button class="text-button danger-button" id="delete-confirm" type="button">delete</button></div></section></div>
-  <div class="toast" id="toast" role="status" aria-live="polite" hidden>Saved. The confirmation is brief, local, and does not interrupt the task.</div>
+  <a class="spec-skip" href="#main">Skip to template</a>
+  <div class="spec-shell">
+    <aside class="spec-rail" aria-label="Template sections" data-boundary-job="separation">
+      <p class="spec-wordmark">KOKUEN <span class="spec-version">v5</span></p>
+      <nav class="spec-nav">
+        <a href="#foundations">Foundations</a>
+        <a href="#actions">Actions</a>
+        <a href="#inputs">Inputs</a>
+        <a href="#navigation">Navigation</a>
+        <a href="#layers">Layers</a>
+        <a href="#command">Command</a>
+        <a href="#ai">AI</a>
+        <a href="#boundaries">Boundaries</a>
+        <a href="#stress">Stress</a>
+      </nav>
+      <p class="spec-rail-note">A product-neutral contract for common UI. Product identity remains a product decision.</p>
+    </aside>
+
+    <main class="spec-main" id="main">
+      <header class="spec-header" id="top">
+        <div>
+          <h1>Universal UI template</h1>
+          <p>Common controls, spacing, focus, states, command, and AI behavior in one inspectable working reference.</p>
+        </div>
+        <div class="spec-mode-bar" aria-label="Specimen modes">
+          <div class="spec-mode-group" role="group" aria-label="Theme">
+            <span>Theme</span>
+            <button class="spec-mode" type="button" data-mode-axis="theme" data-mode-value="dark" aria-pressed="true">Dark default</button>
+            <button class="spec-mode" type="button" data-mode-axis="theme" data-mode-value="light" aria-pressed="false">Light proof</button>
+          </div>
+          <div class="spec-mode-group" role="group" aria-label="Contrast">
+            <span>Contrast</span>
+            <button class="spec-mode" type="button" data-mode-axis="contrast" data-mode-value="standard" aria-pressed="true">Standard</button>
+            <button class="spec-mode" type="button" data-mode-axis="contrast" data-mode-value="more" aria-pressed="false">More</button>
+          </div>
+          <div class="spec-mode-group" role="group" aria-label="Density">
+            <span>Density</span>
+            <button class="spec-mode" type="button" data-mode-axis="density" data-mode-value="comfortable" aria-pressed="true">Comfortable</button>
+            <button class="spec-mode" type="button" data-mode-axis="density" data-mode-value="compact" aria-pressed="false">Compact visual</button>
+          </div>
+        </div>
+      </header>
+
+      <section class="spec-section" id="foundations" data-fixtures="fixture-target-measurement">
+        <div class="spec-section-head">
+          <span class="spec-section-index">01</span>
+          <div><h2>Foundations</h2><p>Spacing names relationships. Density may tighten the visible control, but every target remains 44px.</p></div>
+        </div>
+        <div class="spec-measure" aria-label="Spacing relationship scale">
+          <div class="spec-measure-row"><span class="spec-measure-value">4</span><span class="spec-measure-track"><span style="--measure-width:4px"></span></span><span class="spec-measure-use">optical pair</span></div>
+          <div class="spec-measure-row"><span class="spec-measure-value">8</span><span class="spec-measure-track"><span style="--measure-width:8px"></span></span><span class="spec-measure-use">label and control</span></div>
+          <div class="spec-measure-row"><span class="spec-measure-value">16</span><span class="spec-measure-track"><span style="--measure-width:16px"></span></span><span class="spec-measure-use">field groups</span></div>
+          <div class="spec-measure-row"><span class="spec-measure-value">24</span><span class="spec-measure-track"><span style="--measure-width:24px"></span></span><span class="spec-measure-use">related regions</span></div>
+          <div class="spec-measure-row"><span class="spec-measure-value">48</span><span class="spec-measure-track"><span style="--measure-width:48px"></span></span><span class="spec-measure-use">sections</span></div>
+          <div class="spec-measure-row"><span class="spec-measure-value">64</span><span class="spec-measure-track"><span style="--measure-width:64px"></span></span><span class="spec-measure-use">major task shift</span></div>
+        </div>
+      </section>
+
+      <section class="spec-section" id="actions" data-fixtures="fixture-button-states fixture-button-busy fixture-button-cjk fixture-icon-action">
+        <div class="spec-section-head">
+          <span class="spec-section-index">02</span>
+          <div><h2>Actions</h2><p>One clear outcome, no hover movement, stable busy language, and no repeat activation.</p></div>
+        </div>
+        <div class="k-cluster">
+          <button class="k-button k-button--primary" type="button" id="save-action">Save changes</button>
+          <button class="k-button k-button--quiet" id="review-action" type="button">Review details</button>
+          <button class="k-button k-button--danger" type="button" id="delete-open">Delete project</button>
+          <button class="k-button" type="button" id="busy-action" aria-busy="false"><span>Run check</span></button>
+          <button class="k-button" type="button" disabled>Unavailable</button>
+          <button class="k-button k-button--quiet" id="save-cjk" type="button">保存更改</button>
+          <button class="k-icon-button" id="center-view" type="button" aria-label="Center working view">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7V3h4M13 3h4v4M17 13v4h-4M7 17H3v-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <p class="spec-status" id="action-status" role="status" aria-live="polite">Ready. The busy action accepts one operation at a time.</p>
+      </section>
+
+      <section class="spec-section" id="inputs">
+        <div class="spec-section-head">
+          <span class="spec-section-index">03</span>
+          <div><h2>Inputs and choice</h2><p>Fields follow expected content width. Inline actions stay attached. Custom composites implement one complete focus model.</p></div>
+        </div>
+
+        <div class="spec-subsection" data-fixtures="fixture-field-default fixture-field-composite fixture-field-error fixture-field-cjk">
+          <h3>Text fields</h3>
+          <div class="k-field-group">
+            <label class="k-label" for="display-name">Display name</label>
+            <input class="k-field" id="display-name" type="text" value="Lin Mei" autocomplete="name">
+            <span class="k-help" id="display-name-help">Shown in shared workspaces.</span>
+          </div>
+          <div class="k-field-group">
+            <label class="k-label" for="project-name">Project name</label>
+            <div class="k-field-shell" data-boundary-job="input affordance">
+              <input class="k-field" id="project-name" type="text" aria-describedby="project-error" aria-invalid="true" placeholder="例：秋季研究计划">
+              <button class="k-field-action" id="field-clear" type="button" aria-label="Clear project name">Clear</button>
+            </div>
+            <span class="k-error-text" id="project-error">Enter a project name to continue.</span>
+          </div>
+          <button class="k-button k-button--primary" id="field-validate" type="button">Validate name</button>
+        </div>
+
+        <div class="spec-subsection" data-fixtures="fixture-textarea fixture-textarea-cjk">
+          <h3>Multiline intent</h3>
+          <div class="k-field-group">
+            <label class="k-label" for="brief">Review brief</label>
+            <textarea class="k-textarea" id="brief" aria-describedby="brief-help">检查桌面与窄屏布局，保留键盘焦点，并确认错误内容不会挤走字段操作。</textarea>
+            <span class="k-help" id="brief-help">A multiline task uses a real textarea and preserves IME composition.</span>
+          </div>
+        </div>
+
+        <div class="spec-subsection" data-fixtures="fixture-select fixture-select-disabled fixture-select-cjk">
+          <h3>Custom select</h3>
+          <div class="k-field-group">
+            <span class="k-label" id="scope-label">Search scope</span>
+            <div class="k-select">
+              <button class="k-select__trigger" id="scope-trigger" type="button" role="combobox" aria-labelledby="scope-label scope-value" aria-expanded="false" aria-controls="scope-list" aria-haspopup="listbox">
+                <span id="scope-value">Everything</span><span aria-hidden="true">⌄</span>
+              </button>
+              <div class="k-select-list" id="scope-list" role="listbox" aria-labelledby="scope-label" hidden>
+                <button class="k-select-option" id="scope-all" type="button" role="option" aria-selected="true">Everything</button>
+                <button class="k-select-option" id="scope-notes" type="button" role="option" aria-selected="false">Notes and documents</button>
+                <button class="k-select-option" id="scope-tasks" type="button" role="option" aria-selected="false">任务和截止日期</button>
+                <button class="k-select-option" id="scope-locked" type="button" role="option" aria-selected="false" aria-disabled="true">Administrative records</button>
+              </div>
+            </div>
+            <span class="k-help">Focus stays on the trigger while active descendant moves.</span>
+          </div>
+        </div>
+
+        <div class="spec-subsection" data-fixtures="fixture-checkbox-states fixture-checkbox-cjk fixture-radio-group fixture-radio-disabled fixture-switch-states fixture-switch-error fixture-slider fixture-slider-keyboard">
+          <h3>Choice controls</h3>
+          <div class="k-cluster">
+            <button class="k-checkbox" type="button" role="checkbox" aria-checked="false"><span class="k-checkbox__mark" aria-hidden="true"></span><span>Include archived work</span></button>
+            <button class="k-checkbox" type="button" role="checkbox" aria-checked="mixed"><span class="k-checkbox__mark" aria-hidden="true"></span><span>同步选定项目</span></button>
+            <button class="k-switch" id="review-switch" type="button" role="switch" aria-checked="false"><span class="k-switch__track" aria-hidden="true"></span><span>Review mode</span></button>
+          </div>
+          <div>
+            <span class="k-label" id="density-label">Reading density</span>
+            <div class="k-radio-group" id="density-radios" role="radiogroup" aria-labelledby="density-label">
+              <button class="k-radio" type="button" role="radio" aria-checked="true" tabindex="0"><span class="k-radio__mark" aria-hidden="true"></span><span>Comfortable</span></button>
+              <button class="k-radio" type="button" role="radio" aria-checked="false" tabindex="-1"><span class="k-radio__mark" aria-hidden="true"></span><span>Compact visual</span></button>
+              <button class="k-radio" type="button" role="radio" aria-checked="false" aria-disabled="true" tabindex="-1"><span class="k-radio__mark" aria-hidden="true"></span><span>Unavailable preset</span></button>
+            </div>
+          </div>
+          <div class="k-field-group">
+            <span class="k-label" id="volume-label">Preview volume: <span id="slider-value">40</span>%</span>
+            <button class="k-slider" id="volume-slider" type="button" role="slider" aria-labelledby="volume-label" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40" style="--k-slider-value:40%">
+              <span class="k-slider__track" aria-hidden="true"><span class="k-slider__fill"></span></span><span class="k-slider__thumb" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="spec-section" id="navigation">
+        <div class="spec-section-head">
+          <span class="spec-section-index">04</span>
+          <div><h2>Navigation and data</h2><p>Location, selection, and action use different semantics. Dense content preserves comparison and reachable actions.</p></div>
+        </div>
+
+        <div class="spec-subsection">
+          <h3>Location</h3>
+          <nav class="spec-example-nav" aria-label="Example product navigation">
+            <a href="#navigation" aria-current="page">Overview</a><a href="#navigation">Notes</a><a href="#navigation">Tasks</a><a href="#navigation">Archive</a>
+          </nav>
+        </div>
+
+        <div class="spec-subsection" data-fixtures="fixture-tabs fixture-tabs-manual">
+          <h3>Tabs</h3>
+          <div class="k-tabs" role="tablist" aria-label="Activity views">
+            <button class="k-tab" id="tab-recent" type="button" role="tab" aria-selected="true" aria-controls="panel-recent" tabindex="0">Recent</button>
+            <button class="k-tab" id="tab-pinned" type="button" role="tab" aria-selected="false" aria-controls="panel-pinned" tabindex="-1">Pinned</button>
+            <button class="k-tab" id="tab-shared" type="button" role="tab" aria-selected="false" aria-controls="panel-shared" tabindex="-1">Shared with me</button>
+          </div>
+          <div class="k-tabpanel" id="panel-recent" role="tabpanel" aria-labelledby="tab-recent">Recent work is shown without leaving the page.</div>
+          <div class="k-tabpanel" id="panel-pinned" role="tabpanel" aria-labelledby="tab-pinned" hidden>Pinned work keeps the same panel relationship.</div>
+          <div class="k-tabpanel" id="panel-shared" role="tabpanel" aria-labelledby="tab-shared" hidden>共享项目保留完整的键盘焦点顺序。</div>
+        </div>
+
+        <div class="spec-subsection" data-fixtures="fixture-menu fixture-menu-keyboard">
+          <h3>Action menu</h3>
+          <div class="k-menu-anchor">
+            <button class="k-button k-button--quiet k-menu-trigger" id="menu-trigger" type="button" aria-haspopup="menu" aria-expanded="false">More actions</button>
+            <div class="k-menu" id="action-menu" role="menu" hidden>
+              <button class="k-menuitem" type="button" role="menuitem">Rename workspace</button>
+              <button class="k-menuitem" type="button" role="menuitem">Duplicate workspace</button>
+              <button class="k-menuitem" type="button" role="menuitem" aria-disabled="true">Move to locked folder</button>
+              <button class="k-menuitem k-menuitem--danger" type="button" role="menuitem">Delete workspace</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="spec-subsection" data-fixtures="fixture-row-states fixture-row-long-content">
+          <h3>Rows</h3>
+          <div class="spec-row-list" role="list">
+            <div class="k-row" role="listitem"><button class="k-row-primary" type="button"><span class="spec-row-label">Design system review notes</span><span class="k-meta">12 min ago</span></button><button class="k-row-action" type="button" aria-label="More actions for Design system review notes">•••</button></div>
+            <div class="k-row" role="listitem"><button class="k-row-primary" type="button"><span class="spec-row-label">一个很长的项目名称用于检查窄屏、字体回退与省略策略是否仍然可理解</span><span class="k-meta">Yesterday</span></button><button class="k-row-action" type="button" aria-label="More actions for long project name">•••</button></div>
+          </div>
+        </div>
+
+        <div class="spec-subsection" data-fixtures="fixture-table fixture-table-stress fixture-table-empty">
+          <h3>Data table</h3>
+          <div class="k-table-scroll" tabindex="0" aria-label="Scrollable project table">
+            <table class="k-table">
+              <caption>Project activity with stable columns and real content stress.</caption>
+              <thead><tr><th scope="col">Project</th><th scope="col">Owner</th><th scope="col" data-numeric>Open items</th><th scope="col">Updated</th></tr></thead>
+              <tbody><tr><td>Field boundary audit</td><td>Lin Mei</td><td data-numeric>28</td><td>12 min ago</td></tr><tr><td>跨平台键盘与焦点验证</td><td>王怡安</td><td data-numeric>1,204</td><td>2026-07-30</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="spec-subsection" data-fixtures="fixture-pagination fixture-pagination-boundary">
+          <h3>Pagination</h3>
+          <nav class="k-pagination" aria-label="Project pages">
+            <button class="k-page-button" type="button" aria-label="Previous page" disabled>‹</button>
+            <button class="k-page-button" type="button" aria-label="Page 1" aria-current="page">1</button>
+            <button class="k-page-button" type="button" aria-label="Page 2">2</button>
+            <button class="k-page-button" type="button" aria-label="Page 3">3</button>
+            <button class="k-page-button" type="button" aria-label="Next page">›</button>
+          </nav>
+        </div>
+
+        <div class="spec-subsection" data-fixtures="fixture-feedback-states fixture-feedback-cjk">
+          <h3>Data states</h3>
+          <div class="k-cluster" role="group" aria-label="Preview data state">
+            <button class="k-button k-button--quiet" type="button" data-state-preview="empty">Empty</button>
+            <button class="k-button k-button--quiet" type="button" data-state-preview="loading">Loading</button>
+            <button class="k-button k-button--quiet" type="button" data-state-preview="error">Error</button>
+            <button class="k-button k-button--quiet" type="button" data-state-preview="permission">Permission</button>
+          </div>
+          <div class="k-state" id="state-preview" role="status" aria-live="polite"><strong>No pinned work</strong><span>Pin an item when it needs to stay in reach.</span><button class="k-button k-button--quiet" type="button">Browse recent work</button></div>
+        </div>
+      </section>
+
+      <section class="spec-section" id="layers">
+        <div class="spec-section-head">
+          <span class="spec-section-index">05</span>
+          <div><h2>Layers and feedback</h2><p>Every temporary surface defines trigger, focus entry, boundary, Escape, outside interaction, and return.</p></div>
+        </div>
+        <div class="k-cluster">
+          <span class="spec-tooltip-anchor" data-fixtures="fixture-tooltip">
+            <button class="k-button k-button--quiet" id="tooltip-trigger" type="button" aria-describedby="tooltip-content">Explain target</button>
+            <span class="k-tooltip" id="tooltip-content" role="tooltip" hidden>Targets remain 44px even in compact visual mode.</span>
+          </span>
+          <span class="spec-popover-anchor" data-fixtures="fixture-popover">
+            <button class="k-button k-button--quiet" id="popover-trigger" type="button" aria-expanded="false" aria-controls="popover-content">Open context</button>
+            <span class="k-popover" id="popover-content" role="region" aria-label="View options" hidden>
+              <span class="k-stack k-stack--tight"><strong>View options</strong><span class="k-help">This nonmodal surface returns focus to its trigger when closed.</span></span>
+              <span class="spec-popover-actions"><button class="k-button k-button--quiet" id="popover-close" type="button">Close</button><button class="k-button" id="popover-apply" type="button">Apply view</button></span>
+            </span>
+          </span>
+          <button class="k-button" id="dialog-open" type="button" data-fixtures="fixture-dialog fixture-dialog-focus-trap fixture-dialog-cjk">Open dialog</button>
+          <button class="k-button" id="toast-open" type="button" data-fixtures="fixture-toast fixture-toast-action">Show confirmation</button>
+        </div>
+      </section>
+
+      <section class="spec-section" id="command" data-fixtures="fixture-command fixture-command-empty fixture-command-error fixture-command-permission">
+        <div class="spec-section-head">
+          <span class="spec-section-index">06</span>
+          <div><h2>Universal command</h2><p>Navigation, search, creation, contextual actions, and bounded AI actions share one keyboard model.</p></div>
+        </div>
+        <button class="k-command-trigger" id="command-trigger" type="button"><span>Search everything or run a command</span><kbd>⌘ K</kbd></button>
+        <p class="spec-status" id="command-result" role="status" aria-live="polite">Try “offline”, “admin”, or a query with no matching result to inspect failure states.</p>
+      </section>
+
+      <section class="spec-section" id="ai">
+        <div class="spec-section-head">
+          <span class="spec-section-index">07</span>
+          <div><h2>AI composition and result</h2><p>Scope, streaming, Stop, partial output, sources, permission, and failure remain explicit. Animation never proves completion.</p></div>
+        </div>
+        <div class="spec-subsection" data-fixtures="fixture-ai-composer fixture-ai-streaming fixture-ai-permission">
+          <div class="k-ai-composer" id="ai-composer" data-boundary-job="input affordance and containment">
+            <label class="k-label" for="ai-prompt">Ask about selected material</label>
+            <textarea id="ai-prompt" aria-describedby="ai-scope ai-error" placeholder="Describe the result and its scope.">Summarize the selected review notes and preserve unresolved decisions.</textarea>
+            <span class="spec-ai-scope" id="ai-scope">Scope: 3 selected notes. No external action.</span>
+            <span class="k-error-text" id="ai-error" hidden>Enter a request before sending.</span>
+            <div class="k-ai-composer__actions"><span class="k-help">Enter inserts a line. Use the button to send.</span><span class="k-cluster"><button class="k-button k-button--quiet" type="button" aria-disabled="true">Attach source</button><button class="k-button k-button--primary" id="ai-send" type="button">Generate summary</button><button class="k-button" id="ai-stop" type="button" hidden>Stop generation</button></span></div>
+          </div>
+        </div>
+        <div class="spec-subsection" data-fixtures="fixture-ai-response fixture-ai-stopped fixture-ai-failure fixture-ai-sources">
+          <div class="k-ai-response" id="ai-response" aria-labelledby="ai-response-title" aria-busy="false">
+            <strong id="ai-response-title">Generated response</strong>
+            <span class="k-ai-status" id="ai-status" role="status" aria-live="polite">Idle. The selected scope is visible before generation.</span>
+            <div class="spec-ai-output" id="ai-output"><p>No generated content yet.</p></div>
+            <div class="k-ai-sources" id="ai-sources" hidden>Sources: Boundary audit notes, keyboard review, spacing decisions.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="spec-section" id="boundaries">
+        <div class="spec-section-head">
+          <span class="spec-section-index">08</span>
+          <div><h2>Boundary law</h2><p>A component does not get a box merely because it exists. Every edge names a job and one control has one focus geometry.</p></div>
+        </div>
+        <div class="spec-boundary-grid">
+          <figure class="spec-boundary-case"><figcaption><span class="spec-do">Do</span><br>Focus hugs the bounded field that receives input.</figcaption><div class="spec-static-field spec-static-field--correct" aria-hidden="true">Project name</div></figure>
+          <figure class="spec-boundary-case"><figcaption><span class="spec-dont">Do not</span><br>A full row, wrapper, input, and outline become three unrelated bezels.</figcaption><div class="spec-static-shell--wrong" aria-hidden="true"><div class="spec-static-field">Project name</div></div></figure>
+        </div>
+        <ol class="spec-rule-list">
+          <li>Name the job: input affordance, state, containment, clipping, or separation.</li>
+          <li>Remove the edge when spacing, alignment, or tone already does the job.</li>
+          <li>Keep fields bounded to expected content unless the task is search, command, composition, or full-row entry.</li>
+          <li>Keep Clear, Edit, validation, and other field actions inside or immediately beside the field.</li>
+          <li>Focus must remain visible, unclipped, high-contrast, and attached to the actual target.</li>
+          <li>Never nest same-level shells to simulate depth or importance.</li>
+        </ol>
+      </section>
+
+      <section class="spec-section" id="stress">
+        <div class="spec-section-head">
+          <span class="spec-section-index">09</span>
+          <div><h2>Stress and proof</h2><p>A default frame is not enough. The same contract must survive real language, narrow width, zoom, preferences, and failure.</p></div>
+        </div>
+        <div class="spec-stress-copy">
+          <p><strong>Long content:</strong> Review all selected projects whose names, ownership records, synchronization states, and recovery instructions cannot fit on one short line.</p>
+          <p lang="zh-Hant"><strong>繁體中文：</strong>檢查欄位操作、對話框焦點、表格欄位和錯誤復原說明，在窄螢幕與百分之二百縮放時仍然完整可用。</p>
+          <p lang="ja"><strong>日本語：</strong>長いラベル、入力エラー、キーボード操作、フォーカス復帰が同じレイアウト規則で維持されることを確認します。</p>
+        </div>
+        <div class="k-table-scroll" tabindex="0" aria-label="Proof matrix">
+          <table class="spec-proof-table">
+            <thead><tr><th scope="col">Axis</th><th scope="col">Required proof</th></tr></thead>
+            <tbody><tr><td>Viewport</td><td>Wide, 768px class, and 320 to 390px narrow.</td></tr><tr><td>Zoom</td><td>100 and 200 percent without lost content or horizontal task hunting.</td></tr><tr><td>Input</td><td>Pointer, Tab, Shift+Tab, Arrow, Home, End, Enter, Space, Escape, IME.</td></tr><tr><td>Preference</td><td>Reduced motion and forced colors.</td></tr><tr><td>Data</td><td>Populated, empty, loading, error, partial, stale, unavailable, permission.</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer class="spec-footer">KOKUEN v5 specimen. The template demonstrates the universal contract; a real product still requires its own identity and rendered proof.</footer>
+    </main>
+  </div>
+
+  <div class="k-overlay" id="dialog-overlay" hidden>
+    <section class="k-dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title" aria-describedby="dialog-copy" data-boundary-job="containment">
+      <h2 class="k-dialog__title" id="dialog-title">Review keyboard behavior</h2>
+      <p class="k-dialog__copy" id="dialog-copy">Tab and Shift+Tab remain inside this surface. Escape and Cancel return focus to the opener. 對話框內容在窄螢幕上仍然可讀。</p>
+      <div class="k-field-group"><label class="k-label" for="dialog-note">Review note</label><input class="k-field" id="dialog-note" type="text" value="Focus stays inside the current task."></div>
+      <div class="k-dialog__actions"><button class="k-button k-button--quiet" id="dialog-cancel" type="button">Cancel review</button><button class="k-button k-button--primary" id="dialog-save" type="button">Save review</button></div>
+    </section>
+  </div>
+
+  <div class="k-overlay" id="confirm-overlay" hidden data-fixtures="fixture-confirmation fixture-confirmation-busy">
+    <section class="k-dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-copy" data-boundary-job="containment">
+      <h2 class="k-dialog__title" id="confirm-title">Delete “Field boundary audit”?</h2>
+      <p class="k-dialog__copy" id="confirm-copy">This removes the project and its local review history. This specimen does not perform a real deletion.</p>
+      <div class="k-dialog__actions"><button class="k-button k-button--quiet" id="confirm-cancel" type="button">Keep project</button><button class="k-button k-button--danger" id="confirm-delete" type="button">Delete project</button></div>
+    </section>
+  </div>
+
+  <div class="k-overlay" id="command-overlay" hidden>
+    <section class="k-command spec-command-wrap" role="dialog" aria-modal="true" aria-labelledby="command-title" data-boundary-job="containment">
+      <h2 id="command-title" hidden>Universal command</h2>
+      <div class="k-command__head"><input class="k-command-input" id="command-input" type="text" role="combobox" aria-label="Search everything or run a command" aria-autocomplete="list" aria-expanded="true" aria-controls="command-list" placeholder="Search everything or run a command"><button class="k-icon-button spec-command-close" id="command-close" type="button" aria-label="Close universal command">×</button></div>
+      <div class="k-command__status" id="command-status" role="status" aria-live="polite">5 results</div>
+      <ul class="k-command__list" id="command-list" role="listbox" aria-label="Command results"></ul>
+    </section>
+  </div>
+
+  <div class="k-toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
+
   <script>
-    const overlay = document.getElementById("command-overlay");
-    const trigger = document.getElementById("command-trigger");
-    const commandInput = document.getElementById("command-input");
-    const commandOptions = [...document.querySelectorAll(".command-option")];
-    let activeIndex = 0;
-    let opener = trigger;
-    const setActive = (index) => { activeIndex = (index + commandOptions.length) % commandOptions.length; commandOptions.forEach((option, i) => option.setAttribute("aria-selected", String(i === activeIndex))); commandInput.setAttribute("aria-activedescendant", commandOptions[activeIndex].id); };
-    const openCommand = (source) => { opener = source; overlay.hidden = false; setActive(0); commandInput.focus(); };
-    const closeCommand = () => { overlay.hidden = true; opener.focus(); };
-    trigger.addEventListener("click", () => openCommand(trigger));
-    document.addEventListener("keydown", (event) => { if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") { event.preventDefault(); openCommand(document.activeElement instanceof HTMLElement ? document.activeElement : trigger); } });
-    overlay.addEventListener("click", (event) => { if (event.target === overlay) closeCommand(); });
-    commandInput.addEventListener("keydown", (event) => { if (event.key === "ArrowDown") { event.preventDefault(); setActive(activeIndex + 1); } else if (event.key === "ArrowUp") { event.preventDefault(); setActive(activeIndex - 1); } else if (event.key === "Home") { event.preventDefault(); setActive(0); } else if (event.key === "End") { event.preventDefault(); setActive(commandOptions.length - 1); } else if (event.key === "Escape") { event.preventDefault(); closeCommand(); } else if (event.key === "Enter") { event.preventDefault(); closeCommand(); } });
-    commandOptions.forEach((option, index) => option.addEventListener("click", () => { setActive(index); closeCommand(); }));
-    document.querySelectorAll(".mode").forEach((mode) => mode.addEventListener("click", () => { document.querySelectorAll(".mode").forEach((item) => item.setAttribute("aria-pressed", String(item === mode))); document.getElementById("capture-input").setAttribute("aria-label", mode.textContent === "quiet" ? "Quiet action example" : "Default action example"); document.getElementById("capture-input").placeholder = mode.textContent === "quiet" ? "quiet action treatment" : "one clear field anatomy"; }));
-    document.getElementById("field-clear").addEventListener("click", () => { const field = document.getElementById("field-example"); field.value = ""; field.focus(); });
-    const bindTask = (row) => row.addEventListener("click", () => { const complete = row.dataset.complete === "true"; row.dataset.complete = String(!complete); row.querySelector(".check").textContent = complete ? "" : "✓"; });
-    document.querySelectorAll(".today-row").forEach(bindTask);
-    document.getElementById("save-example").addEventListener("click", () => { const input = document.getElementById("capture-input"); const text = input.value.trim(); if (!text) { input.focus(); return; } const row = document.createElement("button"); row.className = "today-row"; row.type = "button"; row.dataset.complete = "false"; row.innerHTML = '<span class="check" aria-hidden="true"></span><span class="task-name"></span><span class="task-meta">new</span>'; row.querySelector(".task-name").textContent = text; bindTask(row); document.getElementById("today-list").prepend(row); input.value = ""; });
-    document.querySelectorAll(".choice-check,.choice-switch").forEach((choice) => choice.addEventListener("click", () => choice.setAttribute("aria-checked", String(choice.getAttribute("aria-checked") !== "true"))));
-    document.querySelectorAll(".choice-radio").forEach((choice) => choice.addEventListener("click", () => document.querySelectorAll(".choice-radio").forEach((item) => item.setAttribute("aria-checked", String(item === choice)))));
-    document.querySelectorAll(".slider").forEach((slider) => slider.addEventListener("keydown", (event) => { const current = Number(slider.getAttribute("aria-valuenow")); const next = event.key === "Home" ? 0 : event.key === "End" ? 100 : event.key === "ArrowLeft" || event.key === "ArrowDown" ? Math.max(0, current - 10) : event.key === "ArrowRight" || event.key === "ArrowUp" ? Math.min(100, current + 10) : current; if (next !== current || event.key === "Home" || event.key === "End") { event.preventDefault(); slider.setAttribute("aria-valuenow", String(next)); slider.style.setProperty("--slider-position", `${next}%`); } }));
-    document.querySelectorAll(".tab").forEach((tab) => tab.addEventListener("click", () => document.querySelectorAll(".tab").forEach((item) => item.setAttribute("aria-selected", String(item === tab)))));
-    const menuTrigger = document.getElementById("menu-trigger"); const exampleMenu = document.getElementById("example-menu");
-    menuTrigger.addEventListener("click", () => { exampleMenu.hidden = !exampleMenu.hidden; menuTrigger.setAttribute("aria-expanded", String(!exampleMenu.hidden)); });
-    exampleMenu.addEventListener("click", () => { exampleMenu.hidden = true; menuTrigger.setAttribute("aria-expanded", "false"); menuTrigger.focus(); });
-    const scopeTrigger = document.getElementById("scope-trigger"); const scopeList = document.getElementById("scope-list"); const scopeOptions = [...scopeList.querySelectorAll("[role=option]")];
-    const closeScope = () => { scopeList.hidden = true; scopeTrigger.setAttribute("aria-expanded", "false"); scopeTrigger.focus(); };
-    const chooseScope = (index) => { scopeOptions.forEach((option, i) => option.setAttribute("aria-selected", String(i === index))); document.getElementById("scope-value").textContent = scopeOptions[index].textContent; closeScope(); };
-    scopeTrigger.addEventListener("click", () => { scopeList.hidden = !scopeList.hidden; scopeTrigger.setAttribute("aria-expanded", String(!scopeList.hidden)); if (!scopeList.hidden) scopeOptions[0].focus(); });
-    scopeTrigger.addEventListener("keydown", (event) => { if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) { event.preventDefault(); scopeList.hidden = false; scopeTrigger.setAttribute("aria-expanded", "true"); scopeOptions[event.key === "End" || event.key === "ArrowUp" ? scopeOptions.length - 1 : 0].focus(); } else if (event.key === "Escape" && !scopeList.hidden) { closeScope(); } });
-    scopeOptions.forEach((option, index) => option.addEventListener("click", () => chooseScope(index)));
-    scopeList.addEventListener("keydown", (event) => { const current = scopeOptions.indexOf(document.activeElement); if (event.key === "Escape") { event.preventDefault(); closeScope(); } else if (event.key === "Home" || event.key === "End" || event.key === "ArrowDown" || event.key === "ArrowUp") { event.preventDefault(); const next = event.key === "Home" ? 0 : event.key === "End" ? scopeOptions.length - 1 : (current + (event.key === "ArrowDown" ? 1 : -1) + scopeOptions.length) % scopeOptions.length; scopeOptions[next].focus(); } else if (event.key === "Enter" || event.key === " ") { event.preventDefault(); chooseScope(current); } });
-    const toast = document.getElementById("toast"); let toastTimer; const showToast = (message) => { toast.textContent = message; toast.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { toast.hidden = true; }, 3600); };
-    document.getElementById("toast-trigger").addEventListener("click", () => showToast("Saved. The confirmation is brief, local, and does not interrupt the task."));
-    document.getElementById("busy-trigger").addEventListener("click", (event) => { const button = event.currentTarget; button.setAttribute("aria-busy", "true"); button.textContent = "working…"; setTimeout(() => { button.setAttribute("aria-busy", "false"); button.textContent = "run action"; showToast("Action complete."); }, 900); });
-    const confirmOverlay = document.getElementById("confirm-overlay"); const deleteTrigger = document.getElementById("delete-trigger"); const closeConfirm = () => { confirmOverlay.hidden = true; deleteTrigger.focus(); };
-    deleteTrigger.addEventListener("click", () => { confirmOverlay.hidden = false; document.getElementById("delete-cancel").focus(); });
-    document.getElementById("delete-cancel").addEventListener("click", closeConfirm);
-    document.getElementById("delete-confirm").addEventListener("click", () => { closeConfirm(); showToast("Item deleted. A real product would offer recovery when possible."); });
-    confirmOverlay.addEventListener("click", (event) => { if (event.target === confirmOverlay) closeConfirm(); });
-    document.addEventListener("keydown", (event) => { if (event.key === "Escape" && !confirmOverlay.hidden) { event.preventDefault(); closeConfirm(); } });
+    (() => {
+      const root = document.documentElement;
+      const byId = (id) => document.getElementById(id);
+      const all = (selector, parent = document) => [...parent.querySelectorAll(selector)];
+      const isDisabled = (element) => element.disabled || element.getAttribute("aria-disabled") === "true";
+
+      all("[data-mode-axis]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const axis = button.dataset.modeAxis;
+          const value = button.dataset.modeValue;
+          root.dataset[axis] = value;
+          all(`[data-mode-axis="${axis}"]`).forEach((peer) => peer.setAttribute("aria-pressed", String(peer === button)));
+        });
+      });
+
+      let busyRuns = 0;
+      const busyAction = byId("busy-action");
+      busyAction.addEventListener("click", () => {
+        if (busyAction.getAttribute("aria-busy") === "true") return;
+        busyRuns += 1;
+        busyAction.setAttribute("aria-busy", "true");
+        busyAction.setAttribute("aria-disabled", "true");
+        busyAction.querySelector("span").textContent = "Running check";
+        byId("action-status").textContent = `Check ${busyRuns} is running. Repeated activation is blocked.`;
+        window.setTimeout(() => {
+          busyAction.setAttribute("aria-busy", "false");
+          busyAction.removeAttribute("aria-disabled");
+          busyAction.querySelector("span").textContent = "Run check";
+          byId("action-status").textContent = `Check ${busyRuns} completed. One operation ran.`;
+          showToast("Check complete. One operation ran.");
+        }, 900);
+      });
+      byId("save-action").addEventListener("click", () => showToast("Changes saved in this specimen."));
+      byId("review-action").addEventListener("click", () => byId("boundaries").scrollIntoView({ block: "start" }));
+      byId("save-cjk").addEventListener("click", () => showToast("更改已儲存在此範本中。"));
+      byId("center-view").addEventListener("click", () => byId("top").scrollIntoView({ block: "start" }));
+
+      const projectName = byId("project-name");
+      const projectError = byId("project-error");
+      const setProjectValidity = (valid) => {
+        projectName.setAttribute("aria-invalid", String(!valid));
+        projectError.hidden = valid;
+      };
+      byId("field-clear").addEventListener("click", () => {
+        projectName.value = "";
+        setProjectValidity(false);
+        projectName.focus();
+      });
+      byId("field-validate").addEventListener("click", () => {
+        const valid = Boolean(projectName.value.trim());
+        setProjectValidity(valid);
+        if (!valid) projectName.focus();
+        else showToast(`“${projectName.value.trim()}” is ready.`);
+      });
+      projectName.addEventListener("input", () => {
+        if (projectName.value.trim()) setProjectValidity(true);
+      });
+
+      all(".k-checkbox, .k-switch").forEach((control) => {
+        control.addEventListener("click", () => {
+          if (isDisabled(control)) return;
+          control.setAttribute("aria-checked", String(control.getAttribute("aria-checked") !== "true"));
+        });
+      });
+
+      const radios = all("#density-radios [role=radio]");
+      const enabledRadios = () => radios.filter((radio) => !isDisabled(radio));
+      const selectRadio = (radio, focus = false) => {
+        if (!radio || isDisabled(radio)) return;
+        radios.forEach((item) => {
+          item.setAttribute("aria-checked", String(item === radio));
+          item.tabIndex = item === radio ? 0 : -1;
+        });
+        if (focus) radio.focus();
+      };
+      radios.forEach((radio) => {
+        radio.addEventListener("click", () => selectRadio(radio));
+        radio.addEventListener("keydown", (event) => {
+          const enabled = enabledRadios();
+          const current = enabled.indexOf(radio);
+          let next = current;
+          if (["ArrowRight", "ArrowDown"].includes(event.key)) next = (current + 1) % enabled.length;
+          else if (["ArrowLeft", "ArrowUp"].includes(event.key)) next = (current - 1 + enabled.length) % enabled.length;
+          else if (event.key === "Home") next = 0;
+          else if (event.key === "End") next = enabled.length - 1;
+          else if (event.key === " ") {
+            event.preventDefault();
+            selectRadio(radio);
+            return;
+          } else return;
+          event.preventDefault();
+          selectRadio(enabled[next], true);
+        });
+      });
+
+      const slider = byId("volume-slider");
+      const updateSlider = (value) => {
+        const next = Math.max(0, Math.min(100, Math.round(value / 5) * 5));
+        slider.setAttribute("aria-valuenow", String(next));
+        slider.style.setProperty("--k-slider-value", `${next}%`);
+        byId("slider-value").textContent = String(next);
+      };
+      slider.addEventListener("keydown", (event) => {
+        const current = Number(slider.getAttribute("aria-valuenow"));
+        let next = current;
+        if (["ArrowRight", "ArrowUp"].includes(event.key)) next += 5;
+        else if (["ArrowLeft", "ArrowDown"].includes(event.key)) next -= 5;
+        else if (event.key === "PageUp") next += 10;
+        else if (event.key === "PageDown") next -= 10;
+        else if (event.key === "Home") next = 0;
+        else if (event.key === "End") next = 100;
+        else return;
+        event.preventDefault();
+        updateSlider(next);
+      });
+      slider.addEventListener("pointerdown", (event) => {
+        const bounds = slider.getBoundingClientRect();
+        updateSlider(((event.clientX - bounds.left) / bounds.width) * 100);
+      });
+
+      const selectTrigger = byId("scope-trigger");
+      const selectList = byId("scope-list");
+      const selectOptions = all(".k-select-option", selectList);
+      let selectedScope = 0;
+      let activeScope = 0;
+      const enabledScope = (index) => selectOptions[index] && !isDisabled(selectOptions[index]);
+      const moveScope = (start, direction) => {
+        let index = start;
+        do index = (index + direction + selectOptions.length) % selectOptions.length;
+        while (!enabledScope(index) && index !== start);
+        return enabledScope(index) ? index : start;
+      };
+      const setActiveScope = (index) => {
+        if (!enabledScope(index)) return;
+        activeScope = index;
+        selectOptions.forEach((option, optionIndex) => option.dataset.active = String(optionIndex === activeScope));
+        selectTrigger.setAttribute("aria-activedescendant", selectOptions[activeScope].id);
+        selectOptions[activeScope].scrollIntoView({ block: "nearest" });
+      };
+      const openScope = (index = selectedScope) => {
+        selectList.hidden = false;
+        selectTrigger.setAttribute("aria-expanded", "true");
+        setActiveScope(index);
+      };
+      const closeScope = () => {
+        selectList.hidden = true;
+        selectTrigger.setAttribute("aria-expanded", "false");
+        selectTrigger.removeAttribute("aria-activedescendant");
+        selectOptions.forEach((option) => delete option.dataset.active);
+      };
+      const commitScope = (index) => {
+        if (!enabledScope(index)) return;
+        selectedScope = index;
+        selectOptions.forEach((option, optionIndex) => option.setAttribute("aria-selected", String(optionIndex === selectedScope)));
+        byId("scope-value").textContent = selectOptions[selectedScope].textContent.trim();
+        closeScope();
+        selectTrigger.focus();
+      };
+      selectTrigger.addEventListener("click", () => {
+        if (selectList.hidden) openScope();
+        else closeScope();
+      });
+      selectTrigger.addEventListener("keydown", (event) => {
+        const open = !selectList.hidden;
+        if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+          event.preventDefault();
+          if (!open) openScope(event.key === "ArrowUp" || event.key === "End" ? selectOptions.length - 2 : 0);
+          else if (event.key === "Home") setActiveScope(0);
+          else if (event.key === "End") setActiveScope(selectOptions.length - 2);
+          else setActiveScope(moveScope(activeScope, event.key === "ArrowDown" ? 1 : -1));
+        } else if (["Enter", " "].includes(event.key)) {
+          event.preventDefault();
+          if (open) commitScope(activeScope);
+          else openScope();
+        } else if (event.key === "Escape" && open) {
+          event.preventDefault();
+          closeScope();
+        } else if (open && event.key.length === 1 && !event.metaKey && !event.ctrlKey && !event.altKey) {
+          const query = event.key.toLocaleLowerCase();
+          const match = selectOptions.findIndex((option) => !isDisabled(option) && option.textContent.trim().toLocaleLowerCase().startsWith(query));
+          if (match >= 0) setActiveScope(match);
+        }
+      });
+      selectOptions.forEach((option, index) => option.addEventListener("click", () => commitScope(index)));
+
+      const tabs = all(".k-tab");
+      const activateTab = (tab, focus = false) => {
+        tabs.forEach((item) => {
+          const selected = item === tab;
+          item.setAttribute("aria-selected", String(selected));
+          item.tabIndex = selected ? 0 : -1;
+          byId(item.getAttribute("aria-controls")).hidden = !selected;
+        });
+        if (focus) tab.focus();
+      };
+      tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => activateTab(tab));
+        tab.addEventListener("keydown", (event) => {
+          let next = index;
+          if (["ArrowRight", "ArrowDown"].includes(event.key)) next = (index + 1) % tabs.length;
+          else if (["ArrowLeft", "ArrowUp"].includes(event.key)) next = (index - 1 + tabs.length) % tabs.length;
+          else if (event.key === "Home") next = 0;
+          else if (event.key === "End") next = tabs.length - 1;
+          else return;
+          event.preventDefault();
+          activateTab(tabs[next], true);
+        });
+      });
+
+      const menuTrigger = byId("menu-trigger");
+      const menu = byId("action-menu");
+      const menuItems = all("[role=menuitem]", menu);
+      const enabledMenuItems = () => menuItems.filter((item) => !isDisabled(item));
+      const openMenu = (last = false) => {
+        menu.hidden = false;
+        menuTrigger.setAttribute("aria-expanded", "true");
+        const items = enabledMenuItems();
+        (last ? items.at(-1) : items[0]).focus();
+      };
+      const closeMenu = (restore = true) => {
+        menu.hidden = true;
+        menuTrigger.setAttribute("aria-expanded", "false");
+        if (restore) menuTrigger.focus();
+      };
+      menuTrigger.addEventListener("click", () => menu.hidden ? openMenu() : closeMenu());
+      menuTrigger.addEventListener("keydown", (event) => {
+        if (["ArrowDown", "ArrowUp"].includes(event.key)) {
+          event.preventDefault();
+          openMenu(event.key === "ArrowUp");
+        }
+      });
+      menu.addEventListener("keydown", (event) => {
+        const items = enabledMenuItems();
+        const index = items.indexOf(document.activeElement);
+        let next = index;
+        if (event.key === "ArrowDown") next = (index + 1) % items.length;
+        else if (event.key === "ArrowUp") next = (index - 1 + items.length) % items.length;
+        else if (event.key === "Home") next = 0;
+        else if (event.key === "End") next = items.length - 1;
+        else if (event.key === "Escape") {
+          event.preventDefault();
+          closeMenu();
+          return;
+        } else return;
+        event.preventDefault();
+        items[next].focus();
+      });
+      menuItems.forEach((item) => item.addEventListener("click", () => {
+        if (isDisabled(item)) return;
+        const label = item.textContent.trim();
+        closeMenu();
+        showToast(`${label} selected.`);
+      }));
+
+      all("[data-state-preview]").forEach((button) => button.addEventListener("click", () => {
+        const state = button.dataset.statePreview;
+        const preview = byId("state-preview");
+        const states = {
+          empty: '<strong>No pinned work</strong><span>Pin an item when it needs to stay in reach.</span><button class="k-button k-button--quiet" type="button">Browse recent work</button>',
+          loading: '<strong>Loading current projects</strong><span aria-hidden="true" class="k-skeleton-line" style="--k-skeleton-width:82%"></span><span aria-hidden="true" class="k-skeleton-line" style="--k-skeleton-width:58%"></span>',
+          error: '<strong>Could not load projects</strong><span>Your filters are preserved. Try again when the connection returns.</span><button class="k-button k-button--quiet" type="button">Try again</button>',
+          permission: '<strong>Access required</strong><span>Ask the workspace owner for permission to view administrative records.</span><button class="k-button k-button--quiet" type="button">Copy request details</button>'
+        };
+        preview.className = `k-state${state === "error" ? " k-state--error" : state === "loading" ? " k-state--loading" : ""}`;
+        preview.innerHTML = states[state];
+      }));
+      byId("state-preview").addEventListener("click", (event) => {
+        const action = event.target.closest("button");
+        if (action) showToast(`${action.textContent.trim()} selected.`);
+      });
+
+      all(".k-row-primary, .k-row-action").forEach((button) => button.addEventListener("click", () => {
+        showToast(`${button.getAttribute("aria-label") || button.textContent.trim()} selected.`);
+      }));
+      all(".k-page-button:not(:disabled)").forEach((button) => button.addEventListener("click", () => {
+        const label = button.getAttribute("aria-label");
+        const current = all('.k-page-button[aria-current="page"]')[0];
+        if (/^Page \d+$/.test(label)) {
+          current?.removeAttribute("aria-current");
+          button.setAttribute("aria-current", "page");
+        }
+        showToast(`${label} selected.`);
+      }));
+
+      const tooltipTrigger = byId("tooltip-trigger");
+      const tooltip = byId("tooltip-content");
+      const showTooltip = () => { tooltip.hidden = false; };
+      const hideTooltip = () => { tooltip.hidden = true; };
+      tooltipTrigger.addEventListener("mouseenter", showTooltip);
+      tooltipTrigger.addEventListener("mouseleave", hideTooltip);
+      tooltipTrigger.addEventListener("focus", showTooltip);
+      tooltipTrigger.addEventListener("blur", hideTooltip);
+      tooltipTrigger.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") hideTooltip();
+      });
+
+      const popoverTrigger = byId("popover-trigger");
+      const popover = byId("popover-content");
+      const openPopover = () => {
+        popover.hidden = false;
+        popoverTrigger.setAttribute("aria-expanded", "true");
+        byId("popover-close").focus();
+      };
+      const closePopover = (restore = true) => {
+        popover.hidden = true;
+        popoverTrigger.setAttribute("aria-expanded", "false");
+        if (restore) popoverTrigger.focus();
+      };
+      popoverTrigger.addEventListener("click", () => popover.hidden ? openPopover() : closePopover());
+      byId("popover-close").addEventListener("click", () => closePopover());
+      byId("popover-apply").addEventListener("click", () => { closePopover(); showToast("View options applied."); });
+      popover.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          closePopover();
+        }
+      });
+
+      let activeOverlay = null;
+      let overlayOpener = null;
+      const focusableIn = (container) => all('button:not([disabled]):not([aria-disabled="true"]), input:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])', container).filter((element) => !element.hidden);
+      const openOverlay = (overlay, opener, initial) => {
+        if (activeOverlay && activeOverlay !== overlay) closeOverlay(false);
+        activeOverlay = overlay;
+        overlayOpener = opener;
+        overlay.hidden = false;
+        document.body.style.overflow = "hidden";
+        window.requestAnimationFrame(() => (initial || focusableIn(overlay)[0] || overlay).focus());
+      };
+      const closeOverlay = (restore = true) => {
+        if (!activeOverlay) return;
+        activeOverlay.hidden = true;
+        activeOverlay = null;
+        document.body.style.overflow = "";
+        if (restore && overlayOpener && overlayOpener.isConnected) overlayOpener.focus();
+        overlayOpener = null;
+      };
+      const trapOverlayFocus = (event) => {
+        if (!activeOverlay || event.key !== "Tab") return;
+        const focusables = focusableIn(activeOverlay);
+        if (!focusables.length) return;
+        const first = focusables[0];
+        const last = focusables.at(-1);
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      };
+      document.addEventListener("keydown", (event) => {
+        if (activeOverlay && event.key === "Escape") {
+          event.preventDefault();
+          closeOverlay();
+        } else trapOverlayFocus(event);
+      });
+
+      const dialogOverlay = byId("dialog-overlay");
+      byId("dialog-open").addEventListener("click", (event) => openOverlay(dialogOverlay, event.currentTarget, byId("dialog-note")));
+      byId("dialog-cancel").addEventListener("click", () => closeOverlay());
+      byId("dialog-save").addEventListener("click", () => { closeOverlay(); showToast("Review saved."); });
+      dialogOverlay.addEventListener("click", (event) => { if (event.target === dialogOverlay) closeOverlay(); });
+
+      const confirmOverlay = byId("confirm-overlay");
+      byId("delete-open").addEventListener("click", (event) => openOverlay(confirmOverlay, event.currentTarget, byId("confirm-cancel")));
+      byId("confirm-cancel").addEventListener("click", () => closeOverlay());
+      byId("confirm-delete").addEventListener("click", () => { closeOverlay(); showToast("Specimen deletion confirmed. No real data changed."); });
+
+      let toastTimer = null;
+      function showToast(message) {
+        const region = byId("toast-region");
+        region.innerHTML = "";
+        const toast = document.createElement("div");
+        toast.className = "k-toast";
+        toast.setAttribute("role", "status");
+        toast.textContent = message;
+        region.append(toast);
+        window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(() => toast.remove(), 4200);
+      }
+      byId("toast-open").addEventListener("click", () => showToast("Saved locally. The current task was not interrupted."));
+
+      const commandData = [
+        { id: "new-note", group: "Create", label: "Create note", meta: "Capture" },
+        { id: "new-task", group: "Create", label: "Create task for today", meta: "Task" },
+        { id: "open-search", group: "Navigate", label: "Open complete search", meta: "Everything" },
+        { id: "summarize", group: "Act", label: "Summarize 3 selected notes", meta: "AI, no external action" },
+        { id: "export", group: "Act", label: "Export current view", meta: "Local file" }
+      ];
+      const commandOverlay = byId("command-overlay");
+      const commandInput = byId("command-input");
+      const commandList = byId("command-list");
+      let commandResults = [];
+      let commandActive = 0;
+      const setCommandActive = (index) => {
+        const enabled = commandResults.filter((result) => !result.disabled);
+        if (!enabled.length) {
+          commandInput.removeAttribute("aria-activedescendant");
+          return;
+        }
+        commandActive = (index + enabled.length) % enabled.length;
+        const activeId = enabled[commandActive].id;
+        all(".k-command-option", commandList).forEach((option) => {
+          const active = option.dataset.commandId === activeId;
+          option.dataset.active = String(active);
+          option.setAttribute("aria-selected", String(active));
+          if (active) option.scrollIntoView({ block: "nearest" });
+        });
+        commandInput.setAttribute("aria-activedescendant", `command-option-${activeId}`);
+      };
+      const renderCommand = () => {
+        const query = commandInput.value.trim().toLocaleLowerCase();
+        commandList.innerHTML = "";
+        if (query === "offline") {
+          commandResults = [];
+          byId("command-status").textContent = "Search is unavailable. Your query is preserved; retry when the connection returns.";
+          commandInput.removeAttribute("aria-activedescendant");
+          return;
+        }
+        if (query === "admin") {
+          commandResults = [{ id: "admin", group: "Permission", label: "Open administration", meta: "Owner access required", disabled: true }];
+        } else {
+          commandResults = commandData.filter((result) => !query || `${result.label} ${result.meta}`.toLocaleLowerCase().includes(query));
+        }
+        if (!commandResults.length) {
+          byId("command-status").textContent = `No results for “${commandInput.value.trim()}”.`;
+          commandInput.removeAttribute("aria-activedescendant");
+          return;
+        }
+        let previousGroup = "";
+        commandResults.forEach((result) => {
+          if (result.group !== previousGroup) {
+            const group = document.createElement("li");
+            group.className = "k-command__group";
+            group.setAttribute("role", "presentation");
+            group.textContent = result.group;
+            commandList.append(group);
+            previousGroup = result.group;
+          }
+          const row = document.createElement("li");
+          row.setAttribute("role", "none");
+          const option = document.createElement("button");
+          option.className = "k-command-option";
+          option.id = `command-option-${result.id}`;
+          option.type = "button";
+          option.setAttribute("role", "option");
+          option.setAttribute("aria-selected", "false");
+          option.tabIndex = -1;
+          option.dataset.commandId = result.id;
+          if (result.disabled) option.setAttribute("aria-disabled", "true");
+          const label = document.createElement("span");
+          label.textContent = result.label;
+          const meta = document.createElement("span");
+          meta.className = "k-meta";
+          meta.textContent = result.meta;
+          option.append(label, meta);
+          option.addEventListener("click", () => invokeCommand(result));
+          row.append(option);
+          commandList.append(row);
+        });
+        const enabledCount = commandResults.filter((result) => !result.disabled).length;
+        byId("command-status").textContent = enabledCount ? `${enabledCount} available result${enabledCount === 1 ? "" : "s"}.` : "This result requires owner access and cannot be invoked.";
+        commandActive = 0;
+        setCommandActive(0);
+      };
+      const invokeCommand = (result) => {
+        if (!result || result.disabled) return;
+        byId("command-result").textContent = `${result.label} selected. ${result.meta}.`;
+        closeOverlay();
+      };
+      const openCommand = (opener) => {
+        commandInput.value = "";
+        openOverlay(commandOverlay, opener, commandInput);
+        renderCommand();
+      };
+      byId("command-trigger").addEventListener("click", (event) => openCommand(event.currentTarget));
+      byId("command-close").addEventListener("click", () => closeOverlay());
+      commandInput.addEventListener("input", renderCommand);
+      commandInput.addEventListener("keydown", (event) => {
+        const enabled = commandResults.filter((result) => !result.disabled);
+        if (event.key === "ArrowDown") {
+          event.preventDefault();
+          setCommandActive(commandActive + 1);
+        } else if (event.key === "ArrowUp") {
+          event.preventDefault();
+          setCommandActive(commandActive - 1);
+        } else if (event.key === "Home" && enabled.length) {
+          event.preventDefault();
+          setCommandActive(0);
+        } else if (event.key === "End" && enabled.length) {
+          event.preventDefault();
+          setCommandActive(enabled.length - 1);
+        } else if (event.key === "Enter" && enabled.length) {
+          event.preventDefault();
+          invokeCommand(enabled[commandActive]);
+        }
+      });
+      document.addEventListener("keydown", (event) => {
+        if ((event.metaKey || event.ctrlKey) && event.key.toLocaleLowerCase() === "k" && !event.isComposing) {
+          event.preventDefault();
+          if (activeOverlay === commandOverlay) closeOverlay();
+          else openCommand(document.activeElement instanceof HTMLElement ? document.activeElement : byId("command-trigger"));
+        }
+      });
+
+      const aiComposer = byId("ai-composer");
+      const aiPrompt = byId("ai-prompt");
+      const aiSend = byId("ai-send");
+      const aiStop = byId("ai-stop");
+      const aiResponse = byId("ai-response");
+      const aiStatus = byId("ai-status");
+      const aiOutput = byId("ai-output");
+      const aiSources = byId("ai-sources");
+      const aiError = byId("ai-error");
+      let aiTimer = null;
+      let aiIndex = 0;
+      let aiState = "idle";
+      const aiChunks = [
+        "The review identifies three unresolved decisions. ",
+        "First, field actions must remain inside or immediately beside the value they affect. ",
+        "Second, dialogs need a complete focus boundary and return path. ",
+        "Third, compact density may change visual rhythm but not the 44px target."
+      ];
+      const finishAI = (state) => {
+        window.clearInterval(aiTimer);
+        aiTimer = null;
+        aiState = state;
+        aiResponse.setAttribute("aria-busy", "false");
+        aiComposer.removeAttribute("aria-busy");
+        aiSend.hidden = false;
+        aiStop.hidden = true;
+        if (state === "completed") {
+          aiStatus.textContent = "Completed from 3 selected notes.";
+          aiSources.hidden = false;
+        } else if (state === "stopped") {
+          aiStatus.textContent = "Stopped. Partial output is preserved below.";
+          aiSources.hidden = true;
+        }
+      };
+      aiSend.addEventListener("click", () => {
+        if (["pending", "streaming"].includes(aiState)) return;
+        if (!aiPrompt.value.trim()) {
+          aiError.hidden = false;
+          aiPrompt.setAttribute("aria-invalid", "true");
+          aiPrompt.focus();
+          return;
+        }
+        aiError.hidden = true;
+        aiPrompt.removeAttribute("aria-invalid");
+        aiState = "pending";
+        aiIndex = 0;
+        aiOutput.innerHTML = "<p></p>";
+        aiSources.hidden = true;
+        aiResponse.setAttribute("aria-busy", "true");
+        aiComposer.setAttribute("aria-busy", "true");
+        aiSend.hidden = true;
+        aiStop.hidden = false;
+        aiStop.focus();
+        aiStatus.textContent = "Pending. Preparing a summary from 3 selected notes.";
+        window.setTimeout(() => {
+          if (aiState !== "pending") return;
+          aiState = "streaming";
+          aiStatus.textContent = "Streaming. Stop remains available.";
+          aiTimer = window.setInterval(() => {
+            aiOutput.firstElementChild.textContent += aiChunks[aiIndex];
+            aiIndex += 1;
+            if (aiIndex >= aiChunks.length) finishAI("completed");
+          }, 500);
+        }, 350);
+      });
+      aiStop.addEventListener("click", () => {
+        if (!["pending", "streaming"].includes(aiState)) return;
+        finishAI("stopped");
+        aiSend.focus();
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!selectList.hidden && !selectTrigger.closest(".k-select").contains(event.target)) closeScope();
+        if (!menu.hidden && !menuTrigger.closest(".k-menu-anchor").contains(event.target)) closeMenu(false);
+        if (!popover.hidden && !popoverTrigger.closest(".spec-popover-anchor").contains(event.target)) closePopover(false);
+      });
+
+      const sectionLinks = all(".spec-nav a");
+      const sections = sectionLinks.map((link) => byId(link.getAttribute("href").slice(1)));
+      const updateLocation = () => {
+        let current = sections[0];
+        sections.forEach((section) => {
+          if (section.getBoundingClientRect().top <= 160) current = section;
+        });
+        sectionLinks.forEach((link) => {
+          if (link.getAttribute("href") === `#${current.id}`) link.setAttribute("aria-current", "location");
+          else link.removeAttribute("aria-current");
+        });
+      };
+      document.addEventListener("scroll", updateLocation, { passive: true });
+      updateLocation();
+    })();
   </script>
 </body>
 </html>

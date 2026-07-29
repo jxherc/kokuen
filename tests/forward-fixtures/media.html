@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Afterimage - KOKUEN forward test</title>
+  <link rel="stylesheet" href="../../kokuen.css">
+  <style>
+    :root {
+      color-scheme: dark;
+      --k-canvas: #170d11;
+      --k-surface: #211318;
+      --k-surface-raised: #2c1920;
+      --k-text: #fff2f1;
+      --k-text-secondary: #cbb3b6;
+      --k-text-disabled: #876f73;
+      --k-text-inverse: #170d11;
+      --k-edge: #563840;
+      --k-edge-strong: #a17c83;
+      --k-focus: #ffd3c5;
+      --k-selection: #ffd3c5;
+      --k-selection-text: #170d11;
+      --k-error: #ff9f95;
+      --k-scrim: rgb(12 5 8 / 78%);
+      --program-coral: #cf6e5e;
+      --program-blue: #688695;
+      --program-yellow: #b99b5a;
+      --program-green: #66806c;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      background: var(--k-canvas);
+    }
+
+    .media-shell {
+      min-width: 0;
+      padding-bottom: calc(var(--k-space-8) + var(--k-space-7));
+    }
+
+    .media-head {
+      min-height: 80px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: var(--k-space-4);
+      padding: var(--k-space-3) clamp(16px, 4vw, 48px);
+    }
+
+    .media-brand {
+      font-family: "Arial Narrow", "Helvetica Neue", sans-serif;
+      font-size: 22px;
+      font-stretch: condensed;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .media-main {
+      min-width: 0;
+      padding-top: clamp(24px, 5vw, 48px);
+    }
+
+    .program-intro {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(240px, .5fr);
+      align-items: end;
+      gap: var(--k-space-6);
+      padding: 0 clamp(16px, 4vw, 48px) var(--k-space-6);
+    }
+
+    .program-intro h1 {
+      max-width: 13ch;
+      margin: 0;
+      font-family: "Arial Narrow", "Helvetica Neue", sans-serif;
+      font-size: clamp(48px, 10vw, 116px);
+      font-stretch: condensed;
+      font-weight: 800;
+      line-height: .84;
+      text-transform: uppercase;
+    }
+
+    .program-intro p {
+      margin: 0;
+      color: var(--k-text-secondary);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .program-strip {
+      min-width: 0;
+      display: flex;
+      gap: var(--k-space-4);
+      overflow-x: auto;
+      padding: var(--k-space-2) clamp(16px, 4vw, 48px) var(--k-space-6);
+      scroll-padding-inline: clamp(16px, 4vw, 48px);
+      scroll-snap-type: x proximity;
+    }
+
+    .program {
+      width: clamp(176px, 25vw, 292px);
+      min-width: clamp(176px, 25vw, 292px);
+      display: grid;
+      gap: var(--k-space-3);
+      scroll-snap-align: start;
+    }
+
+    .program-art {
+      width: 100%;
+      min-height: 264px;
+      aspect-ratio: 3 / 4;
+      display: grid;
+      align-items: end;
+      border: 0;
+      border-radius: 0;
+      overflow: hidden;
+      background: var(--poster-color);
+      color: #180d10;
+      padding: var(--k-space-4);
+      text-align: left;
+    }
+
+    .program-art:hover {
+      filter: brightness(1.08);
+    }
+
+    .program-art[aria-pressed="true"] {
+      box-shadow: inset 0 0 0 3px var(--k-text);
+    }
+
+    .program-art svg {
+      width: 100%;
+      height: auto;
+      align-self: center;
+      color: rgb(24 13 16 / 62%);
+    }
+
+    .program-art strong {
+      align-self: end;
+      font-family: "Arial Narrow", "Helvetica Neue", sans-serif;
+      font-size: clamp(24px, 4vw, 42px);
+      font-stretch: condensed;
+      font-weight: 800;
+      line-height: .9;
+      text-transform: uppercase;
+    }
+
+    .program-copy {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--k-space-3);
+      align-items: baseline;
+    }
+
+    .program-copy h2,
+    .program-copy p {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .program-copy p {
+      color: var(--k-text-secondary);
+    }
+
+    .player {
+      position: fixed;
+      z-index: var(--k-layer-popover);
+      inset-inline: 0;
+      bottom: 0;
+      min-height: 80px;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: var(--k-space-4);
+      padding: var(--k-space-3) clamp(16px, 4vw, 48px);
+      background: #0e080a;
+    }
+
+    .player-copy {
+      min-width: 0;
+    }
+
+    .player-copy strong,
+    .player-copy span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .player-copy span,
+    .player-time {
+      color: var(--k-text-secondary);
+      font-size: 14px;
+    }
+
+    .search-layer {
+      position: fixed;
+      z-index: var(--k-layer-dialog);
+      inset: 0;
+      display: grid;
+      place-items: start center;
+      padding: min(14vh, calc(var(--k-space-8) + var(--k-space-7))) var(--k-space-4) var(--k-space-4);
+      background: var(--k-scrim);
+    }
+
+    .search-layer[hidden] {
+      display: none;
+    }
+
+    .search-sheet {
+      width: min(680px, 100%);
+      background: var(--k-surface-raised);
+      padding: var(--k-space-4);
+    }
+
+    .search-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 44px;
+      gap: var(--k-space-2);
+    }
+
+    .search-result {
+      width: 100%;
+      min-height: 64px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: var(--k-space-4);
+      border: 0;
+      background: transparent;
+      color: var(--k-text);
+      padding: var(--k-space-2) var(--k-space-3);
+      text-align: left;
+    }
+
+    .search-result:hover,
+    .search-result:focus-visible {
+      background: color-mix(in srgb, var(--k-text) 8%, transparent);
+    }
+
+    .search-result span:last-child {
+      color: var(--k-text-secondary);
+    }
+
+    @media (max-width: 720px) {
+      .program-intro {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .program-intro h1 {
+        max-width: 9ch;
+      }
+
+      .program-intro p {
+        max-width: 34ch;
+      }
+
+      .player {
+        grid-template-columns: 44px minmax(0, 1fr);
+      }
+
+      .player-time {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="media-shell">
+    <header class="media-head">
+      <strong class="media-brand">Afterimage</strong>
+      <button class="k-button" id="open-search" type="button" aria-haspopup="dialog">Search programs</button>
+    </header>
+
+    <main class="media-main">
+      <section class="program-intro" aria-labelledby="season-title">
+        <h1 id="season-title">Cities after midnight</h1>
+        <p>Four short films recorded between the last train and first light. Continue where you stopped or choose another city.</p>
+      </section>
+
+      <section class="program-strip" aria-label="Programs">
+        <article class="program">
+          <button class="program-art" style="--poster-color: var(--program-coral)" type="button" aria-pressed="true" data-title="Red platforms" data-meta="Taipei · 18 min">
+            <svg viewBox="0 0 180 130" aria-hidden="true"><path d="M12 110h156M28 96l34-52 27 40 28-66 35 78" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="square"/><circle cx="117" cy="18" r="10" fill="currentColor"/></svg>
+            <strong>Red platforms</strong>
+          </button>
+          <div class="program-copy"><h2>Taipei</h2><p>18 min</p></div>
+        </article>
+        <article class="program">
+          <button class="program-art" style="--poster-color: var(--program-blue)" type="button" aria-pressed="false" data-title="Blue hour bus" data-meta="Osaka · 23 min">
+            <svg viewBox="0 0 180 130" aria-hidden="true"><path d="M16 88h148M28 88V38h124v50M48 60h24M108 60h24" fill="none" stroke="currentColor" stroke-width="7"/><circle cx="54" cy="102" r="10" fill="currentColor"/><circle cx="128" cy="102" r="10" fill="currentColor"/></svg>
+            <strong>Blue hour bus</strong>
+          </button>
+          <div class="program-copy"><h2>Osaka</h2><p>23 min</p></div>
+        </article>
+        <article class="program">
+          <button class="program-art" style="--poster-color: var(--program-yellow)" type="button" aria-pressed="false" data-title="Last kitchen" data-meta="Seoul · 14 min">
+            <svg viewBox="0 0 180 130" aria-hidden="true"><path d="M42 22v84M72 22v84M102 22v84M132 22v84M22 48h136M22 80h136" fill="none" stroke="currentColor" stroke-width="6"/><path d="M22 106h136" stroke="currentColor" stroke-width="9"/></svg>
+            <strong>Last kitchen</strong>
+          </button>
+          <div class="program-copy"><h2>Seoul</h2><p>14 min</p></div>
+        </article>
+        <article class="program">
+          <button class="program-art" style="--poster-color: var(--program-green)" type="button" aria-pressed="false" data-title="First tram" data-meta="Hong Kong · 21 min">
+            <svg viewBox="0 0 180 130" aria-hidden="true"><path d="M20 100h140M44 100V24h92v76M60 48h60M60 70h60" fill="none" stroke="currentColor" stroke-width="7"/><path d="M70 14h40" stroke="currentColor" stroke-width="7"/></svg>
+            <strong>First tram</strong>
+          </button>
+          <div class="program-copy"><h2>Hong Kong</h2><p>21 min</p></div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <footer class="player" aria-label="Now playing">
+    <button class="k-icon-button k-button--primary" id="play-toggle" type="button" aria-label="Pause Red platforms" aria-pressed="true">Ⅱ</button>
+    <div class="player-copy" aria-live="polite">
+      <strong id="player-title">Red platforms</strong>
+      <span id="player-meta">Taipei · 18 min</span>
+    </div>
+    <span class="player-time">06:42 / 18:00</span>
+  </footer>
+
+  <div class="search-layer" id="search-layer" hidden>
+    <section class="search-sheet" role="dialog" aria-modal="true" aria-labelledby="search-title">
+      <h2 id="search-title" hidden>Search programs</h2>
+      <div class="search-head">
+        <input class="k-field" id="search-input" aria-label="Search titles, cities, and directors" placeholder="Search titles, cities, and directors">
+        <button class="k-icon-button" id="close-search" type="button" aria-label="Close search">×</button>
+      </div>
+      <button class="search-result" type="button"><span>Blue hour bus</span><span>Osaka · 23 min</span></button>
+      <button class="search-result" id="media-search-last" type="button"><span>Night route: director commentary</span><span>Audio · 11 min</span></button>
+    </section>
+  </div>
+
+  <script>
+    const programs = [...document.querySelectorAll('.program-art')];
+    const play = document.querySelector('#play-toggle');
+    const title = document.querySelector('#player-title');
+    const meta = document.querySelector('#player-meta');
+    const searchTrigger = document.querySelector('#open-search');
+    const searchLayer = document.querySelector('#search-layer');
+    const searchInput = document.querySelector('#search-input');
+    const searchClose = document.querySelector('#close-search');
+
+    programs.forEach((program) => program.addEventListener('click', () => {
+      programs.forEach((item) => item.setAttribute('aria-pressed', String(item === program)));
+      title.textContent = program.dataset.title;
+      meta.textContent = program.dataset.meta;
+      play.setAttribute('aria-pressed', 'true');
+      play.setAttribute('aria-label', `Pause ${program.dataset.title}`);
+      play.textContent = 'Ⅱ';
+    }));
+
+    play.addEventListener('click', () => {
+      const playing = play.getAttribute('aria-pressed') === 'true';
+      play.setAttribute('aria-pressed', String(!playing));
+      play.setAttribute('aria-label', `${playing ? 'Play' : 'Pause'} ${title.textContent}`);
+      play.textContent = playing ? '▶' : 'Ⅱ';
+    });
+
+    function closeSearch() {
+      searchLayer.hidden = true;
+      searchTrigger.focus();
+    }
+
+    searchTrigger.addEventListener('click', () => {
+      searchLayer.hidden = false;
+      searchInput.focus();
+    });
+    searchClose.addEventListener('click', closeSearch);
+    searchLayer.addEventListener('click', (event) => {
+      if (event.target === searchLayer) closeSearch();
+    });
+    searchLayer.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeSearch();
+      if (event.key !== 'Tab') return;
+      const items = [...searchLayer.querySelectorAll('input, button')];
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+  </script>
+</body>
+</html>

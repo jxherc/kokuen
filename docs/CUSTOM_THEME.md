@@ -17,6 +17,7 @@ Visual medium and asset grammar (photo, diagram, type-led, illustration, materia
 Type role: signature display treatment / quiet body treatment / data treatment:
 Color roles: canvas, surface, ink, muted, focus, destructive, success, selection:
 Geometry: control density, radius family, edge/border/elevation behavior:
+Boundary model: which surfaces need input affordance, state, containment, clipping, or separation:
 Motion: functional feedback only, reduced-motion behavior:
 Icon and image language: source, construction, sizing, and when not to use one:
 Reference principles to borrow (not layouts/assets/copy):
@@ -47,7 +48,8 @@ Required foundation groups:
 - color: canvas, surface, ink, muted, border, focus, destructive, success, selection;
 - space: `0, 4, 8, 12, 16, 24, 32, 48, 64` plus semantic layout aliases;
 - typography: family, size, line-height, weight, tracking, roles;
-- geometry: control height, radius, border, page gutter, content width;
+- geometry: 44px target, visual control height, radius, border, focus width and offset, page gutter,
+  content width, overlay width, and layer order;
 - motion: duration and easing for feedback only;
 - elevation: only if the product has a deliberate physical-depth model.
 
@@ -61,6 +63,19 @@ high-contrast product theme is not a replacement for the platform accessibility 
 
 Use opaque text and control colors unless transparency is a deliberate, tested material decision.
 Alpha text frequently changes contrast when a surface is reused.
+
+The starter token file declares independent `theme`, `contrast`, and `density` axes under
+`$extensions.kokuen.modeAxes`. Every axis lists its required public overrides. The default dark mode
+is the original KOKUEN specimen palette, not a mandatory product palette. Replace its primitive
+values and mode mappings from the product brief while preserving the public role contract.
+
+### Boundaries are a contract
+
+Read [`references/boundaries-and-bezels.md`](../references/boundaries-and-bezels.md). Each stable
+component records one boundary job, resting owner, focus owner, and width behavior. Remove a border,
+surface, shadow, or divider that cannot name input affordance, state, containment, clipping, or
+separation as its job. Never stack wrapper border, child border, and focus outline into nested
+geometry.
 
 ### Type and assets are data, not decoration
 
@@ -107,13 +122,22 @@ record exactly which components or modes are missing and keep the code contract 
 Use [`COMPONENT_CONTRACT_TEMPLATE.md`](COMPONENT_CONTRACT_TEMPLATE.md) before calling a component
 stable. A component's visual variant is not its contract: the record must include its slots, state
 matrix, token dependencies, keyboard/focus model, accessible naming, content constraints, code path,
-and Figma key.
+Figma key, boundary rationale, width behavior, repeat-activation policy, and deterministic fixture IDs.
 
 Give the lab a deterministic fixture or URL for each important state. Test approved visual baselines
 at desktop and narrow widths, regular/high contrast, normal/reduced motion, and supported density
 modes. Exercise Tab/Shift+Tab, arrows, Home/End, Enter, Space, Escape, focus return, pointer, error
 recovery, long localized content, font fallback, empty/loading/partial/stale data, and 200% zoom.
 Automated accessibility checks support this work; they do not replace real screen-reader review.
+
+Run all foundation validators before review:
+
+```bash
+python3 scripts/validate_theme.py tokens/kokuen.tokens.json
+python3 scripts/validate_contracts.py contracts
+python3 scripts/validate_figma_manifest.py
+python3 scripts/lint_ui_rules.py kokuen.css preview.html designs/kokuen-visual-template tests/forward-fixtures
+```
 
 ## 6. Theme review questions
 

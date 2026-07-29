@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kokuen.design/schema/components-v5.json",
+  "title": "KOKUEN component registry",
+  "type": "object",
+  "required": ["version", "description", "defaults", "components"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "description": { "type": "string", "minLength": 20 },
+    "defaults": {
+      "type": "object",
+      "required": ["minimumTarget", "contentVisibleByDefault", "colorOnlyStateAllowed", "hoverMovementAllowed", "layoutSpacing"]
+    },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/component" }
+    }
+  },
+  "$defs": {
+    "stringArray": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "component": {
+      "type": "object",
+      "required": [
+        "id", "status", "userJob", "code", "figma", "anatomy", "variants", "states", "tokens",
+        "boundary", "accessibility", "keyboard", "behavior", "content", "responsive", "dataStates",
+        "fixtures", "exceptions"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*(\\.[a-z][a-z0-9-]*)+$" },
+        "status": { "enum": ["draft", "candidate", "stable", "deprecated"] },
+        "userJob": { "type": "string", "minLength": 12 },
+        "code": {
+          "type": "object",
+          "required": ["path", "api"],
+          "properties": {
+            "path": { "type": "string", "minLength": 1 },
+            "api": { "$ref": "#/$defs/stringArray" }
+          }
+        },
+        "figma": {
+          "type": "object",
+          "required": ["status", "componentKey", "propertyMapping"],
+          "properties": {
+            "status": { "enum": ["planned", "mapped", "blocked", "not-applicable"] },
+            "componentKey": { "type": ["string", "null"] },
+            "propertyMapping": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "anatomy": { "$ref": "#/$defs/stringArray" },
+        "variants": { "$ref": "#/$defs/stringArray" },
+        "states": { "$ref": "#/$defs/stringArray" },
+        "tokens": { "$ref": "#/$defs/stringArray" },
+        "boundary": {
+          "type": "object",
+          "required": ["job", "rationale", "restingOwner", "focusOwner", "widthBehavior"],
+          "properties": {
+            "job": { "type": "string", "minLength": 3 },
+            "rationale": { "type": "string", "minLength": 20 },
+            "restingOwner": { "type": "string", "minLength": 2 },
+            "focusOwner": { "type": "string", "minLength": 2 },
+            "widthBehavior": { "type": "string", "minLength": 8 }
+          }
+        },
+        "accessibility": {
+          "type": "object",
+          "required": ["role", "name", "description", "state", "errorRelationship"],
+          "additionalProperties": { "type": "string" }
+        },
+        "keyboard": {
+          "type": "object",
+          "required": ["keys", "focusEntry", "focusExit", "focusReturn"],
+          "properties": {
+            "keys": { "$ref": "#/$defs/stringArray" },
+            "focusEntry": { "type": "string", "minLength": 1 },
+            "focusExit": { "type": "string", "minLength": 1 },
+            "focusReturn": { "type": "string", "minLength": 1 }
+          }
+        },
+        "behavior": {
+          "type": "object",
+          "required": ["pointer", "touch", "disabled", "loading", "repeatActivation"],
+          "additionalProperties": { "type": "string" }
+        },
+        "content": {
+          "type": "object",
+          "required": ["limits", "localization", "overflow"],
+          "additionalProperties": { "type": "string" }
+        },
+        "responsive": {
+          "type": "object",
+          "required": ["density", "reflow"],
+          "additionalProperties": { "type": "string" }
+        },
+        "dataStates": { "$ref": "#/$defs/stringArray" },
+        "fixtures": { "$ref": "#/$defs/stringArray" },
+        "exceptions": { "type": "array", "items": { "type": "string" } }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "const": "stable" } } },
+          "then": {
+            "properties": {
+              "figma": {
+                "properties": {
+                  "status": { "const": "mapped" },
+                  "componentKey": { "type": "string", "minLength": 1 }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kokuen.design/schema/figma-library-v5.json",
+  "title": "KOKUEN Figma library synchronization manifest",
+  "type": "object",
+  "required": ["version", "file", "sourceOfTruth", "collections", "pages", "components", "reviewFrames", "codeConnect"],
+  "properties": {
+    "version": { "const": "5.0.0" },
+    "file": {
+      "type": "object",
+      "required": ["key", "url", "syncStatus", "observedPages", "unverified"],
+      "properties": {
+        "key": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "format": "uri" },
+        "syncStatus": { "enum": ["planned", "blocked", "synced", "drifted"] },
+        "observedPages": { "type": "array" },
+        "unverified": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "sourceOfTruth": { "type": "object" },
+    "collections": { "type": "array", "minItems": 5 },
+    "pages": { "type": "array", "minItems": 5 },
+    "components": { "type": "array", "minItems": 1 },
+    "reviewFrames": { "type": "array", "minItems": 1 },
+    "codeConnect": { "type": "object", "required": ["status", "reason"] }
+  }
+}
