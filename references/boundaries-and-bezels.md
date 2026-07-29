@@ -40,6 +40,24 @@ Choose the component owner before styling:
 2. If controls are independent, each owns its boundary and focus. Do not add a shared wrapper edge.
 3. If the input alone is the control, its width and focus geometry stop with the input.
 
+## Whole-silhouette state
+
+Apply state to the complete object the user perceives.
+
+- For an already contained box, row, toast, card, or control, change the full perimeter, the full
+  surface tone, the content treatment, or a combination of those signals.
+- Never thicken or recolor only the left, right, top, inline-start, or inline-end edge as an accent
+  rail for focus, selection, status, validation, or completion.
+- Keep perimeter width and radius continuous around all sides. A state must not look stapled onto the
+  component after the component was designed.
+- Preserve a written, symbolic, or programmatic state cue so color is not the only signal.
+- If a full state border is too loud, keep the neutral perimeter and use a restrained full-surface
+  tonal shift plus explicit state copy. Do not fall back to a side bar.
+
+A line-only field or tab may use its single baseline because that line is the control's entire
+resting affordance. It must not sit inside another complete border. Structural rails, timelines, and
+table separators require a non-state boundary job and must not masquerade as selection or status.
+
 ## Focus geometry
 
 Focus must be perceivable without being mistaken for a resting border.
@@ -118,7 +136,8 @@ Dialogs, menus, popovers, and command surfaces need containment because they occ
   underlying controls appear active.
 - The overlay edge must not clip its focus ring or live content.
 - Menus and popovers align to their trigger or a named anchor.
-- Toasts use placement and surface tone for separation; do not add a decorative card inside the toast.
+- Toasts use placement and surface tone for separation. A status may change the full toast perimeter
+  or full surface, never one colored edge. Do not add a decorative card inside the toast.
 
 ## Do and do not fixtures
 

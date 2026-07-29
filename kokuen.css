@@ -877,10 +877,9 @@ textarea:disabled,
 
 .k-toast {
   width: min(24rem, calc(100vw - 48px));
-  border: var(--k-border) solid var(--k-edge);
-  border-inline-start: var(--k-focus-width) solid var(--k-success);
+  border: var(--k-border) solid var(--k-success);
   border-radius: var(--k-radius-surface);
-  background: var(--k-surface);
+  background: color-mix(in srgb, var(--k-success) 8%, var(--k-surface));
   color: var(--k-text);
   padding: var(--k-space-3) var(--k-space-4);
 }

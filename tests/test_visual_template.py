@@ -131,6 +131,23 @@ def run_interactions(page: Page) -> None:
     page.get_by_role("button", name="Error", exact=True).click()
     expect(page.locator("#state-preview")).to_contain_text("Could not load projects")
 
+    page.get_by_role("button", name="Page 2", exact=True).click()
+    toast = page.locator(".k-toast")
+    expect(toast).to_have_text("Page 2 selected.")
+    toast_edges = toast.evaluate(
+        """
+        (element) => {
+          const style = getComputedStyle(element);
+          return {
+            widths: [style.borderTopWidth, style.borderRightWidth, style.borderBottomWidth, style.borderLeftWidth],
+            colors: [style.borderTopColor, style.borderRightColor, style.borderBottomColor, style.borderLeftColor]
+          };
+        }
+        """
+    )
+    assert len(set(toast_edges["widths"])) == 1, f"toast edge widths differ: {toast_edges}"
+    assert len(set(toast_edges["colors"])) == 1, f"toast edge colors differ: {toast_edges}"
+
     tooltip_trigger = page.locator("#tooltip-trigger")
     tooltip_trigger.focus()
     expect(page.locator("#tooltip-content")).to_be_visible()
@@ -227,6 +244,9 @@ def main() -> None:
         page.locator("#dialog-open").click()
         page.screenshot(path=str(ARTIFACT_DIR / "dialog-open.png"), full_page=False)
         page.keyboard.press("Escape")
+        page.get_by_role("button", name="Page 2", exact=True).scroll_into_view_if_needed()
+        page.get_by_role("button", name="Page 2", exact=True).click()
+        page.screenshot(path=str(ARTIFACT_DIR / "toast-whole-silhouette.png"), full_page=False)
 
         page.set_viewport_size({"width": 390, "height": 844})
         page.reload()

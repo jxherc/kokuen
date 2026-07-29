@@ -6,11 +6,15 @@ description: Design, implement, audit, or specify professional product UI with K
 # KOKUEN
 
 KOKUEN is a design operating system for the reusable parts of product UI. It governs geometry,
-spacing, component behavior, accessibility, Figma parity, and proof. It does not impose one palette,
-typeface, page skeleton, or product identity.
+spacing, component behavior, accessibility, optional Figma parity, and proof. It does not impose one
+palette, typeface, page skeleton, or product identity.
 
 The bundled visual specimen uses the original dark KOKUEN palette by default. Treat that as a
 reference theme, not a universal accent or signal doctrine.
+
+Treat Figma as conditional. Use it only when the user requests Figma output or the current product
+already names Figma parity as an acceptance requirement. When Figma is excluded, skip it and do not
+treat missing Figma evidence as a blocker.
 
 ## Authority
 
@@ -65,15 +69,17 @@ application model.
    exception is valid for the platform and verified.
 3. One control has one perceived resting boundary and one focus geometry.
 4. A visible boundary names its job: input affordance, state, containment, clipping, or separation.
-5. Focus is visible, unobscured, unclipped, and follows the actual interactive region.
-6. Field actions remain inside the field end affordance or directly beside a deliberately bounded
+5. State styling affects the whole component silhouette. Never attach a colored or thickened bar to
+   one edge of an already contained box to signal focus, selection, status, or completion.
+6. Focus is visible, unobscured, unclipped, and follows the actual interactive region.
+7. Field actions remain inside the field end affordance or directly beside a deliberately bounded
    field. Spare layout width never strands an action.
-7. Essential state is not communicated by color alone.
-8. Custom controls implement one complete native or WAI-ARIA interaction model.
-9. Busy actions reject repeat activation and never imply completion before it occurs.
-10. Dialogs and popovers define focus entry, boundary, Escape policy, close behavior, and return.
-11. Product identity remains product-specific. KOKUEN must not make unrelated products converge.
-12. Completion requires the latest real surface to be rendered and exercised.
+8. Essential state is not communicated by color alone.
+9. Custom controls implement one complete native or WAI-ARIA interaction model.
+10. Busy actions reject repeat activation and never imply completion before it occurs.
+11. Dialogs and popovers define focus entry, boundary, Escape policy, close behavior, and return.
+12. Product identity remains product-specific. KOKUEN must not make unrelated products converge.
+13. Completion requires the latest real surface to be rendered and exercised.
 
 Read [boundaries-and-bezels.md](references/boundaries-and-bezels.md) and
 [qa-and-antipatterns.md](references/qa-and-antipatterns.md) before changing visual containers or
@@ -121,7 +127,7 @@ python3 scripts/validate_theme.py tokens/kokuen.tokens.json
 Use [COMPONENT_CONTRACT_TEMPLATE.md](docs/COMPONENT_CONTRACT_TEMPLATE.md). A stable component needs
 anatomy, variants, states, tokens, boundary rationale, width behavior, accessible semantics,
 keyboard model, focus entry and return, content constraints, responsive behavior, fixture IDs, code
-path, and Figma key.
+path, and a Figma key only when Figma is in scope.
 
 Load the component reference that matches the task:
 
@@ -137,12 +143,13 @@ Build every required state before visual polish. Default, hover, focus-visible, 
 disabled, busy, invalid, empty, loading, error, unavailable, and permission states apply where the
 component can enter them.
 
-### 5. Align Figma and code
+### 5. Align Figma and code when required
 
-Read [figma-contract.md](references/figma-contract.md) and use the active Figma skills before any
-Figma mutation. Create semantic variables before components. Component properties map independently
-to the public code API. Add review and stress examples, not only a polished default. Code Connect
-waits until both APIs are stable.
+Skip this step when the user excludes Figma. Otherwise read
+[figma-contract.md](references/figma-contract.md) and use the active Figma skills before any Figma
+mutation. Create semantic variables before components. Component properties map independently to
+the public code API. Add review and stress examples, not only a polished default. Code Connect waits
+until both APIs are stable.
 
 Figma specifies and reviews the contract. It is not evidence that production behavior works.
 
@@ -179,7 +186,7 @@ Stop and resolve the issue before completion when:
 - a custom control lacks a complete keyboard and focus model;
 - a boundary exists without a declared job;
 - a required state or realistic content fixture is missing;
-- a Figma/code mismatch is hidden or undocumented;
+- a Figma/code mismatch is hidden or undocumented when Figma is in scope;
 - the real surface cannot be rendered or exercised;
 - an external permission or irreversible AI action lacks an explicit approval boundary.
 
@@ -189,7 +196,8 @@ Report these separately:
 
 1. foundations, contracts, components, and patterns changed;
 2. product-specific decisions preserved or introduced;
-3. Figma coverage, node or component identifiers, and known drift;
+3. Figma coverage, node or component identifiers, and known drift when Figma is in scope; otherwise
+   state that it was excluded without treating that as a blocker;
 4. rendered viewport and content proof;
 5. pointer, keyboard, focus, and state proof;
 6. validation, build, lint, test, accessibility, and console proof;

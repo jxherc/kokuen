@@ -29,6 +29,7 @@ Reject or fix:
 - custom select, menu, radio, tabs, slider, or command with an incomplete keyboard model;
 - native controls forbidden by the consuming product's rules;
 - color-only state;
+- colored or thickened partial-edge status rail on an already contained box;
 - raw layout spacing outside the scale without a semantic exception.
 
 ## Boundary warnings
@@ -36,6 +37,7 @@ Reject or fix:
 Investigate rather than automatically reject:
 
 - nested elements both drawing border, shadow, or focus geometry;
+- one edge of a contained component carrying a different state thickness or color;
 - more than one strong boundary within 8px;
 - full-width field for short content;
 - field action separated by flexible space;
@@ -57,6 +59,7 @@ Check the complete active anti-slop law, including:
 - tiny uppercase or monospace labels everywhere;
 - all-around shadows, hover lifts, hidden entrance content, clipped text, and ragged peer alignment;
 - default sun/moon toggles, active-nav dots, decorative rules, and unreadable muted text;
+- accent bars or side rails stapled onto cards, toasts, rows, or status boxes;
 - generic free-font choices used as product identity without a brief;
 - technically clean but empty work with no product-specific point of view.
 

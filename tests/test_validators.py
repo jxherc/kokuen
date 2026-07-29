@@ -93,6 +93,25 @@ class ValidatorTests(unittest.TestCase):
         self.assertIn("hover-movement", output)
         self.assertIn("spacing-scale", output)
 
+    def test_ui_linter_rejects_partial_state_edge(self) -> None:
+        fixture = """<!doctype html>
+<html><head><style>
+.status-box {
+  border: 1px solid #333;
+  border-inline-start: 4px solid var(--k-success);
+}
+</style></head><body><div class="status-box" role="status">Page 2 selected.</div></body></html>
+"""
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".html", dir=ROOT / "tests", delete=True
+        ) as handle:
+            handle.write(fixture)
+            handle.flush()
+            result = run("scripts/lint_ui_rules.py", handle.name)
+        output = (result.stdout + result.stderr).lower()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("partial-state-edge", output)
+
     def test_figma_manifest_rejects_property_drift(self) -> None:
         document = json.loads((ROOT / "figma/kokuen.library.json").read_text())
         document["components"][0]["properties"] = ["OpaqueCombination"]

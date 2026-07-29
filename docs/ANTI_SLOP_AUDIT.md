@@ -14,8 +14,8 @@ Surfaces reviewed:
 - Draftroom, Relay ledger, and Afterimage forward fixtures at wide and narrow sizes.
 
 Evidence includes source lint, token contrast checks, browser target measurement, pointer and keyboard
-interaction, console capture, screenshots, and direct visual inspection. Remote Figma is excluded and
-remains blocked as recorded in `FIGMA_SYNC.md`.
+interaction, console capture, screenshots, and direct visual inspection. Remote Figma is excluded by
+owner direction and is not a completion gate for this audit.
 
 ## Direct visual tells
 
@@ -44,7 +44,7 @@ remains blocked as recorded in `FIGMA_SYNC.md`.
 | Split hero | Pass. The universal reference is a measured document, not a hero; all three forward fixtures use different task compositions. |
 | Full-page graph-paper background | Pass. No grid background. The banner ruler encodes the real spacing scale. |
 | Crude CSS/SVG placeholder illustration | Pass with a reviewed conditional use. Afterimage covers are the actual authored program art, share a deliberate construction, and are not generic hero filler. |
-| Accent-bar card | Pass. No card edge decoration. |
+| Accent-bar card or status rail | Fixed. The pagination toast had a green inline-start rail. Outcome styling now covers its full perimeter and surface; lint rejects partial-edge state markers. |
 | Background radial glow | Pass. No radial background or bloom. |
 | Fake code-snippet window | Pass. No code prop. |
 | Sora or JetBrains Mono costume | Pass. Not used. System mono appears only for event IDs and timestamps. |
@@ -168,8 +168,10 @@ the universal reference or the three test briefs.
    technology without entering visual layout.
 5. Removed the resting edge while a field, textarea, composite shell, or select trigger owns visible
    focus, leaving one perceived focused boundary instead of an outline nested around a line.
+6. Removed the green inline-start rail from toast feedback, applied the outcome to the full toast
+   silhouette, and added a regression rule against partial-edge state markers on contained boxes.
 
 ## Result
 
-The audited code-native surfaces pass the anti-slop check. This is not a Figma completion claim.
-Remote Figma review remains blocked and must receive the same audit after synchronization.
+The audited code-native surfaces pass the anti-slop check. Figma is outside this audit by explicit
+owner direction.

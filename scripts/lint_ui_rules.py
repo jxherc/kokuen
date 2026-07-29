@@ -24,6 +24,25 @@ CSS_RULE = re.compile(r"(?P<selectors>[^{}]+)\{(?P<body>[^{}]*)\}", re.DOTALL)
 DECLARATION = re.compile(r"(?P<name>(?:--)?[a-zA-Z][a-zA-Z-]*)\s*:\s*(?P<value>[^;{}]+)")
 PIXEL = re.compile(r"(?<![A-Za-z0-9_.-])(-?[0-9]+(?:\.[0-9]+)?)px\b")
 SUPPRESSION = re.compile(r"kokuen-lint-disable(?:-next-line)?\s+([a-z0-9-]+)\s*:\s*([^*\n]+)", re.IGNORECASE)
+PARTIAL_BORDER_PROPERTIES = (
+    "border-top",
+    "border-right",
+    "border-bottom",
+    "border-left",
+    "border-inline-start",
+    "border-inline-end",
+    "border-block-start",
+    "border-block-end",
+)
+STATE_TERM = re.compile(
+    r"(?:success|error|warning|danger|selected|active|current|info|status|focus(?!-width))",
+    re.IGNORECASE,
+)
+STATE_SELECTOR = re.compile(
+    r"(?:\[aria-(?:selected|current|invalid|checked)|\[data-state|:(?:focus|focus-visible|active)|"
+    r"(?:^|[-_.])(?:success|error|warning|danger|selected|active|current|info|status|toast)(?:\b|[-_]))",
+    re.IGNORECASE,
+)
 
 
 @dataclass(frozen=True)
@@ -131,6 +150,24 @@ def lint_css(path: Path, text: str) -> list[Finding]:
         props = declarations(body)
         is_interactive = interactive_selector(selectors)
         selector_display = " ".join(selectors.split())[:120]
+
+        has_full_boundary = "border" in props and any(
+            value.strip() not in {"0", "none", "transparent"} for value in props["border"]
+        )
+        for property_name in PARTIAL_BORDER_PROPERTIES:
+            for value in props.get(property_name, []):
+                if value.strip() in {"0", "none", "transparent"}:
+                    continue
+                if has_full_boundary or STATE_TERM.search(value) or STATE_SELECTOR.search(selectors):
+                    add(
+                        findings,
+                        "ERROR",
+                        "partial-state-edge",
+                        path,
+                        text,
+                        match.start(),
+                        f"{property_name} adds a state rail to {selector_display}; highlight the whole silhouette instead",
+                    )
 
         if "opacity" in props and any(value.strip() in {"0", "0.0", ".0"} for value in props["opacity"]):
             if "[hidden]" not in selectors and "aria-hidden" not in selectors:

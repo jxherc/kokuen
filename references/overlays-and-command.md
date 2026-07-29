@@ -78,6 +78,8 @@ Do not use a toast as a pre-action confirmation.
 - Use a toast for nonblocking outcome information.
 - Use `role=status` for polite updates and `role=alert` only for urgent interruption.
 - Keep the message concise and provide an action only when it supports recovery or undo.
+- Apply outcome styling to the complete toast silhouette: use one continuous perimeter, a restrained
+  full-surface tone, and explicit copy. Never add a colored left or inline-start status rail.
 - Do not move focus into a toast automatically.
 - Pause dismissal while hovered or focused.
 - Give enough time to read and support persistent alternatives for important information.
