@@ -1,65 +1,121 @@
-<img src="banner.svg" alt="kokuen" width="100%">
+<h1 align="center">KOKUEN</h1>
 
-# KOKUEN
+<p align="center"><strong>A design operating system for product UI.</strong></p>
 
-A reusable, product-neutral UI template for the parts every app needs: foundations, buttons, fields,
-selection, lists, dialogs, feedback, and universal command/search.
+<p align="center">
+  Coherent controls, spacing, interaction, accessibility, and verification<br>
+  without forcing every product into the same visual theme.
+</p>
 
-It is deliberately not a palette doctrine. Choose a visual direction per product, then keep the
-shared UI behavior and spacing coherent.
+<p align="center">
+  <a href="SKILL.md">Skill</a> ·
+  <a href="reference.md">Reference</a> ·
+  <a href="designs/kokuen-visual-template/Universal%20UI%20Template.html">Visual template</a> ·
+  <a href="https://www.figma.com/design/dMpK3ZOhraefh9L6m4BgBi">Figma</a>
+</p>
 
-## What is included
+## What KOKUEN does
 
-- [`SKILL.md`](SKILL.md): the Codex workflow for applying KOKUEN.
-- [`reference.md`](reference.md): component, accessibility, command, Figma, and verification contracts.
-- [`kokuen.css`](kokuen.css): a no-build semantic CSS baseline.
-- [`preview.html`](preview.html): an interactive component lab.
-- [`docs/CUSTOM_THEME.md`](docs/CUSTOM_THEME.md): professional custom-theme brief and theme review.
-- [`tokens/kokuen.tokens.json`](tokens/kokuen.tokens.json): DTCG-aligned starter tokens.
-- [`scripts/validate_theme.py`](scripts/validate_theme.py): token/alias validation.
-- [`docs/KOKUEN_V3_BRIEF.md`](docs/KOKUEN_V3_BRIEF.md): historical v3 scope and component inventory.
+KOKUEN gives an app one reliable contract for the interface that repeats everywhere: spacing,
+controls, forms, navigation, command search, overlays, feedback, AI surfaces, accessibility,
+tokens, and visual verification.
 
-## Use it
+It does not prescribe a brand, palette, typeface, or component-library aesthetic.
 
-```html
-<link rel="stylesheet" href="kokuen.css">
+> **KOKUEN owns recurring behavior. The product owns character.**
 
-<button class="ui-button ui-button--primary">Save changes</button>
-<input class="ui-field" aria-label="Search notes" placeholder="Search notes, tasks, and commands">
+That boundary lets a product look completely like itself without every button, field, menu, and
+state behaving as if it came from a different system.
+
+## Install
+
+Clone KOKUEN into the Codex skills directory:
+
+```sh
+git clone https://github.com/jxherc/kokuen.git ~/.codex/skills/kokuen
 ```
 
-Set semantic project tokens once:
+Then invoke it directly:
 
-```css
-:root {
-  --ui-canvas: #f7f6f2;
-  --ui-surface: #ffffff;
-  --ui-text: #1d1c1a;
-  --ui-muted: #6e6b66;
-  --ui-border: #d9d5ce;
-  --ui-focus: #1d1c1a;
-  --ui-error: #b42318;
-}
+```text
+Use $kokuen to design and verify a coherent, accessible product UI surface.
 ```
 
-Open `preview.html` in a browser to test the command dialog, Arrow/Home/End navigation, Escape
-focus restoration, selection controls, and slider keyboard behavior.
+## The contract
 
-## Create a custom theme
+KOKUEN protects six things across a product:
 
-Start with [`docs/CUSTOM_THEME.md`](docs/CUSTOM_THEME.md), then replace the starter values in
-`tokens/kokuen.tokens.json` with product decisions. Preserve the primitive → semantic → component
-token ladder and validate aliases before handing it off:
+1. **Product character stays product-specific.** No mandatory grayscale theme, accent color, font,
+   radius, dashboard layout, or material treatment.
+2. **Shared geometry stays disciplined.** Use the spacing scale
+   `0, 4, 8, 12, 16, 24, 32, 48, 64` and a 44px default interactive target.
+3. **Common controls stay real.** Buttons, fields, selection controls, menus, dialogs, command,
+   feedback, and async actions receive complete keyboard, focus, disabled, error, and recovery
+   behavior.
+4. **Actions stay close to what they change.** Never stretch a field across spare width and strand
+   `Clear`, `Edit`, validation, or another field action at the far edge.
+5. **Content remains visible by default.** Motion can support state and causality, but an animation
+   cannot decide whether content exists.
+6. **Rendered behavior is the proof.** Source, screenshots, tests, and Figma are supporting evidence.
+   The final delivery surface must still be opened, exercised, and inspected.
+
+## Workflow
+
+| Stage | Decision | Primary artifact |
+| --- | --- | --- |
+| 1. Brief | Define the product, users, tasks, visual character, density, and constraints | [Custom-theme brief](docs/CUSTOM_THEME.md) |
+| 2. System | Map primitive values to semantic roles and component decisions | [Design tokens](tokens/kokuen.tokens.json) |
+| 3. Contract | Specify anatomy, states, keyboard behavior, content, and responsive rules | [Component contract](docs/COMPONENT_CONTRACT_TEMPLATE.md) |
+| 4. Build | Reuse the product stack and apply KOKUEN behavior without importing a generic skin | [Skill workflow](SKILL.md) |
+| 5. Prove | Exercise real states at representative sizes in the delivery surface | [Verification reference](reference.md) |
+
+Validate the token graph before handoff:
 
 ```sh
 python3 scripts/validate_theme.py tokens/kokuen.tokens.json
 ```
 
+## Universal system, product-specific result
+
+| Layer | KOKUEN decides | The product decides |
+| --- | --- | --- |
+| Foundations | semantic token roles, spacing scale, control geometry | palette, typography, density, radius, material |
+| Primitives | anatomy, states, focus, keyboard behavior | labels, icons, visual treatment |
+| Patterns | field recovery, collections, command/search, overlays, feedback | task flow and information hierarchy |
+| Screens | responsive and accessibility review requirements | composition, content, brand character |
+
+## Repository map
+
+| Artifact | Use it for |
+| --- | --- |
+| [`SKILL.md`](SKILL.md) | Designing, implementing, or auditing product UI with KOKUEN |
+| [`reference.md`](reference.md) | Exact component, accessibility, command, overlay, data, AI, and QA contracts |
+| [`docs/CUSTOM_THEME.md`](docs/CUSTOM_THEME.md) | A new theme, rebrand, or substantial visual direction |
+| [`docs/SPACING.md`](docs/SPACING.md) | Screen composition, proximity, field width, and responsive spacing |
+| [`docs/COMPONENT_CONTRACT_TEMPLATE.md`](docs/COMPONENT_CONTRACT_TEMPLATE.md) | Promoting a primitive into the shared system |
+| [`tokens/kokuen.tokens.json`](tokens/kokuen.tokens.json) | Portable primitive, semantic, and component decisions |
+| [`kokuen.css`](kokuen.css) | A no-build semantic baseline, not a mandatory product skin |
+| [`preview.html`](preview.html) | Lightweight interaction and component behavior checks |
+| [Universal UI template](designs/kokuen-visual-template/Universal%20UI%20Template.html) | Product-neutral visual and interaction stress testing |
+| [`scripts/validate_theme.py`](scripts/validate_theme.py) | Token type, alias, and reference validation |
+
+## Definition of done
+
+A KOKUEN implementation is ready only when:
+
+- semantic tokens are valid and every alias resolves;
+- changed controls include their required states and keyboard behavior;
+- focus enters, remains within, and returns from overlays correctly;
+- spacing, action proximity, contrast, and hierarchy survive realistic content;
+- narrow layouts, long strings, empty states, errors, loading, and reduced motion are covered;
+- no content is clipped, obscured, or dependent on an entrance animation;
+- the latest rendered surface has been inspected and every changed interaction has been exercised.
+
 ## Figma
 
-[Open the KOKUEN Figma library](https://www.figma.com/design/dMpK3ZOhraefh9L6m4BgBi). It contains
-the starter foundations, Button variants, Field variants, Universal Command, and the Alles home
-screen direction. The current Figma Starter plan has reached its MCP write quota, so the command-open
-screen state will be added when that quota resets or the file is upgraded.
+The [KOKUEN Figma file](https://www.figma.com/design/dMpK3ZOhraefh9L6m4BgBi) is a review and
+specification companion. Code and rendered behavior remain the delivery source of truth.
 
-MIT.
+## License
+
+[MIT](LICENSE)
