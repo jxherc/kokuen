@@ -1,6 +1,6 @@
 # Architecture
 
-KOKUEN is a portable design operating system, not a runtime framework or mandatory visual theme.
+KOKUEN is a portable design skill, not a runtime framework or mandatory visual theme.
 
 ## Source-of-truth flow
 
@@ -22,7 +22,8 @@ fixtures, validators, and source inspection are supporting evidence.
 
 ## Major artifacts
 
-- `SKILL.md`: compact task router, authority order, invariants, and completion contract.
+- `SKILL.md`: entry skill. Brief, art direction, anti-default calibration, foundation routing,
+  component invariants, and completion contract.
 - `references/`: one-level professional guidance for visual grammar, foundations, common controls,
   navigation, overlays, command, AI surfaces, Figma, and QA.
 - `tokens/kokuen.tokens.json`: 118 typed tokens, 49 aliases, six public modes across theme,

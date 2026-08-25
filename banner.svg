@@ -1,27 +1,39 @@
 <svg viewBox="0 0 1200 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
-  <title id="title">KOKUEN design operating system</title>
-  <desc id="desc">A sparse graphite banner describing KOKUEN's shared interface contracts.</desc>
+  <title id="title">KOKUEN, a design skill for professional product UI</title>
+  <desc id="desc">A sparse graphite banner: the kokuen mark, what the skill is, and the spacing scale it is built on.</desc>
 
   <rect width="1200" height="520" fill="#0a0a0a"/>
 
-  <g fill="#e8e6e3" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif">
-    <text x="64" y="78" font-size="18" font-weight="650" letter-spacing="1.5">KOKUEN</text>
-    <text x="58" y="300" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif" font-size="188" font-weight="700">黒鉛</text>
-    <text x="68" y="370" font-size="34" font-weight="450" letter-spacing="10">kokuen</text>
+  <g fill="#e8e6e3">
+    <text x="58" y="296" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif" font-size="188" font-weight="700">黒鉛</text>
+    <text x="64" y="366" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="30" font-weight="500" letter-spacing="8">kokuen</text>
+  </g>
 
-    <text x="672" y="148" font-size="48" font-weight="650" letter-spacing="-1.8">Design operating</text>
-    <text x="672" y="204" font-size="48" font-weight="650" letter-spacing="-1.8">system.</text>
-    <text x="675" y="260" fill="#a8a8a4" font-size="21" font-weight="400">Shared behavior. Product-owned character.</text>
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif">
+    <text x="576" y="170" fill="#e8e6e3" font-size="46" font-weight="650" letter-spacing="-0.5">A design skill for</text>
+    <text x="576" y="226" fill="#e8e6e3" font-size="46" font-weight="650" letter-spacing="-0.5">professional</text>
+    <text x="576" y="282" fill="#e8e6e3" font-size="46" font-weight="650" letter-spacing="-0.5">product UI.</text>
 
-    <text x="675" y="332" font-size="17" font-weight="600">44px targets</text>
-    <text x="675" y="368" font-size="17" font-weight="600">one control, one boundary</text>
-    <text x="675" y="404" font-size="17" font-weight="600">complete keyboard and focus models</text>
-    <text x="675" y="440" font-size="17" font-weight="600">rendered proof before completion</text>
+    <text x="577" y="334" fill="#a8a8a4" font-size="20" font-weight="400">Shared behavior. Product-owned character.</text>
+
+    <text x="577" y="378" fill="#8a8a86" font-size="14" font-weight="400" letter-spacing="0.2">art direction · foundations · components · states · accessibility · proof</text>
   </g>
 
   <g stroke="#6e6e6e" stroke-width="2" stroke-linecap="round">
-    <path d="M64 452H576"/>
-    <path d="M64 444V460M128 448V456M192 448V456M256 444V460M320 448V456M384 448V456M448 444V460M512 448V456M576 444V460"/>
+    <path d="M64 448H576" stroke="#565654" stroke-width="1.5"/>
+    <path d="M64 441V455 M576 441V455"/>
+    <path d="M96 444V452 M128 444V452 M160 444V452 M192 444V452 M256 444V452 M320 444V452 M448 444V452"/>
   </g>
-  <text x="64" y="490" fill="#a8a8a4" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="14">0 · 4 · 8 · 12 · 16 · 24 · 32 · 48 · 64</text>
+  <g fill="#8a8a86" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="12" text-anchor="middle">
+    <text x="64" y="472">0</text>
+    <text x="96" y="472">4</text>
+    <text x="128" y="472">8</text>
+    <text x="160" y="472">12</text>
+    <text x="192" y="472">16</text>
+    <text x="256" y="472">24</text>
+    <text x="320" y="472">32</text>
+    <text x="448" y="472">48</text>
+    <text x="576" y="472">64</text>
+  </g>
+  <text x="600" y="472" fill="#7a7a76" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="12">spacing in px</text>
 </svg>

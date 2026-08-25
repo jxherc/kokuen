@@ -1,222 +1,201 @@
 ---
 name: kokuen
-description: Design, implement, audit, or specify professional product UI with KOKUEN. Use for design systems, shared UI foundations, spacing, boundaries and bezels, buttons, fields, custom controls, navigation, data views, overlays, universal command or search, AI surfaces, Figma libraries, visual redesigns, and rendered accessibility review. Routes work through explicit component contracts, product-specific art direction, deterministic validation, and real interaction proof.
+description: Design skill for professional product UI. Use when designing, building, redesigning, or auditing interfaces: design systems, themes and tokens, typography, color, spacing, buttons, forms, navigation, data views, overlays, command search, AI surfaces, accessibility, and rendered verification. Establishes product-specific art direction, enforces complete component states and interaction contracts, and requires proof on the real rendered surface.
 ---
 
 # KOKUEN
 
-KOKUEN is a design operating system for the reusable parts of product UI. It governs geometry,
-spacing, component behavior, accessibility, optional Figma parity, and proof. It does not impose one
-palette, typeface, page skeleton, or product identity.
+KOKUEN is a design skill for professional product UI. It covers the whole craft: art direction,
+foundations, component design, accessibility, and proof on the real rendered surface.
 
-The bundled visual specimen uses the original dark KOKUEN palette by default. Treat that as a
-reference theme, not a universal accent or signal doctrine.
+One boundary governs everything:
 
-Treat Figma as conditional. Use it only when the user requests Figma output or the current product
-already names Figma parity as an acceptance requirement. When Figma is excluded, skip it and do not
-treat missing Figma evidence as a blocker.
+> KOKUEN owns recurring behavior. The product owns character.
+
+Two products can share the same button contract and look nothing alike. KOKUEN must never make
+unrelated products converge, and a finished screen must never read as if it could belong to anyone.
 
 ## Authority
 
-Apply this order when guidance conflicts:
+When guidance conflicts, apply this order:
 
 1. explicit user direction;
-2. current product rules and real user needs;
-3. rendered behavior and current source;
-4. KOKUEN invariants and component contracts;
-5. product-specific theme decisions;
-6. references, libraries, and examples.
+2. the product's own rules and its real users;
+3. rendered behavior on the current surface;
+4. KOKUEN rules and component contracts;
+5. references, libraries, and examples.
 
-A mockup, Figma frame, screenshot, unit test, or source diff never outranks the real delivery surface.
+A mockup, screenshot, test, or diff never outranks the real delivery surface.
 
-## Start here
+## 1. Build the brief
 
-Before editing, record this compact map:
+No visual work before this exists:
 
 ```text
-Primary user and job:
-Primary action:
-Secondary actions:
-Content hierarchy and hardest content:
-Required default, empty, loading, error, unavailable, and permission states:
-Keyboard and focus model:
+Primary user and highest-frequency job:
+Moment of greatest risk or cognitive load:
+Three qualities that must feel true / three that must never:
+Hardest real content case:
+Signature artifact or interaction:
+References to borrow principles from, and anti-references to avoid:
 Viewport, zoom, localization, and input constraints:
-Existing primitives and product identity to preserve:
-Product decisions still required:
-Proof surface and completion gates:
 ```
 
-Inspect unknowns. Do not fill them with generic dashboard copy, fabricated metrics, decorative
-components, or an assumed information architecture.
+Infer what is safe to infer. Stop and ask when the job or identity is genuinely ambiguous. Never
+fill unknowns with dashboard filler, invented metrics, or an assumed information architecture.
 
-## Rule classes
+## 2. Make a direction
 
-Classify every design rule before enforcing it:
+Design from the brief, not from a trend list. For a new theme or substantial redesign, complete
+[docs/CUSTOM_THEME.md](docs/CUSTOM_THEME.md) first, and read
+[references/visual-grammar.md](references/visual-grammar.md) in full.
 
-- **Invariant:** must pass in every implementation.
-- **Hard anti-pattern:** prohibited unless the user explicitly directs it or an exception is recorded.
-- **Conditional rule:** allowed only for a named job and verified in context.
-- **Product decision:** palette, type, imagery, icon grammar, density, radius, signature, and content.
-- **Proof gate:** evidence required before completion.
+- Choose one coherent world: ink on a measured surface, a dense operational instrument, a tactile
+  shelf, a typographic editor, or a product-specific world the task supports. Let that one logic
+  govern type, spacing, edges, motion, and imagery together. Never assemble attractive parts from
+  unrelated visual systems.
+- Make one signature decision specific enough that it could not be pasted into a competitor
+  unchanged. A signature is a real artifact, an authored layout, a typographic behavior, a bespoke
+  icon construction. It is not a glow, a gradient, a card grid, or a decorative hero stack.
+- State what stays quiet so the signature has room. Minimal means every remaining element carries
+  more responsibility, not that fewer decisions were made.
 
-Read [visual-grammar.md](references/visual-grammar.md) for the universal/product boundary and rule
-application model.
+### Recognize the defaults
 
-## Non-negotiable invariants
+Agent-generated product UI clusters around unchosen answers. Know them so you can refuse them:
 
-1. Content is visible before animation runs.
-2. Every interactive target is at least 44 by 44 CSS pixels unless a documented target-spacing
-   exception is valid for the platform and verified.
-3. One control has one perceived resting boundary and one focus geometry.
-4. A visible boundary names its job: input affordance, state, containment, clipping, or separation.
-5. State styling affects the whole component silhouette. Never attach a colored or thickened bar to
-   one edge of an already contained box to signal focus, selection, status, or completion.
-6. Focus is visible, unobscured, unclipped, and follows the actual interactive region.
-7. Field actions remain inside the field end affordance or directly beside a deliberately bounded
-   field. Spare layout width never strands an action.
-8. Essential state is not communicated by color alone.
-9. Custom controls implement one complete native or WAI-ARIA interaction model.
-10. Busy actions reject repeat activation and never imply completion before it occurs.
-11. Dialogs and popovers define focus entry, boundary, Escape policy, close behavior, and return.
-12. Product identity remains product-specific. KOKUEN must not make unrelated products converge.
-13. Completion requires the latest real surface to be rendered and exercised.
+- the sidebar + topbar + stat-card shell, big number over small label, whatever the actual job;
+- one saturated hue on a dark ground, gradient text, glows, blurred blooms behind elements;
+- tracked-uppercase 11px labels as the only hierarchy; one sans carrying every role;
+- cards inside cards, stacked even shadows, the same radius on everything;
+- a lone colored bar glued to a card edge, or a colored dot as the only carrier of status;
+- marketing moves inside a working tool: oversized hero headline, CTA pair, feature-card trio;
+- emoji or generic thin-line icon packs filling space;
+- hairline rules and eyebrow ticks used as ornament where spacing and type would do the job;
+- hover lift or scale on controls; entrance animations that hide content until they run.
 
-Read [boundaries-and-bezels.md](references/boundaries-and-bezels.md) and
-[qa-and-antipatterns.md](references/qa-and-antipatterns.md) before changing visual containers or
-claiming completion.
+When the brief explicitly names one of these, the brief wins. When it leaves the axis free, do
+not spend that freedom on a default.
 
-## Operating sequence
+## 3. Establish foundations
 
-### 1. Classify the work
+Primitive values first, then semantic roles, then component tokens. Components never consume raw
+color or arbitrary layout values. Load only what the task needs:
 
-| Class | Meaning | Required artifact |
-| --- | --- | --- |
-| Foundation | repeated visual or behavioral rule | semantic token and usage rule |
-| Primitive | one focused interaction | component contract and complete state matrix |
-| Pattern | primitives composed for one job | responsive, data-state, and focus behavior |
-| Product screen | a real task flow | real content and rendered interaction proof |
-| Figma artifact | inspectable specification | variables, components, usage, and drift record |
+- spacing, proximity, target size, responsive behavior:
+  [references/spacing-and-layout.md](references/spacing-and-layout.md)
+- type roles, color roles, modes, contrast, CJK:
+  [references/typography-and-color.md](references/typography-and-color.md)
+- borders, focus geometry, containment, field width:
+  [references/boundaries-and-bezels.md](references/boundaries-and-bezels.md)
 
-Do not globalize a one-off without two credible reuse contexts. Extend a stable primitive before
-creating a parallel one.
-
-### 2. Choose product character
-
-For a new theme or substantial redesign, complete [CUSTOM_THEME.md](docs/CUSTOM_THEME.md) before
-choosing final tokens. Use [visual-grammar.md](references/visual-grammar.md) to define one coherent
-world and the explicit anti-references. Preserve established product character when the request is
-for shared UI rather than rebranding.
-
-### 3. Establish foundations
-
-Build primitive values, then semantic roles, then durable component tokens. Components do not
-consume raw colors or arbitrary layout values. Read only the relevant foundation references:
-
-- layout and proximity: [spacing-and-layout.md](references/spacing-and-layout.md)
-- type, color, modes, contrast: [typography-and-color.md](references/typography-and-color.md)
-- borders, focus, containment: [boundaries-and-bezels.md](references/boundaries-and-bezels.md)
-
-Validate the token source with:
+Validate the token source after changing it:
 
 ```bash
 python3 scripts/validate_theme.py tokens/kokuen.tokens.json
 ```
 
-### 4. Write the contract before polishing
+## 4. Design components by contract
 
-Use [COMPONENT_CONTRACT_TEMPLATE.md](docs/COMPONENT_CONTRACT_TEMPLATE.md). A stable component needs
-anatomy, variants, states, tokens, boundary rationale, width behavior, accessible semantics,
-keyboard model, focus entry and return, content constraints, responsive behavior, fixture IDs, code
-path, and a Figma key only when Figma is in scope.
-
-Load the component reference that matches the task:
+Write the contract before the polish:
+[docs/COMPONENT_CONTRACT_TEMPLATE.md](docs/COMPONENT_CONTRACT_TEMPLATE.md). Build every state the
+component can enter (default, hover, focus-visible, pressed, selected, disabled, busy, invalid,
+empty, loading, error) before refining any single one.
 
 | Work | Required reference |
 | --- | --- |
-| buttons, icon actions, destructive or busy actions | [buttons-and-actions.md](references/buttons-and-actions.md) |
-| fields, forms, textarea, checkbox, radio, switch, slider, select | [forms-and-input.md](references/forms-and-input.md) |
-| navigation, tabs, rows, lists, tables, pagination | [navigation-and-data.md](references/navigation-and-data.md) |
-| menu, tooltip, popover, dialog, toast, command/search | [overlays-and-command.md](references/overlays-and-command.md) |
-| generation, streaming, sources, approval, stop/cancel | [ai-surfaces.md](references/ai-surfaces.md) |
+| buttons, icon actions, destructive or busy actions | [references/buttons-and-actions.md](references/buttons-and-actions.md) |
+| fields, forms, textarea, checkbox, radio, switch, slider, select | [references/forms-and-input.md](references/forms-and-input.md) |
+| navigation, tabs, rows, lists, tables, pagination | [references/navigation-and-data.md](references/navigation-and-data.md) |
+| menu, tooltip, popover, dialog, toast, command/search | [references/overlays-and-command.md](references/overlays-and-command.md) |
+| generation, streaming, sources, approval, stop/cancel | [references/ai-surfaces.md](references/ai-surfaces.md) |
 
-Build every required state before visual polish. Default, hover, focus-visible, pressed, selected,
-disabled, busy, invalid, empty, loading, error, unavailable, and permission states apply where the
-component can enter them.
+### Invariants
 
-### 5. Align Figma and code when required
+Hard constraints, not judgment calls:
 
-Skip this step when the user excludes Figma. Otherwise read
-[figma-contract.md](references/figma-contract.md) and use the active Figma skills before any Figma
-mutation. Create semantic variables before components. Component properties map independently to
-the public code API. Add review and stress examples, not only a polished default. Code Connect waits
-until both APIs are stable.
+1. content is visible before animation runs, and never gated behind an animation;
+2. interactive targets are at least 44 by 44 CSS px unless a documented platform exception applies;
+3. one control has one perceived resting boundary and one focus geometry;
+4. every visible boundary has a named job: affordance, state, containment, clipping, separation;
+5. state styling affects the whole silhouette, never a colored bar attached to one edge;
+6. focus is visible, unobscured, unclipped, and follows the real interactive region;
+7. field actions stay attached to the field they change;
+8. no essential state is communicated by color alone;
+9. custom controls implement one complete native or WAI-ARIA interaction model, keyboard included;
+10. busy actions reject repeat activation and never imply completion before it occurs;
+11. dialogs and popovers define focus entry, containment, Escape policy, close, and return;
+12. controls do not lift, scale, or jump on hover;
+13. the latest real surface is rendered and exercised before completion is claimed.
 
-Figma specifies and reviews the contract. It is not evidence that production behavior works.
+## 5. Prove it on the real surface
 
-### 6. Validate the actual surface
+[references/qa-and-antipatterns.md](references/qa-and-antipatterns.md) is the audit reference.
+Run the deterministic validators, then exercise the latest real surface with pointer and keyboard:
+wide and narrow viewports, 200 percent zoom, long and CJK content, reduced motion, forced colors,
+every changed state. Console must be clean. Fix failures and repeat the pass until it holds.
 
-Read [qa-and-antipatterns.md](references/qa-and-antipatterns.md). Run deterministic validators,
-then exercise the latest real surface with pointer and keyboard. Inspect wide, narrow, 200 percent
-zoom, long and CJK content, reduced motion, forced colors, and every changed state. Check console and
-application logs. Fix failures and repeat the pass.
+A screenshot pass or a green test alone is not proof.
 
-## Companion-skill routing
+## Figma
 
-Use the smallest relevant set and announce why:
+Conditional. Include it only when the user requests Figma output or the product names Figma parity
+as a requirement; then read [references/figma-contract.md](references/figma-contract.md) and keep
+[docs/FIGMA_SYNC.md](docs/FIGMA_SYNC.md) current. Figma specifies and reviews the contract. It
+never proves production behavior, and missing Figma evidence is not a blocker when Figma is out of
+scope.
 
-| Situation | Companion |
+## Companion skills
+
+Load the smallest relevant set, and say why:
+
+| Situation | Skill |
 | --- | --- |
-| any visual judgment or critique | `human-taste` |
-| new or substantially reshaped composition | `frontend-design` |
-| production UI implementation | `frontend-ui-engineering` |
-| targeted UX or pattern uncertainty | `ui-ux-pro-max` |
-| standalone HTML prototype or mockup | `baoyu-design` |
-| Figma variables/components/library | `figma:figma-use` plus the relevant Figma skill |
+| visual judgment or critique | `human-taste` |
+| new composition or page design | `frontend-design` |
+| targeted pattern lookup | `ui-ux-pro-max` |
 | rendered browser verification | `webapp-testing` |
 | final evidence audit | `verification-before-completion` |
 
-Use one primary art-direction authority. Product rules and KOKUEN invariants outrank an imported
-recommendation. Do not load every visual skill by default.
+Use one primary art-direction authority per task. Product rules and the invariants above outrank
+any imported recommendation.
 
 ## Hard stops
 
-Stop and resolve the issue before completion when:
+Stop and resolve the issue before continuing when:
 
 - the product identity, main user job, or canonical repository is genuinely ambiguous;
 - a custom control lacks a complete keyboard and focus model;
 - a boundary exists without a declared job;
 - a required state or realistic content fixture is missing;
-- a Figma/code mismatch is hidden or undocumented when Figma is in scope;
+- a Figma/code mismatch is hidden while Figma is in scope;
 - the real surface cannot be rendered or exercised;
 - an external permission or irreversible AI action lacks an explicit approval boundary.
 
-## Completion report
+## Report
 
-Report these separately:
+Report separately:
 
 1. foundations, contracts, components, and patterns changed;
 2. product-specific decisions preserved or introduced;
-3. Figma coverage, node or component identifiers, and known drift when Figma is in scope; otherwise
-   state that it was excluded without treating that as a blocker;
+3. Figma coverage and known drift when in scope, or that it was excluded;
 4. rendered viewport and content proof;
 5. pointer, keyboard, focus, and state proof;
-6. validation, build, lint, test, accessibility, and console proof;
+6. validation, lint, test, accessibility, and console proof;
 7. exclusions, blocked checks, exceptions, and remaining risk.
 
 Do not say complete while any required evidence is missing.
 
 ## Repository map
 
-- [KOKUEN_V5_MASTER_PLAN.md](docs/KOKUEN_V5_MASTER_PLAN.md): architecture and acceptance gates
-- [RESEARCH.md](docs/RESEARCH.md): primary standards and professional system references
-- [FORWARD_TESTS.md](docs/FORWARD_TESTS.md): product-neutrality evidence
-- [ANTI_SLOP_AUDIT.md](docs/ANTI_SLOP_AUDIT.md): final visual quality audit
-- [FIGMA_SYNC.md](docs/FIGMA_SYNC.md): current remote status and resume sequence
-- [CUSTOM_THEME.md](docs/CUSTOM_THEME.md): product-specific design brief and token workflow
-- [COMPONENT_CONTRACT_TEMPLATE.md](docs/COMPONENT_CONTRACT_TEMPLATE.md): stable component record
-- [references/](references/): focused professional rules loaded on demand
-- [kokuen.tokens.json](tokens/kokuen.tokens.json): portable token source
-- [validate_theme.py](scripts/validate_theme.py): deterministic token validation
-- [kokuen.library.json](figma/kokuen.library.json): validated Figma synchronization manifest
-- [kokuen.css](kokuen.css): portable reference primitives
-- [Universal UI Template.html](designs/kokuen-visual-template/Universal%20UI%20Template.html): functional visual specimen
+- [docs/KOKUEN_V5_MASTER_PLAN.md](docs/KOKUEN_V5_MASTER_PLAN.md): architecture and acceptance gates
+- [docs/RESEARCH.md](docs/RESEARCH.md): standards and professional system sources
+- [docs/FORWARD_TESTS.md](docs/FORWARD_TESTS.md): product-neutrality evidence
+- [docs/ANTI_SLOP_AUDIT.md](docs/ANTI_SLOP_AUDIT.md): visual quality audit
+- [docs/CUSTOM_THEME.md](docs/CUSTOM_THEME.md): product-specific design brief and token workflow
+- [references/](references/): focused professional rules, loaded on demand
+- [tokens/kokuen.tokens.json](tokens/kokuen.tokens.json): portable token source
+- [contracts/kokuen.components.json](contracts/kokuen.components.json): component contract registry
+- [kokuen.css](kokuen.css): portable reference primitives, not a mandatory skin
+- [Universal UI Template.html](designs/kokuen-visual-template/Universal%20UI%20Template.html):
+  functional visual specimen

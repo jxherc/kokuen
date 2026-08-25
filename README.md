@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="banner.svg" alt="KOKUEN design operating system" width="100%">
+  <img src="banner.svg" alt="KOKUEN, a design skill for professional product UI" width="100%">
 </p>
 
 <h1 align="center">KOKUEN</h1>
 
 <p align="center">
-  A design operating system for the parts of product UI that must stay coherent.<br>
+  A design skill for professional product UI.<br>
   Product-owned character, shared interaction discipline, and rendered proof.
 </p>
 

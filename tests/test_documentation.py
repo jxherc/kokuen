@@ -44,7 +44,7 @@ class DocumentationTests(unittest.TestCase):
         banner = ROOT / "banner.svg"
         ET.parse(banner)
         text = banner.read_text(encoding="utf-8").lower()
-        self.assertIn("design operating system", text)
+        self.assertIn("design skill", text)
         self.assertNotIn("greyscale ui system", text)
         self.assertNotIn("accent", text)
         self.assertNotIn("signal", text)
