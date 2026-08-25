@@ -154,6 +154,7 @@ Load the smallest relevant set, and say why:
 | visual judgment or critique | `human-taste` |
 | new composition or page design | `frontend-design` |
 | targeted pattern lookup | `ui-ux-pro-max` |
+| existing product tokens to preserve | `extract-design-system` |
 | rendered browser verification | `webapp-testing` |
 | final evidence audit | `verification-before-completion` |
 
